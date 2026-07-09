@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Raw and large data
+*.tsv
+*.tsv.gz
+*.csv.gz
+*.zip
+*.parquet
+*.dat
+*.pkl
+*.joblib
+
+# Large generated analysis outputs
+data/raw/
+data/interim/
+data/processed/
+outputs/
+*_render/
+tmp_*/
+
+# Local/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Keep selected compact result CSVs in results/
+!results/**/*.csv
+!results/**/*.md
+!results/**/*.png
+

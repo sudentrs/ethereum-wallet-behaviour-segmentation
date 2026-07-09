@@ -1,0 +1,2 @@
+n_wallets,cluster_a,cluster_b,observed_max_bipartite_overlap,observed_matched_wallets,adjusted_rand_index,normalized_mutual_information,permutations,null_mean,null_std,null_95pct_lower,null_95pct_upper,z_score,empirical_right_tail_p_value
+622218,cluster_1,cluster_2,0.39524089627751047,245926,0.07996059571498555,0.09280381481851628,1000,0.253920391245512,0.0004692736862063761,0.2530430652922288,0.25483050152840325,301.1473031322895,0.000999000999000999
