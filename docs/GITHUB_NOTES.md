@@ -26,6 +26,14 @@ Commit:
 - `.gitignore`
 - `requirements.txt`
 
+After adding new curated files, run:
+
+```powershell
+git add .
+git commit -m "Add raw TSV preparation scripts and pipeline audit"
+git push
+```
+
 Do not commit:
 
 - Raw `.tsv`, `.tsv.gz`, `.zip`, `.parquet`, `.dat`, `.pkl`
@@ -59,4 +67,3 @@ This curated repo is currently best described as:
 not:
 
 > Fully automated one-command reproduction package.
-

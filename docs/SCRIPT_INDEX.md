@@ -4,6 +4,95 @@ This index explains the curated scripts copied into `src/`.
 
 Some scripts were renamed in the curated repo to make their purpose clearer.
 
+## Data Preparation
+
+### `src/data_preparation/extract_erc20_tsv_to_parquet.py`
+
+Reads a raw monthly ERC-20 TSV file in chunks, cleans timestamps/numeric columns, normalizes token values by token decimals, and writes cleaned parquet chunks.
+
+Original location:
+
+`202211.tsv/tsv_extract.py`
+
+### `src/data_preparation/reformat_tsv_to_wallet_direction_rows.py`
+
+Converts transaction rows into wallet-direction rows.
+
+For each transfer, it creates:
+
+- sender as `direction = out`
+- recipient as `direction = in`
+
+Original location:
+
+`dataverse_files/reformat.py`
+
+### `src/data_preparation/aggregate_wallet_daily_flows.py`
+
+Aggregates wallet-direction rows into wallet-day totals:
+
+- `total_in`
+- `total_out`
+- `tx_count`
+
+Original location:
+
+`dataverse_files/daily.py`
+
+### `src/data_preparation/merge_monthly_daily_wallet_files.py`
+
+Merges monthly wallet-daily files into one yearly wallet-daily file.
+
+Original location:
+
+`dataverse_files/merge.py`
+
+### `src/data_preparation/add_wallet_daily_netflow.py`
+
+Adds `net_flow = total_in - total_out` to the merged wallet-daily table.
+
+Original location:
+
+`dataverse_files/netflow.py`
+
+### `src/data_preparation/build_early_wallet_behavior_features.py`
+
+Builds the earlier wallet-level behaviour feature table from the merged wallet-daily data.
+
+This was part of the initial feature-engineering branch before the expanded KMeans6 feature pipeline.
+
+Original location:
+
+`dataverse_files/features.py`
+
+### `src/data_preparation/legacy_event_helpers/build_event_window_wallet_features.py`
+
+Builds event-window wallet features around a specific event date.
+
+This belongs to the earlier event-analysis/WETH branch.
+
+Original location:
+
+`202211.tsv/divide_revised.py`
+
+### `src/data_preparation/legacy_event_helpers/build_rolling_weth_window_features.py`
+
+Builds rolling-window WETH features such as signed turnover, magnitudo, and max exposure.
+
+This belongs to the earlier WETH/event-analysis branch.
+
+Original location:
+
+`202211.tsv/feature_extract.py`
+
+### `src/data_preparation/legacy_event_helpers/build_sept_nov_features.py`
+
+Builds September-November features for the 2022 event-analysis branch.
+
+Original location:
+
+`202211.tsv/sept-nov_features.py`
+
 ## Feature Engineering
 
 ### `src/features/build_original_feature_dataset.py`
@@ -126,6 +215,12 @@ Original location:
 
 Builds a detailed report document focused on completed findings and paper-process validation.
 
+### `src/reporting/build_final_report.py`
+
+Builds the earlier final report artifact.
+
+This is included because other report-building scripts import helper content from it.
+
 ### `src/reporting/build_full_length_template_integrated_report.py`
 
 Builds the full-length final report following the final-report template structure.
@@ -142,4 +237,3 @@ The original workspace also contains earlier exploratory scripts for:
 - Multiple older report/presentation versions.
 
 Those are useful as historical work, but they are not part of the final clean research pipeline.
-

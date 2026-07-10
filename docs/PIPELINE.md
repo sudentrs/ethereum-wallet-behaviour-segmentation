@@ -4,7 +4,50 @@ This file explains the analysis flow and where the main scripts fit.
 
 The scripts were originally developed during exploration, so some file paths may need adjustment before fully rerunning from a clean machine.
 
-## Stage 1: Raw Data To Wallet Features
+## Stage 0: Raw TSV Extraction And Daily Wallet Tables
+
+Purpose:
+
+Convert raw monthly Ethereum TSV files into smaller cleaned formats and wallet-day flow tables.
+
+This is the missing first step before feature engineering.
+
+Main scripts:
+
+- `src/data_preparation/extract_erc20_tsv_to_parquet.py`
+- `src/data_preparation/reformat_tsv_to_wallet_direction_rows.py`
+- `src/data_preparation/aggregate_wallet_daily_flows.py`
+- `src/data_preparation/merge_monthly_daily_wallet_files.py`
+- `src/data_preparation/add_wallet_daily_netflow.py`
+- `src/data_preparation/build_early_wallet_behavior_features.py`
+
+Typical outputs:
+
+- Cleaned parquet chunks from raw ERC-20 TSVs.
+- Wallet-direction CSVs with one row for sender/outflow and one row for recipient/inflow.
+- Monthly wallet-daily flow tables.
+- Merged yearly wallet-daily table.
+- Wallet-daily table with net flow.
+- Early wallet-level behaviour features.
+
+Important original outputs in the working directory:
+
+- `202211.tsv/processed/202211/part_*.parquet`
+- `dataverse_files/wallet_2022*.csv`
+- `dataverse_files/wallet_daily_2022*.csv`
+- `dataverse_files/wallet_daily_2022.csv`
+- `dataverse_files/wallet_daily_2022_netflow.csv`
+- `dataverse_files/wallet_behavior_features.csv`
+
+Notes:
+
+Some of these scripts still contain local hard-coded paths from the original exploratory work.
+
+Before rerunning them from a clean clone, update paths or convert them to command-line arguments.
+
+The scripts under `src/data_preparation/legacy_event_helpers/` belong to the earlier WETH/event-analysis branch and are included for completeness, not as the main KMeans6 pipeline.
+
+## Stage 1: Wallet Features And Scaling
 
 Purpose:
 
@@ -12,6 +55,7 @@ Convert raw/daily Ethereum transaction files into wallet-level behavioural featu
 
 Main scripts:
 
+- `src/data_preparation/*`
 - `src/features/build_original_feature_dataset.py`
 - `src/features/scale_original_features.py`
 - `src/features/build_full_kmeans6_expanded_features.py`
@@ -167,4 +211,3 @@ Main final artifacts:
 - `reports/final_report.docx`
 - `presentations/final_project_presentation.pdf`
 - `presentations/final_project_presentation.pptx`
-

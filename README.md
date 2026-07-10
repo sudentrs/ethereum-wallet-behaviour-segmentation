@@ -24,6 +24,7 @@ The project contributes an unsupervised wallet-role discovery workflow:
 
 ```text
 src/
+  data_preparation/ Raw TSV extraction, reformatting, daily aggregation, and legacy event helpers.
   features/        Feature engineering and scaling scripts.
   clustering/      Cluster comparison and distance-based correspondence scripts.
   network/         Transaction-network validation scripts.
@@ -75,7 +76,8 @@ Start with:
 
 1. `docs/PROJECT_GUIDE.md`
 2. `docs/PIPELINE.md`
-3. `docs/OUTPUTS_CATALOG.md`
+3. `docs/SCRIPT_INDEX.md`
+4. `docs/MAIN_PIPELINE_AUDIT.md`
+5. `docs/OUTPUTS_CATALOG.md`
 
 Then inspect the scripts in `src/` according to the pipeline stage you need.
-
