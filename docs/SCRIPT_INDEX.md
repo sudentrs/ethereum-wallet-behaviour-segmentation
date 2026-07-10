@@ -225,6 +225,18 @@ Original location:
 
 `run_paper_process_remaining_analyses.py`
 
+### `src/validation/eoa_contract_contamination_check.py`
+
+Classifies sampled cluster addresses as EOAs or contracts using `eth_getCode`.
+
+This supports the Gate 1 contamination check requested for publication work.
+
+Example:
+
+`python src/validation/eoa_contract_contamination_check.py --labels-csv ../dataverse_files/wallet_kmeans6_expanded_daily_features.csv --sample-per-cluster 1000`
+
+Provide the RPC URL with `--rpc-url` or through the `ETH_RPC_URL` environment variable.
+
 ### `src/validation/cluster_behavior_subcluster_analysis.py`
 
 Checks whether each top-level behavioural role contains smaller internal subgroups.

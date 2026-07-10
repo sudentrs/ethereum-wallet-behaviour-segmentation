@@ -48,6 +48,7 @@ These are included for project history and reproducibility of older exploratory 
 
 - `src/validation/run_paper_process_remaining_analyses.py`
 - `src/validation/cluster_behavior_subcluster_analysis.py`
+- `src/validation/eoa_contract_contamination_check.py`
 
 ### Reporting
 

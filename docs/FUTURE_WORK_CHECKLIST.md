@@ -64,6 +64,15 @@ Separate externally owned accounts and smart contracts if possible.
 
 This can make role interpretation cleaner.
 
+Implementation started:
+
+- `src/validation/eoa_contract_contamination_check.py`
+
+Expected output:
+
+- cluster-level contract contamination table
+- cached address classifications
+
 ### Graph embedding comparison
 
 Run Node2Vec, DeepWalk, Role2Vec, or Struc2Vec on the transaction graph.
@@ -102,4 +111,3 @@ Position the work against:
 - Static graph analysis.
 - Clustering stability literature.
 - Temporal clustering literature.
-
