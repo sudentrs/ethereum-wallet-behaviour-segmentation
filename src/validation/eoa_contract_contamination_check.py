@@ -91,7 +91,21 @@ def classify_addresses(
 
     for start in range(0, len(missing), batch_size):
         batch = missing[start : start + batch_size]
-        responses = rpc_batch_get_code(rpc_url, batch, block, timeout)
+        responses = None
+        for attempt in range(1, 7):
+            responses = rpc_batch_get_code(rpc_url, batch, block, timeout)
+            retryable = [
+                item.get("error", {})
+                for item in responses
+                if item.get("error", {}).get("code") == 429
+            ]
+            if not retryable:
+                break
+            wait = min(60, sleep_seconds * (2 ** attempt) + attempt)
+            print(f"Rate limit hit; waiting {wait:.1f}s before retry {attempt}/6")
+            time.sleep(wait)
+        if responses is None:
+            raise RuntimeError("No RPC responses received.")
         cache_rows = []
         for address, response in zip(batch, responses):
             if "error" in response:
