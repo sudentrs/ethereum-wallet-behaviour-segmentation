@@ -13,6 +13,8 @@ This file lists the main pipeline pieces now included in the curated repository.
 - `src/data_preparation/add_wallet_daily_netflow.py`
 - `src/data_preparation/build_early_wallet_behavior_features.py`
 
+These scripts now accept command-line input/output paths and default to predictable `data/interim` and `data/processed` locations.
+
 ### Legacy event/WETH branch
 
 - `src/data_preparation/legacy_event_helpers/build_event_window_wallet_features.py`
@@ -55,9 +57,11 @@ These are included for project history and reproducibility of older exploratory 
 
 ## Still Not Fully One-Command Reproducible
 
-The repo now contains the main scripts, but several scripts still have local hard-coded paths from the original workspace.
+The repo now contains the main scripts, and the raw data-preparation layer has been refactored to avoid hard-coded local paths.
 
-To make the repo fully reproducible, the next cleanup step would be to refactor these scripts so every input and output path is passed through command-line arguments.
+Some downstream analysis scripts still came from exploratory work and should be checked before claiming one-command reproducibility.
+
+The next cleanup step would be to create a single driver script or Makefile that runs each stage from `config.example.yaml`.
 
 ## Deliberately Not Included
 
@@ -70,4 +74,3 @@ The following are intentionally excluded from the curated GitHub repo:
 - temporary document/presentation render folders
 - exploratory screenshots
 - extracted PDF text from literature review
-

@@ -28,9 +28,9 @@ tmp_*/
 Thumbs.db
 .idea/
 .vscode/
+config.local.yaml
 
 # Keep selected compact result CSVs in results/
 !results/**/*.csv
 !results/**/*.md
 !results/**/*.png
-

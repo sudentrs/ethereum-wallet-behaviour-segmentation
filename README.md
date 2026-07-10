@@ -78,6 +78,7 @@ Start with:
 2. `docs/PIPELINE.md`
 3. `docs/SCRIPT_INDEX.md`
 4. `docs/MAIN_PIPELINE_AUDIT.md`
-5. `docs/OUTPUTS_CATALOG.md`
+5. `docs/FIGURE_TABLE_AUDIT.md`
+6. `docs/OUTPUTS_CATALOG.md`
 
 Then inspect the scripts in `src/` according to the pipeline stage you need.

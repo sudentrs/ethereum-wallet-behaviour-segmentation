@@ -1,16 +1,11 @@
-import pandas as pd
+import argparse
 from pathlib import Path
 
-# ==========================
-# CONFIGURATION
-# ==========================
+import pandas as pd
 
-INPUT_TSV = "202211.tsv"                 # CHANGE PER RUN
-OUTPUT_DIR = "processed/202211"          # CHANGE PER RUN
-CHUNK_SIZE = 500_000
 
 DTYPES = {
-    "block_id": "string",               # safer: cast later
+    "block_id": "string",
     "transaction_hash": "string",
     "time": "string",
     "token_address": "string",
@@ -19,40 +14,25 @@ DTYPES = {
     "value": "string",
     "token_name": "string",
     "token_symbol": "string",
-    "token_decimals": "string"           # MUST be string initially
+    "token_decimals": "string",
 }
 
-# ==========================
-# PROCESSING FUNCTION
-# ==========================
 
 def process_chunk(df: pd.DataFrame) -> pd.DataFrame:
-    # Parse timestamp
     df["time"] = pd.to_datetime(df["time"], utc=True, errors="coerce")
-
-    # Coerce numeric fields safely
-    df["token_decimals"] = pd.to_numeric(
-        df["token_decimals"], errors="coerce"
-    )
-
-    df["block_id"] = pd.to_numeric(
-        df["block_id"], errors="coerce"
-    )
-
-    # Drop malformed rows
-    df = df.dropna(subset=["time", "token_decimals", "block_id"])
+    df["token_decimals"] = pd.to_numeric(df["token_decimals"], errors="coerce")
+    df["block_id"] = pd.to_numeric(df["block_id"], errors="coerce")
+    df = df.dropna(subset=["time", "token_decimals", "block_id", "value"])
 
     df["token_decimals"] = df["token_decimals"].astype(int)
     df["block_id"] = df["block_id"].astype("int64")
 
-    # Normalize ERC-20 values safely (Python int)
     df["value_decimal"] = [
-        int(v) / (10 ** d)
-        for v, d in zip(df["value"], df["token_decimals"])
+        int(value) / (10 ** decimals)
+        for value, decimals in zip(df["value"], df["token_decimals"])
     ]
 
-    # Keep only needed columns
-    df = df[
+    return df[
         [
             "block_id",
             "time",
@@ -65,35 +45,44 @@ def process_chunk(df: pd.DataFrame) -> pd.DataFrame:
         ]
     ]
 
-    return df
 
-# ==========================
-# MAIN PIPELINE
-# ==========================
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Clean a raw monthly ERC-20 TSV file into parquet chunks."
+    )
+    parser.add_argument("--input-tsv", required=True, help="Path to a raw monthly TSV file.")
+    parser.add_argument(
+        "--output-dir",
+        default="data/interim/erc20_parquet",
+        help="Directory where cleaned parquet chunks will be written.",
+    )
+    parser.add_argument("--chunk-size", type=int, default=500_000)
+    return parser.parse_args()
 
-def main():
-    output_dir = Path(OUTPUT_DIR)
+
+def main() -> None:
+    args = parse_args()
+    input_tsv = Path(args.input_tsv)
+    output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    chunk_id = 0
-
-    for chunk in pd.read_csv(
-        INPUT_TSV,
-        sep="\t",
-        chunksize=CHUNK_SIZE,
-        dtype=DTYPES,
-        on_bad_lines="skip",
-        low_memory=False
+    for chunk_id, chunk in enumerate(
+        pd.read_csv(
+            input_tsv,
+            sep="\t",
+            chunksize=args.chunk_size,
+            dtype=DTYPES,
+            on_bad_lines="skip",
+            low_memory=False,
+        )
     ):
         clean_chunk = process_chunk(chunk)
-
         out_file = output_dir / f"part_{chunk_id:05d}.parquet"
         clean_chunk.to_parquet(out_file, index=False)
-
-        print(f"Processed {len(clean_chunk):,} rows → {out_file.name}")
-        chunk_id += 1
+        print(f"Processed {len(clean_chunk):,} rows -> {out_file}")
 
     print("Processing completed successfully.")
+
 
 if __name__ == "__main__":
     main()

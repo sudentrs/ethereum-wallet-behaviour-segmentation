@@ -47,6 +47,34 @@ Before rerunning them from a clean clone, update paths or convert them to comman
 
 The scripts under `src/data_preparation/legacy_event_helpers/` belong to the earlier WETH/event-analysis branch and are included for completeness, not as the main KMeans6 pipeline.
 
+Example commands:
+
+```powershell
+python src/data_preparation/extract_erc20_tsv_to_parquet.py `
+  --input-tsv data/raw/202211.tsv `
+  --output-dir data/interim/erc20_parquet/202211
+
+python src/data_preparation/reformat_tsv_to_wallet_direction_rows.py `
+  --input-tsv data/raw/202211.tsv `
+  --output-csv data/interim/wallet_202211.csv
+
+python src/data_preparation/aggregate_wallet_daily_flows.py `
+  --input-glob "data/interim/wallet_2022*.csv" `
+  --output-dir data/processed/wallet_daily
+
+python src/data_preparation/merge_monthly_daily_wallet_files.py `
+  --input-glob "data/processed/wallet_daily/*_daily.csv" `
+  --output-csv data/processed/wallet_daily_2022.csv
+
+python src/data_preparation/add_wallet_daily_netflow.py `
+  --input-csv data/processed/wallet_daily_2022.csv `
+  --output-csv data/processed/wallet_daily_2022_netflow.csv
+
+python src/data_preparation/build_early_wallet_behavior_features.py `
+  --input-csv data/processed/wallet_daily_2022_netflow.csv `
+  --output-csv data/processed/wallet_behavior_features.csv
+```
+
 ## Stage 1: Wallet Features And Scaling
 
 Purpose:
@@ -72,6 +100,15 @@ Important original outputs in the working directory:
 - `dataverse_files/wallet_kmeans6_expanded_daily_features.csv`
 - `dataverse_files/wallet_kmeans6_expanded_daily_features_robust_scaled.csv`
 - `dataverse_files/wallet_kmeans6_expanded_daily_features_robust_scaled_scaling_stats.csv`
+
+Example commands:
+
+```powershell
+python src/features/build_full_kmeans6_expanded_features.py --help
+python src/features/robust_scale_expanded_features.py --help
+```
+
+These feature scripts already expose command-line options in the curated repo.
 
 ## Stage 2: Clustering And Cluster Correspondence
 

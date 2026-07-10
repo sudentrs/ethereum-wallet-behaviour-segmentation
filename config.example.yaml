@@ -1,0 +1,26 @@
+# Example local configuration for reproducing the analysis.
+#
+# Copy this file to config.local.yaml and adjust paths for your machine.
+# Do not commit config.local.yaml if it contains private/local paths.
+
+data:
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed
+
+raw_monthly_tsv:
+  example_month: "202211"
+  input_tsv: data/raw/202211.tsv
+
+outputs:
+  wallet_direction_rows: data/interim/wallet_202211.csv
+  wallet_daily_dir: data/processed/wallet_daily
+  wallet_daily_merged: data/processed/wallet_daily_2022.csv
+  wallet_daily_netflow: data/processed/wallet_daily_2022_netflow.csv
+  wallet_behavior_features: data/processed/wallet_behavior_features.csv
+
+analysis:
+  main_cluster_count: 6
+  random_seed: 492
+  subsample_fraction: 0.80
+

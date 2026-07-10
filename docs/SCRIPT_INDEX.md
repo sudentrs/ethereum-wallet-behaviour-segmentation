@@ -10,6 +10,10 @@ Some scripts were renamed in the curated repo to make their purpose clearer.
 
 Reads a raw monthly ERC-20 TSV file in chunks, cleans timestamps/numeric columns, normalizes token values by token decimals, and writes cleaned parquet chunks.
 
+Example:
+
+`python src/data_preparation/extract_erc20_tsv_to_parquet.py --input-tsv data/raw/202211.tsv --output-dir data/interim/erc20_parquet/202211`
+
 Original location:
 
 `202211.tsv/tsv_extract.py`
@@ -27,6 +31,10 @@ Original location:
 
 `dataverse_files/reformat.py`
 
+Example:
+
+`python src/data_preparation/reformat_tsv_to_wallet_direction_rows.py --input-tsv data/raw/202211.tsv --output-csv data/interim/wallet_202211.csv`
+
 ### `src/data_preparation/aggregate_wallet_daily_flows.py`
 
 Aggregates wallet-direction rows into wallet-day totals:
@@ -39,6 +47,10 @@ Original location:
 
 `dataverse_files/daily.py`
 
+Example:
+
+`python src/data_preparation/aggregate_wallet_daily_flows.py --input-glob "data/interim/wallet_2022*.csv" --output-dir data/processed/wallet_daily`
+
 ### `src/data_preparation/merge_monthly_daily_wallet_files.py`
 
 Merges monthly wallet-daily files into one yearly wallet-daily file.
@@ -47,6 +59,10 @@ Original location:
 
 `dataverse_files/merge.py`
 
+Example:
+
+`python src/data_preparation/merge_monthly_daily_wallet_files.py --input-glob "data/processed/wallet_daily/*_daily.csv" --output-csv data/processed/wallet_daily_2022.csv`
+
 ### `src/data_preparation/add_wallet_daily_netflow.py`
 
 Adds `net_flow = total_in - total_out` to the merged wallet-daily table.
@@ -54,6 +70,10 @@ Adds `net_flow = total_in - total_out` to the merged wallet-daily table.
 Original location:
 
 `dataverse_files/netflow.py`
+
+Example:
+
+`python src/data_preparation/add_wallet_daily_netflow.py --input-csv data/processed/wallet_daily_2022.csv --output-csv data/processed/wallet_daily_2022_netflow.csv`
 
 ### `src/data_preparation/build_early_wallet_behavior_features.py`
 
@@ -64,6 +84,10 @@ This was part of the initial feature-engineering branch before the expanded KMea
 Original location:
 
 `dataverse_files/features.py`
+
+Example:
+
+`python src/data_preparation/build_early_wallet_behavior_features.py --input-csv data/processed/wallet_daily_2022_netflow.csv --output-csv data/processed/wallet_behavior_features.csv`
 
 ### `src/data_preparation/legacy_event_helpers/build_event_window_wallet_features.py`
 
