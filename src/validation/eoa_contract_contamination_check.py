@@ -3,6 +3,7 @@ import csv
 import json
 import os
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -93,7 +94,25 @@ def classify_addresses(
         batch = missing[start : start + batch_size]
         responses = None
         for attempt in range(1, 7):
-            responses = rpc_batch_get_code(rpc_url, batch, block, timeout)
+            try:
+                responses = rpc_batch_get_code(rpc_url, batch, block, timeout)
+            except urllib.error.HTTPError as exc:
+                if exc.code != 429:
+                    raise
+                wait = min(120, sleep_seconds * (2 ** attempt) + attempt)
+                print(f"HTTP 429 rate limit; waiting {wait:.1f}s before retry {attempt}/6")
+                time.sleep(wait)
+                continue
+            except urllib.error.URLError as exc:
+                wait = min(120, sleep_seconds * (2 ** attempt) + attempt)
+                print(f"RPC connection error ({exc.reason}); waiting {wait:.1f}s before retry {attempt}/6")
+                time.sleep(wait)
+                continue
+            except ConnectionResetError as exc:
+                wait = min(120, sleep_seconds * (2 ** attempt) + attempt)
+                print(f"RPC connection reset ({exc}); waiting {wait:.1f}s before retry {attempt}/6")
+                time.sleep(wait)
+                continue
             retryable = [
                 item.get("error", {})
                 for item in responses
