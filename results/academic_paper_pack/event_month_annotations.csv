@@ -1,0 +1,5 @@
+event_month,event_label,scope,source,source_url
+202205,Terra/UST-LUNA collapse,market-wide crypto stress,Briola et al. 2022; Kim et al. 2022; Wired,https://arxiv.org/abs/2207.13914
+202206,Celsius withdrawal halt / liquidity stress,centralized-lending stress,crypto-market timelines and news reports,https://en.wikipedia.org/wiki/Cryptocurrency_bubble
+202209,Ethereum Merge,Ethereum protocol event,Kapengut and Mizrach 2022,https://arxiv.org/abs/2210.13655
+202211,FTX collapse and bankruptcy,market-wide exchange crisis,AP timeline; bankruptcy filings/news,https://apnews.com/article/c519d50b9059aa8bff0ce8b6cd26c40e

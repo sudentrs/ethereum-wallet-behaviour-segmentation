@@ -1,0 +1,2 @@
+k,sample_wallets,nodes,edges,density,intra_cluster_edge_ratio,label_modularity,attribute_assortativity,detected_communities,ari_detected_vs_labels
+6,30000,30000,210757,0.00046836450103892354,0.8476871468088841,0.680624743452114,0.8170659889651414,22,0.2539578800259121

@@ -1,0 +1,2 @@
+features_file,wallets_clustered,feature_count,k,random_state,inertia,silhouette_sample_size,silhouette
+wallet_eoa_only_kmeans6_features_robust_scaled\wallet_eoa_only_kmeans6_features_robust_scaled.csv,2443868,33,4,492,32362484.0,50000,0.16332471370697021

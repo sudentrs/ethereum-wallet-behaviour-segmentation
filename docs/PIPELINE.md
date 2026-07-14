@@ -143,6 +143,7 @@ Main scripts:
 
 - `src/network/network_science_cluster_analysis.py`
 - `src/network/broad_network_science_analysis.py`
+- `src/network/eoa_k5_transaction_network_validation.py`
 
 Typical outputs:
 
@@ -156,6 +157,11 @@ Important result files:
 - `results/network_validation/network_science_summary_202209.md`
 - `results/network_validation/cluster_network_metrics_202209.csv`
 - `results/network_validation/cluster_adjacency_values_202209.csv`
+- `results/eoa_only_kmeans5/network_validation/eoa_k5_transaction_network_validation_report.md`
+
+EOA-only K5 note:
+
+The K5 transaction-network validation is a downstream check of the post-Gate-1 taxonomy. It processed September 2022 raw transactions and found mixed network evidence: role-to-role flows are structured, but the same-cluster random-label null test did not support stronger within-role concentration than shuffled labels.
 
 ## Stage 4: Temporal Transition Analysis
 
@@ -166,6 +172,7 @@ Assign wallets to monthly behavioural states and measure persistence, transition
 Main script:
 
 - `src/temporal/cluster_transition_analysis.py`
+- `src/temporal/eoa_k5_temporal_validation.py`
 
 Typical outputs:
 
@@ -180,10 +187,16 @@ Important result files:
 - `results/temporal_analysis/transitional_scientific_report.md`
 - `results/temporal_analysis/overall_transition_probability_matrix.csv`
 - `results/temporal_analysis/state_transition_stability.csv`
+- `results/eoa_only_kmeans5/temporal_validation/eoa_k5_temporal_validation_report.md`
+- `results/eoa_only_kmeans5/temporal_validation/two_step_return_analysis.csv`
 
 Important finding:
 
 Monthly behaviour is moderately persistent, not completely fixed and not random.
+
+EOA-only K5 note:
+
+The K5 temporal validation assigns each wallet-month to the nearest K5 prototype and measures month-to-month movement. It also includes a two-step return analysis, which checks whether wallets that leave a behavioural state return to it in the following month.
 
 ## Stage 5: Paper-Focused Validation
 
@@ -194,6 +207,8 @@ Add stronger validation for an academic paper-style presentation of the work.
 Main script:
 
 - `src/validation/run_paper_process_remaining_analyses.py`
+- `src/validation/build_academic_temporal_pack.py`
+- `src/validation/feature_space_proofs_k4_k5_k6.py`
 
 Typical outputs:
 
@@ -209,6 +224,13 @@ Important result files:
 - `results/paper_process/cross_dataset_correspondence_permutation_summary.csv`
 - `results/paper_process/cross_feature_set_spearman_summary.csv`
 - `results/paper_process/minimum_observation_experiment_summary.csv`
+- `results/academic_paper_pack/paper_ready_synthesis.md`
+- `results/academic_paper_pack/academic_temporal_validation_pack.md`
+- `results/academic_paper_pack/feature_space_proofs/feature_space_proofs_report.md`
+
+EOA paper-pack note:
+
+The academic paper pack reproduces the earlier six-cluster proof style for the EOA-only K4/K5/K6 branch. It includes feature-space KNN network quality, global and pairwise feature-separation tests, transition matrices, transition residuals, event-adjacent rank tests, and two-step return null tests. Event-month interpretation is contextual only and should not be presented as causal evidence without a separate event-study design.
 
 ## Stage 6: Within-Cluster Subcluster Analysis
 

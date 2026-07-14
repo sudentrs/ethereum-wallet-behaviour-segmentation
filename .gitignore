@@ -20,6 +20,8 @@ data/raw/
 data/interim/
 data/processed/
 outputs/
+wallet_eoa_only_kmeans6_features_robust_scaled/
+results/**/wallet_eoa_only_kmeans_clusters.csv
 *_render/
 tmp_*/
 
@@ -34,3 +36,8 @@ config.local.yaml
 !results/**/*.csv
 !results/**/*.md
 !results/**/*.png
+results/eoa_k_model_selection/model_selection_sample_*.csv
+results/**/wallet_eoa_only_kmeans_clusters.csv
+results/**/sampled_edges_for_null_test.csv
+results/**/wallet_monthly_behavior_states.csv
+results/academic_paper_pack/feature_space_proofs/k*/k*_feature_proof_sample.csv

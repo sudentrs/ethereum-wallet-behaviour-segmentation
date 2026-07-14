@@ -33,6 +33,11 @@ def parse_args() -> argparse.Namespace:
         default=50000,
         help="Rows sampled for silhouette. Use 0 to skip.",
     )
+    parser.add_argument(
+        "--write-feature-table",
+        action="store_true",
+        help="Write the full feature table with new cluster labels. This can be very large.",
+    )
     return parser.parse_args()
 
 
@@ -68,10 +73,11 @@ def main() -> None:
     if "cluster" in features_with_labels.columns:
         features_with_labels = features_with_labels.rename(columns={"cluster": "old_cluster"})
     features_with_labels["cluster"] = labels.astype(int)
-    features_with_labels.to_csv(
-        out_dir / "wallet_eoa_only_kmeans6_features_robust_scaled.csv",
-        index=False,
-    )
+    if args.write_feature_table:
+        features_with_labels.to_csv(
+            out_dir / f"wallet_eoa_only_kmeans{args.k}_features_robust_scaled.csv",
+            index=False,
+        )
 
     sizes = assignments["cluster"].value_counts().sort_index().reset_index()
     sizes.columns = ["cluster", "wallet_count"]

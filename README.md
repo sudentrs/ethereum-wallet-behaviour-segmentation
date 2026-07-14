@@ -79,6 +79,7 @@ Start with:
 3. `docs/SCRIPT_INDEX.md`
 4. `docs/MAIN_PIPELINE_AUDIT.md`
 5. `docs/FIGURE_TABLE_AUDIT.md`
-6. `docs/OUTPUTS_CATALOG.md`
+6. `docs/K_SELECTION_ASSESSMENT.md`
+7. `docs/OUTPUTS_CATALOG.md`
 
 Then inspect the scripts in `src/` according to the pipeline stage you need.

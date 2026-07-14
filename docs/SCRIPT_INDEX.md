@@ -197,6 +197,14 @@ Original location:
 
 `dataverse_files/broad_network_science_analysis.py`
 
+### `src/network/eoa_k5_transaction_network_validation.py`
+
+Runs transaction-network validation for the EOA-only KMeans5 clustering.
+
+It reads the K5 wallet labels and a raw monthly TSV file, then produces role-to-role transaction matrices, cluster centrality summaries, a sampled random-label null test, and a written validation report.
+
+This is the downstream network check for the post-contract-removal K5 branch.
+
 ## Temporal Analysis
 
 ### `src/temporal/cluster_transition_analysis.py`
@@ -208,6 +216,14 @@ This is the main script for persistence, role movement, and temporal stability.
 Original location:
 
 `dataverse_files/cluster_transition_analysis.py`
+
+### `src/temporal/eoa_k5_temporal_validation.py`
+
+Runs temporal validation for the EOA-only KMeans5 clustering.
+
+It assigns each wallet-month to the nearest K5 full-year prototype, computes monthly transition matrices, state persistence, and two-step return behaviour.
+
+This is the downstream temporal check for the post-contract-removal K5 branch.
 
 ## Validation And Robustness
 
@@ -244,6 +260,24 @@ Checks whether each top-level behavioural role contains smaller internal subgrou
 Original location:
 
 `dataverse_files/cluster_behavior_subcluster_analysis.py`
+
+### `src/validation/compare_eoa_k4_k5_k6_downstream.py`
+
+Builds the side-by-side downstream validation comparison for EOA-only `K=4`, `K=5`, and `K=6`.
+
+It combines cluster sizes, K-sensitivity metrics, transaction-network null tests, temporal persistence, and two-step return analysis into one comparison table and written recommendation.
+
+### `src/validation/build_academic_temporal_pack.py`
+
+Builds paper-ready temporal validation outputs for EOA-only `K=4`, `K=5`, and `K=6`.
+
+It generates monthly state-share event plots, self-transition event-pair plots, transition residual heatmaps, event-adjacent rank tests, top off-diagonal transition pathways, and two-step return null tests.
+
+### `src/validation/feature_space_proofs_k4_k5_k6.py`
+
+Reproduces the earlier six-cluster feature-space proof style for the EOA-only `K=4`, `K=5`, and `K=6` branch.
+
+It runs sampled KNN feature-neighbourhood validation, global Kruskal-Wallis feature-separation tests, and pairwise Mann-Whitney/Cliff's-delta tests.
 
 ## Reporting
 
