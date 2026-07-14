@@ -92,6 +92,44 @@ State-level persistence summary.
 
 Use this to identify which roles are most or least persistent over time.
 
+## `results/k5_academic_strengthening/`
+
+### `k5_academic_strengthening_report.md`
+
+Main report for the final K5 strengthening pass.
+
+It combines per-cluster stability, consensus/co-membership stability, wallet trajectory types, centroid drift, and the final K5 role interpretation table.
+
+### `per_cluster_stability_table.csv`
+
+Role-level table combining wallet share, seed/subsample recovery, temporal persistence, centroid drift, dominant trajectory type, network position, reliability summary, and cautions.
+
+Use this table when explaining which K5 roles are more reliable and which need careful wording.
+
+### `sampled_pair_comembership_consensus.csv`
+
+Consensus/co-membership result from rerunning KMeans on a stratified wallet sample.
+
+Use this to show whether wallets assigned to the same reference role tend to remain grouped together across reruns.
+
+### `trajectory_type_summary.csv`
+
+Summary of wallet-level monthly trajectory types, such as persistent wallets, returners, one-time switchers, and volatile switchers.
+
+Use this to explain the temporal contribution in plain language.
+
+### `centroid_drift_summary_by_cluster.csv`
+
+Cluster-level summary of monthly centroid drift.
+
+Use this to show whether each monthly role keeps the same feature meaning as its full-year prototype.
+
+### `final_k5_role_interpretation_table.csv`
+
+Paper-ready role table for the K5 taxonomy.
+
+Use this as the main table for describing the five EOA behavioural roles.
+
 ## `results/subcluster_analysis/`
 
 ### `cluster_behavior_subcluster_report.md`
@@ -119,4 +157,3 @@ Final presentation PDF.
 ### `final_project_presentation.pptx`
 
 Editable PowerPoint version of the final presentation.
-

@@ -209,6 +209,7 @@ Main script:
 - `src/validation/run_paper_process_remaining_analyses.py`
 - `src/validation/build_academic_temporal_pack.py`
 - `src/validation/feature_space_proofs_k4_k5_k6.py`
+- `src/validation/build_k5_academic_strengthening_pack.py`
 
 Typical outputs:
 
@@ -227,10 +228,16 @@ Important result files:
 - `results/academic_paper_pack/paper_ready_synthesis.md`
 - `results/academic_paper_pack/academic_temporal_validation_pack.md`
 - `results/academic_paper_pack/feature_space_proofs/feature_space_proofs_report.md`
+- `results/k5_academic_strengthening/k5_academic_strengthening_report.md`
+- `results/k5_academic_strengthening/final_k5_role_interpretation_table.csv`
 
 EOA paper-pack note:
 
 The academic paper pack reproduces the earlier six-cluster proof style for the EOA-only K4/K5/K6 branch. It includes feature-space KNN network quality, global and pairwise feature-separation tests, transition matrices, transition residuals, event-adjacent rank tests, and two-step return null tests. Event-month interpretation is contextual only and should not be presented as causal evidence without a separate event-study design.
+
+K5 strengthening note:
+
+The K5 academic-strengthening pack addresses the remaining paper-readiness questions after model selection. It adds per-cluster stability, consensus/co-membership stability, trajectory-type summaries, centroid drift, and a consolidated role interpretation table. This is the best folder to use when explaining which K5 roles are reliable, which are fragile, and how wallet behaviour changes over time.
 
 ## Stage 6: Within-Cluster Subcluster Analysis
 

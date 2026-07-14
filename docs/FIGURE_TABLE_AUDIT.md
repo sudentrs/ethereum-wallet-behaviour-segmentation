@@ -22,6 +22,15 @@ Status values:
 | Temporal transition probability matrix | `results/temporal_analysis/overall_transition_probability_matrix.csv` | `src/temporal/cluster_transition_analysis.py` | Monthly daily wallet data, scaling stats, KMeans6 centroids | Partially regenerable |
 | State transition stability | `results/temporal_analysis/state_transition_stability.csv` | `src/temporal/cluster_transition_analysis.py` | Monthly wallet-state assignments | Regenerable |
 | Temporal scientific report | `results/temporal_analysis/transitional_scientific_report.md` | `src/temporal/cluster_transition_analysis.py` | Monthly transition outputs | Regenerable |
+| K5 academic strengthening report | `results/k5_academic_strengthening/k5_academic_strengthening_report.md` | `src/validation/build_k5_academic_strengthening_pack.py` | EOA K5 labels, robust-scaled features, monthly wallet states, daily wallet files, K5 network/temporal outputs | Regenerable |
+| K5 per-cluster stability table | `results/k5_academic_strengthening/per_cluster_stability_table.csv` | `src/validation/build_k5_academic_strengthening_pack.py` | K5 role labels, consensus recovery, temporal stability, centroid drift, network centrality | Regenerable |
+| K5 final role interpretation table | `results/k5_academic_strengthening/final_k5_role_interpretation_table.csv` | `src/validation/build_k5_academic_strengthening_pack.py` | K5 role labels, temporal stability, network centrality, consensus recovery, centroid drift, trajectory summaries | Regenerable |
+| K5 co-membership consensus table | `results/k5_academic_strengthening/sampled_pair_comembership_consensus.csv` | `src/validation/build_k5_academic_strengthening_pack.py` | Stratified sample from robust-scaled EOA feature table and K5 labels | Regenerable |
+| K5 co-membership consensus figure | `results/k5_academic_strengthening/consensus_comembership_by_cluster.png` | `src/validation/build_k5_academic_strengthening_pack.py` | `results/k5_academic_strengthening/sampled_pair_comembership_consensus.csv` | Regenerable |
+| K5 trajectory type summary | `results/k5_academic_strengthening/trajectory_type_summary.csv` | `src/validation/build_k5_academic_strengthening_pack.py` | `results/eoa_only_kmeans5/temporal_validation/wallet_monthly_behavior_states.csv` | Regenerable |
+| K5 trajectory type figure | `results/k5_academic_strengthening/trajectory_type_shares.png` | `src/validation/build_k5_academic_strengthening_pack.py` | `results/k5_academic_strengthening/trajectory_type_summary.csv` | Regenerable |
+| K5 centroid drift summary | `results/k5_academic_strengthening/centroid_drift_summary_by_cluster.csv` | `src/validation/build_k5_academic_strengthening_pack.py` | Full-year K5 centroids, scaling stats, monthly daily wallet files, monthly state assignments | Regenerable |
+| K5 centroid drift figure | `results/k5_academic_strengthening/monthly_centroid_drift.png` | `src/validation/build_k5_academic_strengthening_pack.py` | `results/k5_academic_strengthening/monthly_centroid_drift.csv` | Regenerable |
 | Subcluster summary | `results/subcluster_analysis/subcluster_summary.csv` | `src/validation/cluster_behavior_subcluster_analysis.py` | Expanded KMeans6 feature table and labels | Partially regenerable |
 | Subcluster report | `results/subcluster_analysis/cluster_behavior_subcluster_report.md` | `src/validation/cluster_behavior_subcluster_analysis.py` | Subcluster outputs | Regenerable |
 | Final report | `reports/final_report.docx` | `src/reporting/build_full_length_template_integrated_report.py` | Selected analysis outputs and report template | Static artifact / partially regenerable |
@@ -44,4 +53,3 @@ No figure, table, or numerical claim should be used in a submission unless it is
 2. an input dataset,
 3. an output file,
 4. and a tagged Git commit.
-

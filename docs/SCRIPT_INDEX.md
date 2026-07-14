@@ -279,6 +279,20 @@ Reproduces the earlier six-cluster feature-space proof style for the EOA-only `K
 
 It runs sampled KNN feature-neighbourhood validation, global Kruskal-Wallis feature-separation tests, and pairwise Mann-Whitney/Cliff's-delta tests.
 
+### `src/validation/build_k5_academic_strengthening_pack.py`
+
+Builds the final K5 paper-strengthening pack.
+
+It adds per-cluster stability, consensus/co-membership stability, wallet trajectory types, monthly centroid drift, and a consolidated K5 role interpretation table.
+
+Main output:
+
+`results/k5_academic_strengthening/k5_academic_strengthening_report.md`
+
+Example:
+
+`python src/validation/build_k5_academic_strengthening_pack.py`
+
 ## Reporting
 
 ### `src/reporting/build_cluster_stability_complete_report.py`

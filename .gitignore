@@ -40,4 +40,5 @@ results/eoa_k_model_selection/model_selection_sample_*.csv
 results/**/wallet_eoa_only_kmeans_clusters.csv
 results/**/sampled_edges_for_null_test.csv
 results/**/wallet_monthly_behavior_states.csv
+results/**/wallet_trajectory_types.csv
 results/academic_paper_pack/feature_space_proofs/k*/k*_feature_proof_sample.csv
