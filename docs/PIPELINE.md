@@ -239,7 +239,39 @@ K5 strengthening note:
 
 The K5 academic-strengthening pack addresses the remaining paper-readiness questions after model selection. It adds per-cluster stability, consensus/co-membership stability, trajectory-type summaries, centroid drift, and a consolidated role interpretation table. This is the best folder to use when explaining which K5 roles are reliable, which are fragile, and how wallet behaviour changes over time.
 
-## Stage 6: Within-Cluster Subcluster Analysis
+## Stage 6: Temporal Signal Analysis
+
+Purpose:
+
+Extend the EOA wallet study from static aggregate clustering to temporal signal-based wallet profiling.
+
+Main script:
+
+- `src/validation/build_temporal_signal_analysis_pack.py`
+
+Typical outputs:
+
+- Wavelength/spectrum-based clusters.
+- Frequency-domain feature tables and plots with frequency on the x-axis.
+- Time-domain burst/gap/streak features.
+- Signal-cluster correspondence tests against K5.
+- First-pass network-science null tests for signal clusters.
+
+Important result files:
+
+- `results/temporal_signal_analysis/temporal_signal_analysis_report.md`
+- `results/temporal_signal_analysis/wallet_frequency_domain_features.csv`
+- `results/temporal_signal_analysis/wallet_time_domain_features.csv`
+- `results/temporal_signal_analysis/signal_cluster_correspondence_summary.csv`
+- `results/temporal_signal_analysis/network_signal_cluster_null_tests.csv`
+- `results/temporal_signal_analysis/figures/frequency_power_by_k5_role.png`
+- `results/temporal_signal_analysis/figures/frequency_power_by_wavelength_cluster.png`
+
+Academic note:
+
+This stage is exploratory and should be described as temporal signal-based profiling. The first run uses a stratified 5,000-wallet sample. The spectral and time-domain clusters do not simply reproduce K5, suggesting they capture different behavioural dimensions. The first network-science check is underpowered because too few sampled transaction edges connect two signal-sampled wallets, so it is a pipeline proof-of-concept rather than a final network claim.
+
+## Stage 7: Within-Cluster Subcluster Analysis
 
 Purpose:
 
@@ -261,7 +293,7 @@ Important result files:
 - `results/subcluster_analysis/cluster_behavior_subcluster_report.md`
 - `results/subcluster_analysis/subcluster_summary.csv`
 
-## Stage 7: Reporting
+## Stage 8: Reporting
 
 Purpose:
 

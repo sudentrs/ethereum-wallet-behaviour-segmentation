@@ -1,0 +1,4 @@
+label_type,edge_count,observed_same_cluster_ratio,null_mean,null_std,p_value_upper,note
+k5_cluster,1,1.0,1.0,0.0,1.0,sampled September 2022 transaction edges restricted to wallets in the signal-analysis sample
+wavelength_cluster,1,1.0,1.0,0.0,1.0,sampled September 2022 transaction edges restricted to wallets in the signal-analysis sample
+time_domain_cluster,1,1.0,1.0,0.0,1.0,sampled September 2022 transaction edges restricted to wallets in the signal-analysis sample

@@ -293,6 +293,20 @@ Example:
 
 `python src/validation/build_k5_academic_strengthening_pack.py`
 
+### `src/validation/build_temporal_signal_analysis_pack.py`
+
+Starts the temporal signal-analysis extension of the project.
+
+It builds daily 2022 wallet signals for a stratified EOA sample, extracts frequency-domain features, extracts time-domain burst/gap/streak features, clusters signal signatures, compares signal clusters with K5, and runs a first-pass network null test.
+
+Main output:
+
+`results/temporal_signal_analysis/temporal_signal_analysis_report.md`
+
+Example:
+
+`python src/validation/build_temporal_signal_analysis_pack.py`
+
 ## Reporting
 
 ### `src/reporting/build_cluster_stability_complete_report.py`

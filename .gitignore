@@ -14,6 +14,8 @@ env/
 *.dat
 *.pkl
 *.joblib
+*.npz
+~$*.docx
 
 # Large generated analysis outputs
 data/raw/

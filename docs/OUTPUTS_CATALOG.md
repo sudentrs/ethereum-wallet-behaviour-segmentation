@@ -130,6 +130,56 @@ Paper-ready role table for the K5 taxonomy.
 
 Use this as the main table for describing the five EOA behavioural roles.
 
+## `results/temporal_signal_analysis/`
+
+### `temporal_signal_analysis_report.md`
+
+Main report for the next-stage temporal signal analysis.
+
+It explains the four-part extension: wavelength/spectrum clustering, frequency-domain analysis, time-domain temporal signatures, and network-science validation.
+
+### `wallet_frequency_domain_features.csv`
+
+Wallet-level spectral features extracted from daily transaction-count and total-flow signals.
+
+Use this for the wavelength/spectrum-based clustering argument.
+
+### `wallet_time_domain_features.csv`
+
+Wallet-level time-domain features such as active days, burstiness, active/inactive switching, longest active streak, longest inactive gap, and weekly change intensity.
+
+Use this for the temporal signature analysis.
+
+### `temporal_signal_cluster_assignments.csv`
+
+Sample wallet assignments for K5, wavelength/spectral clusters, and time-domain clusters.
+
+Use this to compare the static K5 taxonomy against signal-derived taxonomies.
+
+### `signal_cluster_correspondence_summary.csv`
+
+ARI/NMI comparison between K5, wavelength/spectral clusters, and time-domain clusters.
+
+The first result shows low agreement between signal clusters and K5, suggesting temporal signals capture a different behavioural dimension.
+
+### `network_signal_cluster_null_tests.csv`
+
+First-pass network-science null tests for signal clusters.
+
+In the current 5,000-wallet sample, this test is underpowered because too few sampled transaction edges connect two signal-sampled wallets. Treat it as a pipeline proof-of-concept, not a final network result.
+
+### `figures/frequency_power_by_k5_role.png`
+
+Frequency-domain plot with frequency on the x-axis and mean spectral power on the y-axis, grouped by K5 role.
+
+### `figures/frequency_power_by_wavelength_cluster.png`
+
+Frequency-domain plot grouped by wavelength/spectral cluster.
+
+### `figures/flow_frequency_power_by_wavelength_cluster.png`
+
+Frequency-domain plot based on total-flow signal spectra, grouped by wavelength/spectral cluster.
+
 ## `results/subcluster_analysis/`
 
 ### `cluster_behavior_subcluster_report.md`
