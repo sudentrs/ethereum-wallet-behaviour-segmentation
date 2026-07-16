@@ -337,6 +337,19 @@ Main output:
 
 `results/temporal_signal_k_taxonomy_comparison/paper_ready_temporal_signal_section.md`
 
+### `src/reporting/build_final_academic_deliverable_pack.py`
+
+Builds the final advisor-facing academic deliverable pack from audited result tables.
+
+It creates final paper figures, a robustness summary, a paper contribution note, a Word academic report, and an advisor presentation in PPTX and PDF form.
+
+Main outputs:
+
+- `results/final_academic_pack/final_deliverable_manifest.md`
+- `reports/Final_Academic_Project_Report_Ethereum_Wallet_Behaviour.docx`
+- `presentations/Final_Academic_Project_Advisor_Deck.pptx`
+- `presentations/Final_Academic_Project_Advisor_Deck.pdf`
+
 ### `src/reporting/build_cluster_stability_complete_report.py`
 
 Builds a detailed report document focused on completed findings and paper-process validation.

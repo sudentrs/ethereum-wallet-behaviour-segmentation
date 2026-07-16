@@ -319,9 +319,14 @@ Main scripts:
 
 - `src/reporting/build_cluster_stability_complete_report.py`
 - `src/reporting/build_full_length_template_integrated_report.py`
+- `src/reporting/build_final_academic_deliverable_pack.py`
 
 Main final artifacts:
 
 - `reports/final_report.docx`
 - `presentations/final_project_presentation.pdf`
 - `presentations/final_project_presentation.pptx`
+- `reports/Final_Academic_Project_Report_Ethereum_Wallet_Behaviour.docx`
+- `presentations/Final_Academic_Project_Advisor_Deck.pptx`
+- `presentations/Final_Academic_Project_Advisor_Deck.pdf`
+- `results/final_academic_pack/final_deliverable_manifest.md`

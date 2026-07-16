@@ -246,6 +246,10 @@ Use this to explain that KMeans6 gives the broad role layer, while subclusters s
 
 Latest full-length final report produced from the project materials.
 
+### `Final_Academic_Project_Report_Ethereum_Wallet_Behaviour.docx`
+
+Advisor-facing academic synthesis report built from the current K5, temporal signal, network validation, and two-step return outputs.
+
 ## `presentations/`
 
 ### `final_project_presentation.pdf`
@@ -255,3 +259,27 @@ Final presentation PDF.
 ### `final_project_presentation.pptx`
 
 Editable PowerPoint version of the final presentation.
+
+### `Final_Academic_Project_Advisor_Deck.pptx`
+
+Editable advisor-facing deck summarizing the final academic contribution and evidence.
+
+### `Final_Academic_Project_Advisor_Deck.pdf`
+
+PDF version of the advisor-facing deck.
+
+## `results/final_academic_pack/`
+
+Final deliverable pack for explaining the project academically.
+
+### `robustness_summary.md`
+
+Claim-calibration summary explaining which findings are strong and which need careful wording.
+
+### `paper_contribution_note.md`
+
+Short note defining the research question, academic gap, contribution, and claim boundary.
+
+### `figures/`
+
+Final selected figure pack for paper/report/presentation use.
