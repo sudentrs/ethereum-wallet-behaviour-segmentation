@@ -168,6 +168,28 @@ First-pass network-science null tests for signal clusters.
 
 In the current 5,000-wallet sample, this test is underpowered because too few sampled transaction edges connect two signal-sampled wallets. Treat it as a pipeline proof-of-concept, not a final network result.
 
+### `signal_cluster_validation_summary.csv`
+
+Silhouette, shuffled-label null, and seed-stability diagnostics for wavelength/spectral clusters and time-domain clusters.
+
+Use this for the academic argument that the signal clusters have measurable structure beyond random labels.
+
+### `wavelength_cluster_interpretive_labels.csv`
+
+Simple labels for wavelength/spectral clusters based on dominant frequency-band evidence.
+
+### `time_domain_cluster_interpretive_labels.csv`
+
+Simple labels for time-domain clusters based on active days, burstiness, streaks, inactive gaps, and switching.
+
+## `results/temporal_signal_analysis_edge_sample/`
+
+Edge-aware version of the temporal signal analysis.
+
+This uses 5,000 EOA wallets sampled from transaction-edge endpoints, balanced across K5 where possible. This folder is the stronger version for network-science discussion because the September edge test has many usable sample-internal edges.
+
+The key files mirror `results/temporal_signal_analysis/`, with the same report, feature, validation, network-null, adjacency, and figure outputs.
+
 ### `figures/frequency_power_by_k5_role.png`
 
 Frequency-domain plot with frequency on the x-axis and mean spectral power on the y-axis, grouped by K5 role.

@@ -255,7 +255,8 @@ Typical outputs:
 - Frequency-domain feature tables and plots with frequency on the x-axis.
 - Time-domain burst/gap/streak features.
 - Signal-cluster correspondence tests against K5.
-- First-pass network-science null tests for signal clusters.
+- Network-science null tests for signal clusters.
+- Signal-cluster validation summaries and interpretive label tables.
 
 Important result files:
 
@@ -263,13 +264,22 @@ Important result files:
 - `results/temporal_signal_analysis/wallet_frequency_domain_features.csv`
 - `results/temporal_signal_analysis/wallet_time_domain_features.csv`
 - `results/temporal_signal_analysis/signal_cluster_correspondence_summary.csv`
+- `results/temporal_signal_analysis/signal_cluster_validation_summary.csv`
 - `results/temporal_signal_analysis/network_signal_cluster_null_tests.csv`
 - `results/temporal_signal_analysis/figures/frequency_power_by_k5_role.png`
 - `results/temporal_signal_analysis/figures/frequency_power_by_wavelength_cluster.png`
+- `results/temporal_signal_analysis_edge_sample/temporal_signal_analysis_report.md`
+- `results/temporal_signal_analysis_edge_sample/network_signal_cluster_null_tests.csv`
+- `results/temporal_signal_analysis_edge_sample/signal_cluster_validation_summary.csv`
 
 Academic note:
 
-This stage is exploratory and should be described as temporal signal-based profiling. The first run uses a stratified 5,000-wallet sample. The spectral and time-domain clusters do not simply reproduce K5, suggesting they capture different behavioural dimensions. The first network-science check is underpowered because too few sampled transaction edges connect two signal-sampled wallets, so it is a pipeline proof-of-concept rather than a final network claim.
+This stage is exploratory and should be described as temporal signal-based profiling. The original run uses a stratified 5,000-wallet sample. The edge-aware run uses 5,000 wallets selected from sampled transaction-edge endpoints so the network-science null test has enough usable edges. The spectral and time-domain clusters do not simply reproduce K5, suggesting they capture different behavioural dimensions. The edge-aware network check gives stronger evidence than the first stratified run, but it should still be described as sample-based network validation rather than a full-population network claim.
+
+Example commands:
+
+- Stratified exploratory run: `python src/validation/build_temporal_signal_analysis_pack.py`
+- Edge-aware network run: `python src/validation/build_temporal_signal_analysis_pack.py --out-dir results/temporal_signal_analysis_edge_sample --sample-mode edge --edge-wallet-limit 5000 --force-rebuild-sample --permutations 100`
 
 ## Stage 7: Within-Cluster Subcluster Analysis
 

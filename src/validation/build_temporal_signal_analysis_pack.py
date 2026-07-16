@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import entropy
 from sklearn.cluster import MiniBatchKMeans
-from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
+from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, silhouette_score
 from sklearn.preprocessing import StandardScaler
 
 
@@ -42,6 +42,43 @@ def load_stratified_sample(labels_path: Path, sample_per_cluster: int, random_st
         parts.append(labels.loc[chosen, ["wallet", "cluster"]])
     sample = pd.concat(parts, ignore_index=True)
     return sample.sort_values(["cluster", "wallet"]).reset_index(drop=True)
+
+
+def load_edge_aware_sample(
+    labels_path: Path,
+    edges_path: Path,
+    wallet_limit: int,
+) -> pd.DataFrame:
+    labels = pd.read_csv(labels_path, dtype={"wallet": str})
+    labels["wallet"] = clean_wallet(labels["wallet"])
+    labels["cluster"] = labels["cluster"].astype(int)
+
+    if not edges_path.exists():
+        raise FileNotFoundError(f"Missing edge file for edge-aware sampling: {edges_path}")
+
+    edges = pd.read_csv(edges_path, usecols=["sender", "recipient"], dtype={"sender": str, "recipient": str})
+    edges["sender"] = clean_wallet(edges["sender"])
+    edges["recipient"] = clean_wallet(edges["recipient"])
+
+    endpoint_counts = (
+        pd.concat([edges["sender"], edges["recipient"]], ignore_index=True)
+        .value_counts()
+        .rename_axis("wallet")
+        .reset_index(name="edge_endpoint_count")
+    )
+    endpoint_counts["wallet"] = clean_wallet(endpoint_counts["wallet"])
+    candidates = endpoint_counts.merge(labels[["wallet", "cluster"]], on="wallet", how="inner")
+    candidates = candidates.sort_values(["cluster", "edge_endpoint_count", "wallet"], ascending=[True, False, True])
+
+    per_cluster = int(np.ceil(wallet_limit / max(1, candidates["cluster"].nunique())))
+    balanced = candidates.groupby("cluster", group_keys=False).head(per_cluster)
+    if len(balanced) < wallet_limit:
+        remaining = candidates.loc[~candidates["wallet"].isin(balanced["wallet"])]
+        fill = remaining.sort_values(["edge_endpoint_count", "wallet"], ascending=[False, True]).head(wallet_limit - len(balanced))
+        balanced = pd.concat([balanced, fill], ignore_index=True)
+
+    sample = balanced.head(wallet_limit)[["wallet", "cluster", "edge_endpoint_count"]]
+    return sample.sort_values(["cluster", "edge_endpoint_count", "wallet"], ascending=[True, False, True]).reset_index(drop=True)
 
 
 def build_daily_signal_matrices(
@@ -232,6 +269,172 @@ def cluster_features(features: pd.DataFrame, k: int, random_state: int) -> tuple
     return labels, profiles
 
 
+def scaled_features(features: pd.DataFrame) -> np.ndarray:
+    scaler = StandardScaler()
+    return scaler.fit_transform(features.replace([np.inf, -np.inf], np.nan).fillna(0.0))
+
+
+def random_label_silhouette_null(
+    X: np.ndarray,
+    labels: np.ndarray,
+    permutations: int,
+    random_state: int,
+) -> dict:
+    if len(np.unique(labels)) < 2 or len(labels) < 3:
+        return {
+            "observed_silhouette": np.nan,
+            "null_mean_silhouette": np.nan,
+            "null_std_silhouette": np.nan,
+            "p_value_upper": np.nan,
+        }
+
+    observed = float(silhouette_score(X, labels))
+    rng = np.random.default_rng(random_state)
+    null = []
+    for _ in range(permutations):
+        shuffled = labels.copy()
+        rng.shuffle(shuffled)
+        if len(np.unique(shuffled)) < 2:
+            continue
+        null.append(float(silhouette_score(X, shuffled)))
+    null = np.asarray(null)
+    return {
+        "observed_silhouette": observed,
+        "null_mean_silhouette": float(null.mean()) if len(null) else np.nan,
+        "null_std_silhouette": float(null.std()) if len(null) else np.nan,
+        "p_value_upper": float((np.sum(null >= observed) + 1) / (len(null) + 1)) if len(null) else np.nan,
+    }
+
+
+def seed_stability(features: pd.DataFrame, k: int, seeds: list[int]) -> dict:
+    labels_by_seed = []
+    for seed in seeds:
+        labels, _ = cluster_features(features, k, seed)
+        labels_by_seed.append(labels)
+
+    ari_values = []
+    nmi_values = []
+    for i in range(len(labels_by_seed)):
+        for j in range(i + 1, len(labels_by_seed)):
+            ari_values.append(adjusted_rand_score(labels_by_seed[i], labels_by_seed[j]))
+            nmi_values.append(normalized_mutual_info_score(labels_by_seed[i], labels_by_seed[j]))
+
+    return {
+        "seed_stability_mean_ari": float(np.mean(ari_values)) if ari_values else np.nan,
+        "seed_stability_min_ari": float(np.min(ari_values)) if ari_values else np.nan,
+        "seed_stability_mean_nmi": float(np.mean(nmi_values)) if nmi_values else np.nan,
+        "seed_stability_min_nmi": float(np.min(nmi_values)) if nmi_values else np.nan,
+    }
+
+
+def build_cluster_validation_summary(
+    spectral_features: pd.DataFrame,
+    wavelength_labels: np.ndarray,
+    time_features: pd.DataFrame,
+    time_labels: np.ndarray,
+    k: int,
+    permutations: int,
+    random_state: int,
+) -> pd.DataFrame:
+    rows = []
+    for label_type, features, labels in [
+        ("wavelength_cluster", spectral_features, wavelength_labels),
+        ("time_domain_cluster", time_features, time_labels),
+    ]:
+        X = scaled_features(features)
+        counts = pd.Series(labels).value_counts(normalize=True)
+        row = {
+            "label_type": label_type,
+            "k": k,
+            "cluster_share_min": float(counts.min()),
+            "cluster_share_max": float(counts.max()),
+        }
+        row.update(random_label_silhouette_null(X, labels.copy(), permutations, random_state))
+        row.update(seed_stability(features, k, [101, 202, 303, 404, 505]))
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def build_enrichment_table(assignments: pd.DataFrame, target_col: str) -> pd.DataFrame:
+    counts = pd.crosstab(assignments["k5_cluster"], assignments[target_col])
+    shares = counts.div(counts.sum(axis=1), axis=0)
+    rows = []
+    for k5_cluster in counts.index:
+        for signal_cluster in counts.columns:
+            rows.append(
+                {
+                    "k5_cluster": int(k5_cluster),
+                    "signal_cluster_type": target_col,
+                    "signal_cluster": int(signal_cluster),
+                    "wallet_count": int(counts.loc[k5_cluster, signal_cluster]),
+                    "within_k5_share": float(shares.loc[k5_cluster, signal_cluster]),
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def label_wavelength_clusters(profiles: pd.DataFrame) -> pd.DataFrame:
+    rows = []
+    numeric = profiles.set_index("cluster")
+    for cluster, row in numeric.iterrows():
+        label = "mixed temporal spectrum"
+        evidence = []
+        if row.get("tx_spectral_entropy", 0) < numeric["tx_spectral_entropy"].median():
+            evidence.append("more concentrated spectrum")
+        else:
+            evidence.append("more distributed spectrum")
+
+        tx_components = {
+            "low-frequency": row.get("tx_low_frequency_power_share", 0),
+            "medium-frequency": row.get("tx_medium_frequency_power_share", 0),
+            "high-frequency": row.get("tx_high_frequency_power_share", 0),
+            "weekly-band": row.get("tx_weekly_band_power_share", 0),
+            "monthly-band": row.get("tx_monthly_band_power_share", 0),
+        }
+        dominant_component = max(tx_components, key=tx_components.get)
+        if dominant_component == "low-frequency":
+            label = "slow-cycle activity rhythm"
+        elif dominant_component == "high-frequency":
+            label = "rapid or irregular activity rhythm"
+        elif dominant_component == "weekly-band":
+            label = "weekly-cycle activity rhythm"
+        elif dominant_component == "monthly-band":
+            label = "monthly-cycle activity rhythm"
+        elif dominant_component == "medium-frequency":
+            label = "mid-frequency activity rhythm"
+
+        evidence.append(f"highest transaction spectral share: {dominant_component}")
+        evidence.append(f"dominant period estimate: {row.get('tx_dominant_period_days', 0):.2f} days")
+        rows.append({"wavelength_cluster": int(cluster), "interpretive_label": label, "evidence": "; ".join(evidence)})
+    return pd.DataFrame(rows)
+
+
+def label_time_domain_clusters(profiles: pd.DataFrame) -> pd.DataFrame:
+    rows = []
+    numeric = profiles.set_index("cluster")
+    med = numeric.median(numeric_only=True)
+    for cluster, row in numeric.iterrows():
+        label = "mixed time-domain activity state"
+        evidence = []
+        if row.get("active_ratio", 0) >= med.get("active_ratio", 0) and row.get("longest_active_streak", 0) >= med.get("longest_active_streak", 0):
+            label = "sustained active state"
+            evidence.append("above-median active ratio and active streak")
+        elif row.get("longest_inactive_gap", 0) >= med.get("longest_inactive_gap", 0) and row.get("active_ratio", 0) <= med.get("active_ratio", 0):
+            label = "sparse inactive-gap state"
+            evidence.append("above-median inactive gap with below-median active ratio")
+        elif row.get("tx_burstiness_cv", 0) >= med.get("tx_burstiness_cv", 0) and row.get("max_to_mean_tx", 0) >= med.get("max_to_mean_tx", 0):
+            label = "bursty spike state"
+            evidence.append("above-median burstiness and max-to-mean transaction intensity")
+        elif row.get("activity_switches", 0) >= med.get("activity_switches", 0):
+            label = "on-off switching state"
+            evidence.append("above-median activity switching")
+        else:
+            evidence.append("near-median or mixed time-domain profile")
+        evidence.append(f"median active days: {row.get('active_days', 0):.2f}")
+        rows.append({"time_domain_cluster": int(cluster), "interpretive_label": label, "evidence": "; ".join(evidence)})
+    return pd.DataFrame(rows)
+
+
 def plot_mean_power_by_group(
     out_path: Path,
     freqs: np.ndarray,
@@ -334,6 +537,10 @@ def build_network_signal_validation(
         result["label_type"] = label_col
         result["note"] = "sampled September 2022 transaction edges restricted to wallets in the signal-analysis sample"
         rows.append(result)
+        valid = edges.dropna(subset=[f"source_{label_col}", f"target_{label_col}"]).copy()
+        if not valid.empty:
+            adjacency = pd.crosstab(valid[f"source_{label_col}"].astype(int), valid[f"target_{label_col}"].astype(int))
+            adjacency.to_csv(out_dir / f"{label_col}_edge_adjacency_counts.csv")
     summary = pd.DataFrame(rows)
     summary = summary[
         [
@@ -353,10 +560,19 @@ def build_network_signal_validation(
 def write_report(
     out_dir: Path,
     sample_size: int,
+    sample_mode: str,
     comparison: pd.DataFrame,
+    cluster_validation: pd.DataFrame,
     network_summary: pd.DataFrame,
     trajectory_files: list[str],
 ) -> None:
+    sample_label = "edge-aware" if sample_mode == "edge" else "stratified"
+    sample_article = "an" if sample_mode == "edge" else "a"
+    max_edge_count = pd.to_numeric(network_summary.get("edge_count", pd.Series(dtype=float)), errors="coerce").max()
+    if pd.notna(max_edge_count) and max_edge_count >= 1000:
+        network_finding = "- The network-science check has enough sampled edges for a meaningful sample-based null test; same-cluster transaction concentration can be compared against shuffled labels."
+    else:
+        network_finding = "- The network-science component has been scaffolded, but this sample is not large enough for a meaningful signal-cluster network test."
     lines = [
         "# Temporal Signal Analysis Pack",
         "",
@@ -373,7 +589,7 @@ def write_report(
         "",
         "## Method Summary",
         "",
-        f"The first run uses a stratified sample of `{sample_size}` EOA wallets from the K5 taxonomy.",
+        f"This run uses {sample_article} `{sample_label}` sample of `{sample_size}` EOA wallets from the K5 taxonomy.",
         "",
         "For each sampled wallet, the script builds daily 2022 signals from transaction count, total value flow, and net flow.",
         "",
@@ -389,22 +605,28 @@ def write_report(
         "",
         "Interpretation: ARI and NMI measure whether the new signal-derived clusters reproduce the existing K5 behavioural taxonomy. Low or moderate agreement is not necessarily a failure; it can mean the temporal-signal view captures a different axis of behaviour.",
         "",
+        "## Signal-Cluster Statistical Validation",
+        "",
+        cluster_validation.to_markdown(index=False),
+        "",
+        "Interpretation: silhouette compares within-cluster compactness against between-cluster separation. The shuffled-label p-value asks whether the observed grouping is more separated than random labels with the same wallets. Seed-stability ARI/NMI checks whether the result is sensitive to KMeans initialization.",
+        "",
         "## Network-Science Signal Validation",
         "",
         network_summary.to_markdown(index=False),
         "",
         "Interpretation: this is an early network check. Because the signal clusters are built on a wallet sample, the network test is limited to sampled wallets that also appear in the sampled transaction-edge file.",
         "",
-        "In this first run, the network test is underpowered if the edge count is very small. In that case, it should be treated as a pipeline proof-of-concept rather than evidence for or against network alignment.",
+        "The network test is underpowered if the edge count is very small. In that case, it should be treated as a pipeline proof-of-concept rather than evidence for or against network alignment.",
         "",
-        "The next network-valid version should either increase the signal-analysis sample size substantially, sample wallets directly from transaction-edge endpoints, or assign signal features to the full EOA population before rerunning network assortativity/null tests.",
+        "An edge-aware sample is designed to make this check stronger by selecting wallets that are more likely to appear in the transaction-edge file.",
         "",
-        "## First-Pass Findings",
+        "## Run Findings",
         "",
         "- The wavelength/spectral clusters have low agreement with the original K5 roles, which suggests that frequency-domain rhythm captures a different behavioural axis from aggregate wallet features.",
         "- The time-domain clusters show somewhat stronger, but still limited, agreement with K5. This is expected because both include activity intensity and persistence information.",
         "- Frequency-domain and time-domain clusters also have low agreement with each other, suggesting that rhythm-based behaviour and direct time-axis burst/gap behaviour are related but not identical.",
-        "- The network-science component has been scaffolded, but the first sample is not large enough for a meaningful signal-cluster network test.",
+        network_finding,
         "",
         "## Main Output Files",
         "",
@@ -436,11 +658,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--daily-data-dir", default="../dataverse_files")
     parser.add_argument("--edges", default="results/eoa_only_kmeans5/network_validation/sampled_edges_for_null_test.csv")
     parser.add_argument("--out-dir", default="results/temporal_signal_analysis")
+    parser.add_argument("--sample-mode", choices=["stratified", "edge"], default="stratified")
     parser.add_argument("--sample-per-cluster", type=int, default=1000)
+    parser.add_argument("--edge-wallet-limit", type=int, default=5000)
     parser.add_argument("--k-signal", type=int, default=5)
     parser.add_argument("--chunksize", type=int, default=1_000_000)
     parser.add_argument("--permutations", type=int, default=200)
     parser.add_argument("--random-state", type=int, default=492)
+    parser.add_argument("--force-rebuild-sample", action="store_true")
     return parser.parse_args()
 
 
@@ -453,12 +678,20 @@ def main() -> None:
 
     sample_path = out_dir / "signal_analysis_wallet_sample.csv"
     matrix_path = out_dir / "sample_daily_signal_matrices.npz"
+    if args.force_rebuild_sample and sample_path.exists():
+        sample_path.unlink()
+    if args.force_rebuild_sample and matrix_path.exists():
+        matrix_path.unlink()
+
     if sample_path.exists():
         sample = pd.read_csv(sample_path, dtype={"wallet": str})
         sample["wallet"] = clean_wallet(sample["wallet"])
         print(f"Loaded existing wallet sample: {sample_path}", flush=True)
     else:
-        sample = load_stratified_sample(Path(args.cluster_file), args.sample_per_cluster, args.random_state)
+        if args.sample_mode == "edge":
+            sample = load_edge_aware_sample(Path(args.cluster_file), Path(args.edges), args.edge_wallet_limit)
+        else:
+            sample = load_stratified_sample(Path(args.cluster_file), args.sample_per_cluster, args.random_state)
         sample = sample.rename(columns={"cluster": "k5_cluster"})
         sample.to_csv(sample_path, index=False)
 
@@ -496,6 +729,10 @@ def main() -> None:
     time_out.to_csv(out_dir / "wallet_time_domain_features.csv", index=False)
     wavelength_profiles.to_csv(out_dir / "wavelength_cluster_profiles.csv", index=False)
     time_profiles.to_csv(out_dir / "time_domain_cluster_profiles.csv", index=False)
+    wavelength_labels_table = label_wavelength_clusters(wavelength_profiles)
+    time_labels_table = label_time_domain_clusters(time_profiles)
+    wavelength_labels_table.to_csv(out_dir / "wavelength_cluster_interpretive_labels.csv", index=False)
+    time_labels_table.to_csv(out_dir / "time_domain_cluster_interpretive_labels.csv", index=False)
 
     comparison = pd.DataFrame(
         [
@@ -519,6 +756,24 @@ def main() -> None:
     comparison.to_csv(out_dir / "signal_cluster_correspondence_summary.csv", index=False)
     pd.crosstab(assignments["k5_cluster"], assignments["wavelength_cluster"]).to_csv(out_dir / "k5_vs_wavelength_cluster_crosstab.csv")
     pd.crosstab(assignments["k5_cluster"], assignments["time_domain_cluster"]).to_csv(out_dir / "k5_vs_time_domain_cluster_crosstab.csv")
+    enrichment = pd.concat(
+        [
+            build_enrichment_table(assignments, "wavelength_cluster"),
+            build_enrichment_table(assignments, "time_domain_cluster"),
+        ],
+        ignore_index=True,
+    )
+    enrichment.to_csv(out_dir / "k5_signal_cluster_enrichment.csv", index=False)
+    cluster_validation = build_cluster_validation_summary(
+        spectral_features,
+        wavelength_labels,
+        time_features,
+        time_labels,
+        args.k_signal,
+        args.permutations,
+        args.random_state,
+    )
+    cluster_validation.to_csv(out_dir / "signal_cluster_validation_summary.csv", index=False)
 
     plot_mean_power_by_group(fig_dir / "frequency_power_by_k5_role.png", freqs, tx_norm_power, assignments["k5_cluster"].to_numpy(), "Mean Transaction-Count Spectrum By K5 Role")
     plot_mean_power_by_group(fig_dir / "frequency_power_by_wavelength_cluster.png", freqs, tx_norm_power, assignments["wavelength_cluster"].to_numpy(), "Mean Transaction-Count Spectrum By Wavelength Cluster")
@@ -535,7 +790,9 @@ def main() -> None:
     write_report(
         out_dir,
         sample_size=len(sample),
+        sample_mode=args.sample_mode,
         comparison=comparison,
+        cluster_validation=cluster_validation,
         network_summary=network_summary,
         trajectory_files=[
             "signal_analysis_wallet_sample.csv",
@@ -543,9 +800,16 @@ def main() -> None:
             "wallet_time_domain_features.csv",
             "temporal_signal_cluster_assignments.csv",
             "wavelength_cluster_profiles.csv",
+            "wavelength_cluster_interpretive_labels.csv",
             "time_domain_cluster_profiles.csv",
+            "time_domain_cluster_interpretive_labels.csv",
             "signal_cluster_correspondence_summary.csv",
+            "k5_signal_cluster_enrichment.csv",
+            "signal_cluster_validation_summary.csv",
             "network_signal_cluster_null_tests.csv",
+            "k5_cluster_edge_adjacency_counts.csv",
+            "wavelength_cluster_edge_adjacency_counts.csv",
+            "time_domain_cluster_edge_adjacency_counts.csv",
             "figures/frequency_power_by_k5_role.png",
             "figures/frequency_power_by_wavelength_cluster.png",
             "figures/flow_frequency_power_by_wavelength_cluster.png",

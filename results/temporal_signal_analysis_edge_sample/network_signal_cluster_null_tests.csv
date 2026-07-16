@@ -1,0 +1,4 @@
+label_type,edge_count,observed_same_cluster_ratio,null_mean,null_std,p_value_upper,note
+k5_cluster,34097,0.6907059272076722,0.20281901633574806,0.011213883648797144,0.009900990099009901,sampled September 2022 transaction edges restricted to wallets in the signal-analysis sample
+wavelength_cluster,34097,0.38651494266357744,0.291536792093146,0.028850124154146346,0.009900990099009901,sampled September 2022 transaction edges restricted to wallets in the signal-analysis sample
+time_domain_cluster,34097,0.4170161597794527,0.33929407279232776,0.0389694652537683,0.0297029702970297,sampled September 2022 transaction edges restricted to wallets in the signal-analysis sample

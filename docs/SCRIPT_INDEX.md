@@ -297,7 +297,9 @@ Example:
 
 Starts the temporal signal-analysis extension of the project.
 
-It builds daily 2022 wallet signals for a stratified EOA sample, extracts frequency-domain features, extracts time-domain burst/gap/streak features, clusters signal signatures, compares signal clusters with K5, and runs a first-pass network null test.
+It builds daily 2022 wallet signals, extracts frequency-domain features, extracts time-domain burst/gap/streak features, clusters signal signatures, compares signal clusters with K5, assigns simple interpretive labels, validates cluster separation/stability, and runs transaction-network null tests.
+
+The default run uses a stratified EOA sample. Use `--sample-mode edge` for the stronger network-science version, which samples wallets from transaction-edge endpoints.
 
 Main output:
 
@@ -306,6 +308,10 @@ Main output:
 Example:
 
 `python src/validation/build_temporal_signal_analysis_pack.py`
+
+Edge-aware example:
+
+`python src/validation/build_temporal_signal_analysis_pack.py --out-dir results/temporal_signal_analysis_edge_sample --sample-mode edge --edge-wallet-limit 5000 --force-rebuild-sample --permutations 100`
 
 ## Reporting
 
