@@ -1,6 +1,6 @@
 time_domain_cluster,interpretive_label,evidence
-0,sustained active state,above-median active ratio and active streak; median active days: 155.50
-1,sparse inactive-gap state,above-median inactive gap with below-median active ratio; median active days: 8.00
-2,sustained active state,above-median active ratio and active streak; median active days: 364.00
-3,sparse inactive-gap state,above-median inactive gap with below-median active ratio; median active days: 46.00
-4,sustained active state,above-median active ratio and active streak; median active days: 282.00
+0,intermittent active state,active on many days but not continuously; median active days: 155.50
+1,sparse inactive-gap state,long inactive gap with low active-day share; median active days: 8.00
+2,near-continuous active state,active on almost the entire yearly observation window; median active days: 364.00
+3,sparse inactive-gap state,long inactive gap with low active-day share; median active days: 46.00
+4,sustained active state,active on more than half of observed days; median active days: 282.00

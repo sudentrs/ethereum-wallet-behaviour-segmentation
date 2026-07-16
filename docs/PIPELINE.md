@@ -271,6 +271,9 @@ Important result files:
 - `results/temporal_signal_analysis_edge_sample/temporal_signal_analysis_report.md`
 - `results/temporal_signal_analysis_edge_sample/network_signal_cluster_null_tests.csv`
 - `results/temporal_signal_analysis_edge_sample/signal_cluster_validation_summary.csv`
+- `results/temporal_signal_analysis_edge_sample_10k/temporal_signal_analysis_report.md`
+- `results/temporal_signal_k_taxonomy_comparison/temporal_signal_k_taxonomy_comparison_report.md`
+- `results/temporal_signal_k_taxonomy_comparison/paper_ready_temporal_signal_section.md`
 
 Academic note:
 
@@ -280,6 +283,9 @@ Example commands:
 
 - Stratified exploratory run: `python src/validation/build_temporal_signal_analysis_pack.py`
 - Edge-aware network run: `python src/validation/build_temporal_signal_analysis_pack.py --out-dir results/temporal_signal_analysis_edge_sample --sample-mode edge --edge-wallet-limit 5000 --force-rebuild-sample --permutations 100`
+- Larger edge-aware run: `python src/validation/build_temporal_signal_analysis_pack.py --out-dir results/temporal_signal_analysis_edge_sample_10k --sample-mode edge --edge-wallet-limit 10000 --force-rebuild-sample --permutations 100 --max-silhouette-sample 3000`
+- K-taxonomy signal comparison: `python src/validation/build_temporal_signal_k_taxonomy_comparison.py`
+- Paper-ready temporal signal section: `python src/reporting/build_temporal_signal_paper_section.py`
 
 ## Stage 7: Within-Cluster Subcluster Analysis
 

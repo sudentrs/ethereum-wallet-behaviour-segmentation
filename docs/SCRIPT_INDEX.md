@@ -313,7 +313,29 @@ Edge-aware example:
 
 `python src/validation/build_temporal_signal_analysis_pack.py --out-dir results/temporal_signal_analysis_edge_sample --sample-mode edge --edge-wallet-limit 5000 --force-rebuild-sample --permutations 100`
 
+Larger edge-aware example:
+
+`python src/validation/build_temporal_signal_analysis_pack.py --out-dir results/temporal_signal_analysis_edge_sample_10k --sample-mode edge --edge-wallet-limit 10000 --force-rebuild-sample --permutations 100 --max-silhouette-sample 3000`
+
+### `src/validation/build_temporal_signal_k_taxonomy_comparison.py`
+
+Compares the temporal signal clusters against K4, K5, and K6 on the same 10,000-wallet edge-aware sample.
+
+It writes correspondence metrics, enrichment tables, network null tests, adjacency matrices, and a short comparison report.
+
+Main output:
+
+`results/temporal_signal_k_taxonomy_comparison/temporal_signal_k_taxonomy_comparison_report.md`
+
 ## Reporting
+
+### `src/reporting/build_temporal_signal_paper_section.py`
+
+Builds a paper-ready markdown section from the 10k temporal signal run, the K4/K5/K6 comparison, existing event-adjacent checks, and two-step return tests.
+
+Main output:
+
+`results/temporal_signal_k_taxonomy_comparison/paper_ready_temporal_signal_section.md`
 
 ### `src/reporting/build_cluster_stability_complete_report.py`
 

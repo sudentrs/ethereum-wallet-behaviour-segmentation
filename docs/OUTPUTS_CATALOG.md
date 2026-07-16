@@ -190,6 +190,32 @@ This uses 5,000 EOA wallets sampled from transaction-edge endpoints, balanced ac
 
 The key files mirror `results/temporal_signal_analysis/`, with the same report, feature, validation, network-null, adjacency, and figure outputs.
 
+## `results/temporal_signal_analysis_edge_sample_10k/`
+
+Larger edge-aware temporal signal run using 10,000 EOA wallets.
+
+This is the preferred signal-analysis folder when discussing sample-scaled results. It includes the same feature, clustering, validation, network-null, adjacency, and figure outputs as the 5,000-wallet edge-aware run.
+
+Use this folder for the current academic interpretation unless a faster demonstration run is needed.
+
+## `results/temporal_signal_k_taxonomy_comparison/`
+
+### `temporal_signal_k_taxonomy_comparison_report.md`
+
+Compares the 10,000-wallet temporal signal clusters against K4, K5, and K6 static EOA taxonomies.
+
+### `k_taxonomy_signal_correspondence.csv`
+
+ARI/NMI comparison between K4/K5/K6 and wavelength/time-domain signal clusters.
+
+### `k_taxonomy_signal_network_null_tests.csv`
+
+Same-cluster transaction concentration tests for K4, K5, K6, wavelength clusters, and time-domain clusters on the same edge-aware sample.
+
+### `paper_ready_temporal_signal_section.md`
+
+Paper-facing narrative section that combines the 10k signal run, K-taxonomy comparison, event-adjacent checks, and two-step return results.
+
 ### `figures/frequency_power_by_k5_role.png`
 
 Frequency-domain plot with frequency on the x-axis and mean spectral power on the y-axis, grouped by K5 role.

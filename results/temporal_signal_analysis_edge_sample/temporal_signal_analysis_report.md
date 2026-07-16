@@ -37,8 +37,8 @@ Interpretation: ARI and NMI measure whether the new signal-derived clusters repr
 
 | label_type          |   k |   cluster_share_min |   cluster_share_max |   observed_silhouette |   null_mean_silhouette |   null_std_silhouette |   p_value_upper |   seed_stability_mean_ari |   seed_stability_min_ari |   seed_stability_mean_nmi |   seed_stability_min_nmi |
 |:--------------------|----:|--------------------:|--------------------:|----------------------:|-----------------------:|----------------------:|----------------:|--------------------------:|-------------------------:|--------------------------:|-------------------------:|
-| wavelength_cluster  |   5 |              0.018  |              0.446  |              0.236261 |             -0.0190502 |            0.00998731 |      0.00990099 |                  0.544139 |                 0.342145 |                  0.647857 |                 0.503232 |
-| time_domain_cluster |   5 |              0.0726 |              0.5256 |              0.210581 |             -0.0266078 |            0.0112789  |      0.00990099 |                  0.497123 |                 0.276629 |                  0.619002 |                 0.449323 |
+| wavelength_cluster  |   5 |              0.018  |              0.446  |              0.237348 |             -0.0238166 |             0.011411  |      0.00990099 |                  0.544139 |                 0.342145 |                  0.647857 |                 0.503232 |
+| time_domain_cluster |   5 |              0.0726 |              0.5256 |              0.206125 |             -0.033934  |             0.0130929 |      0.00990099 |                  0.497123 |                 0.276629 |                  0.619002 |                 0.449323 |
 
 Interpretation: silhouette compares within-cluster compactness against between-cluster separation. The shuffled-label p-value asks whether the observed grouping is more separated than random labels with the same wallets. Seed-stability ARI/NMI checks whether the result is sensitive to KMeans initialization.
 

@@ -1,6 +1,6 @@
 wavelength_cluster,interpretive_label,evidence
-0,rapid or irregular activity rhythm,more distributed spectrum; highest transaction spectral share: high-frequency; dominant period estimate: 15.87 days
-1,rapid or irregular activity rhythm,more distributed spectrum; highest transaction spectral share: high-frequency; dominant period estimate: 365.00 days
-2,slow-cycle activity rhythm,more concentrated spectrum; highest transaction spectral share: low-frequency; dominant period estimate: 365.00 days
-3,rapid or irregular activity rhythm,more distributed spectrum; highest transaction spectral share: high-frequency; dominant period estimate: 365.00 days
-4,rapid or irregular activity rhythm,more concentrated spectrum; highest transaction spectral share: high-frequency; dominant period estimate: 7.02 days
+0,distributed irregular rhythm,more distributed spectrum; highest transaction spectral share: high-frequency; dominant period estimate: 15.87 days
+1,distributed irregular rhythm,more distributed spectrum; highest transaction spectral share: high-frequency; dominant period estimate: 365.00 days
+2,long-horizon slow-cycle rhythm,more concentrated spectrum; highest transaction spectral share: low-frequency; dominant period estimate: 365.00 days
+3,distributed irregular rhythm,more distributed spectrum; highest transaction spectral share: high-frequency; dominant period estimate: 365.00 days
+4,short-cycle high-frequency rhythm,more concentrated spectrum; highest transaction spectral share: high-frequency; dominant period estimate: 7.02 days

@@ -279,6 +279,7 @@ def random_label_silhouette_null(
     labels: np.ndarray,
     permutations: int,
     random_state: int,
+    max_sample_size: int,
 ) -> dict:
     if len(np.unique(labels)) < 2 or len(labels) < 3:
         return {
@@ -288,7 +289,8 @@ def random_label_silhouette_null(
             "p_value_upper": np.nan,
         }
 
-    observed = float(silhouette_score(X, labels))
+    sample_size = min(max_sample_size, len(labels)) if max_sample_size and max_sample_size > 0 else None
+    observed = float(silhouette_score(X, labels, sample_size=sample_size, random_state=random_state))
     rng = np.random.default_rng(random_state)
     null = []
     for _ in range(permutations):
@@ -296,7 +298,7 @@ def random_label_silhouette_null(
         rng.shuffle(shuffled)
         if len(np.unique(shuffled)) < 2:
             continue
-        null.append(float(silhouette_score(X, shuffled)))
+        null.append(float(silhouette_score(X, shuffled, sample_size=sample_size, random_state=random_state)))
     null = np.asarray(null)
     return {
         "observed_silhouette": observed,
@@ -335,6 +337,7 @@ def build_cluster_validation_summary(
     k: int,
     permutations: int,
     random_state: int,
+    max_silhouette_sample: int,
 ) -> pd.DataFrame:
     rows = []
     for label_type, features, labels in [
@@ -349,7 +352,7 @@ def build_cluster_validation_summary(
             "cluster_share_min": float(counts.min()),
             "cluster_share_max": float(counts.max()),
         }
-        row.update(random_label_silhouette_null(X, labels.copy(), permutations, random_state))
+        row.update(random_label_silhouette_null(X, labels.copy(), permutations, random_state, max_silhouette_sample))
         row.update(seed_stability(features, k, [101, 202, 303, 404, 505]))
         rows.append(row)
     return pd.DataFrame(rows)
@@ -392,10 +395,13 @@ def label_wavelength_clusters(profiles: pd.DataFrame) -> pd.DataFrame:
             "monthly-band": row.get("tx_monthly_band_power_share", 0),
         }
         dominant_component = max(tx_components, key=tx_components.get)
+        dominant_period = float(row.get("tx_dominant_period_days", 0))
         if dominant_component == "low-frequency":
-            label = "slow-cycle activity rhythm"
+            label = "long-horizon slow-cycle rhythm"
+        elif dominant_component == "high-frequency" and dominant_period <= 10:
+            label = "short-cycle high-frequency rhythm"
         elif dominant_component == "high-frequency":
-            label = "rapid or irregular activity rhythm"
+            label = "distributed irregular rhythm"
         elif dominant_component == "weekly-band":
             label = "weekly-cycle activity rhythm"
         elif dominant_component == "monthly-band":
@@ -404,7 +410,7 @@ def label_wavelength_clusters(profiles: pd.DataFrame) -> pd.DataFrame:
             label = "mid-frequency activity rhythm"
 
         evidence.append(f"highest transaction spectral share: {dominant_component}")
-        evidence.append(f"dominant period estimate: {row.get('tx_dominant_period_days', 0):.2f} days")
+        evidence.append(f"dominant period estimate: {dominant_period:.2f} days")
         rows.append({"wavelength_cluster": int(cluster), "interpretive_label": label, "evidence": "; ".join(evidence)})
     return pd.DataFrame(rows)
 
@@ -416,12 +422,19 @@ def label_time_domain_clusters(profiles: pd.DataFrame) -> pd.DataFrame:
     for cluster, row in numeric.iterrows():
         label = "mixed time-domain activity state"
         evidence = []
-        if row.get("active_ratio", 0) >= med.get("active_ratio", 0) and row.get("longest_active_streak", 0) >= med.get("longest_active_streak", 0):
+        active_days = float(row.get("active_days", 0))
+        if active_days >= 330:
+            label = "near-continuous active state"
+            evidence.append("active on almost the entire yearly observation window")
+        elif active_days >= 180:
             label = "sustained active state"
-            evidence.append("above-median active ratio and active streak")
+            evidence.append("active on more than half of observed days")
+        elif active_days >= 60:
+            label = "intermittent active state"
+            evidence.append("active on many days but not continuously")
         elif row.get("longest_inactive_gap", 0) >= med.get("longest_inactive_gap", 0) and row.get("active_ratio", 0) <= med.get("active_ratio", 0):
             label = "sparse inactive-gap state"
-            evidence.append("above-median inactive gap with below-median active ratio")
+            evidence.append("long inactive gap with low active-day share")
         elif row.get("tx_burstiness_cv", 0) >= med.get("tx_burstiness_cv", 0) and row.get("max_to_mean_tx", 0) >= med.get("max_to_mean_tx", 0):
             label = "bursty spike state"
             evidence.append("above-median burstiness and max-to-mean transaction intensity")
@@ -664,6 +677,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--k-signal", type=int, default=5)
     parser.add_argument("--chunksize", type=int, default=1_000_000)
     parser.add_argument("--permutations", type=int, default=200)
+    parser.add_argument("--max-silhouette-sample", type=int, default=3000)
     parser.add_argument("--random-state", type=int, default=492)
     parser.add_argument("--force-rebuild-sample", action="store_true")
     return parser.parse_args()
@@ -772,6 +786,7 @@ def main() -> None:
         args.k_signal,
         args.permutations,
         args.random_state,
+        args.max_silhouette_sample,
     )
     cluster_validation.to_csv(out_dir / "signal_cluster_validation_summary.csv", index=False)
 

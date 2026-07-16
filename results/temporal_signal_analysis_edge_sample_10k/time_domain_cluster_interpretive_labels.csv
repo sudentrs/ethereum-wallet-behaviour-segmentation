@@ -1,0 +1,6 @@
+time_domain_cluster,interpretive_label,evidence
+0,sparse inactive-gap state,long inactive gap with low active-day share; median active days: 10.00
+1,near-continuous active state,active on almost the entire yearly observation window; median active days: 357.00
+2,sustained active state,active on more than half of observed days; median active days: 224.00
+3,intermittent active state,active on many days but not continuously; median active days: 104.00
+4,sparse inactive-gap state,long inactive gap with low active-day share; median active days: 15.50
