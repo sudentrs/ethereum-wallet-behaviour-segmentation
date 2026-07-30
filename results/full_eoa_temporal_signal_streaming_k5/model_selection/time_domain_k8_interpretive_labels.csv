@@ -1,0 +1,9 @@
+cluster,interpretive_label,evidence
+0,sparse long-gap state,mean active days=18.45; longest inactive gap=144.64; switches=26.91; tx burstiness cv=0.647; max/mean tx=2.774
+1,sparse long-gap state,mean active days=9.75; longest inactive gap=191.80; switches=15.42; tx burstiness cv=0.378; max/mean tx=1.713
+2,sparse long-gap state,mean active days=13.76; longest inactive gap=150.23; switches=22.64; tx burstiness cv=0.519; max/mean tx=2.288
+3,intermittent switching state,mean active days=67.91; longest inactive gap=113.41; switches=68.71; tx burstiness cv=0.628; max/mean tx=3.513
+4,bursty spike state,mean active days=53.14; longest inactive gap=80.74; switches=68.97; tx burstiness cv=0.791; max/mean tx=4.184
+5,sparse long-gap state,mean active days=4.83; longest inactive gap=262.12; switches=7.12; tx burstiness cv=0.675; max/mean tx=2.199
+6,intermittent switching state,mean active days=177.46; longest inactive gap=52.52; switches=90.90; tx burstiness cv=1.094; max/mean tx=7.872
+7,bursty spike state,mean active days=22.14; longest inactive gap=134.38; switches=31.74; tx burstiness cv=1.462; max/mean tx=6.670

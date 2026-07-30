@@ -1,0 +1,5 @@
+cluster,interpretive_label,evidence
+0,distributed high-frequency rhythm,dominant component=high-frequency; dominant period=43.30 days; spectral entropy=6.967; tx high=0.826; tx low=0.051
+1,distributed high-frequency rhythm,dominant component=high-frequency; dominant period=275.33 days; spectral entropy=6.636; tx high=0.581; tx low=0.158
+2,distributed high-frequency rhythm,dominant component=high-frequency; dominant period=348.12 days; spectral entropy=5.718; tx high=0.449; tx low=0.396
+3,distributed high-frequency rhythm,dominant component=high-frequency; dominant period=288.23 days; spectral entropy=6.841; tx high=0.754; tx low=0.115
