@@ -1,13 +1,13 @@
 """Feature/role interpretation checks for the paper revision.
 
-This script collects the professor-requested feature-side fixes into one
-results_v2 folder:
+This script collects feature-side diagnostics for the EOA-only K4/K5/K6
+taxonomies:
 
-- add the missing temporal-persistence feature holdout for Behaviour K5,
-- package K4/K5/K6 internal metrics for the revised Table III,
-- export a K5 robust-scaled feature profile heatmap,
-- compute raw K5 role medians for cautious C2/C4 wording,
-- document the time-domain "burstiness" formula as coefficient of variation.
+- feature-family holdout validation, including temporal-persistence holdout,
+- K4/K5/K6 internal metrics for model-selection discussion,
+- robust-scaled feature profile heatmaps for each candidate k,
+- raw role medians for cautious role descriptions,
+- formula documentation for the time-domain "burstiness" field.
 """
 
 from __future__ import annotations
@@ -30,19 +30,87 @@ SCALED_FEATURES = (
     / "wallet_eoa_only_kmeans6_features_robust_scaled.csv"
 )
 RAW_FEATURES = ROOT.parent / "dataverse_files" / "wallet_kmeans6_expanded_daily_features.csv"
-K5_LABELS = ROOT / "results" / "eoa_only_kmeans5" / "wallet_eoa_only_kmeans_clusters.csv"
+K_VALUES = [4, 5, 6]
+RANDOM_STATE = 492
 
 
-PERSISTENCE_FEATURES = [
+FEATURE_GROUPS = {
+    "all_features_resample_baseline": [],
+    "activity_holdout": [
+        "active_days_observed",
+        "activity_span_days",
+        "activity_density",
+        "total_tx",
+        "avg_daily_tx_count",
+        "max_daily_tx_count",
+        "std_daily_tx_count",
+        "tx_count_cv",
+    ],
+    "value_flow_holdout": [
+        "total_in_sum",
+        "total_out_sum",
+        "total_net_flow_sum",
+        "total_flow_sum",
+        "avg_daily_total_in",
+        "avg_daily_total_out",
+        "avg_daily_net_flow",
+        "avg_daily_total_flow",
+        "max_daily_total_in",
+        "max_daily_total_out",
+        "max_daily_total_flow",
+        "std_daily_total_in",
+        "std_daily_total_out",
+        "std_daily_net_flow",
+        "std_daily_total_flow",
+    ],
+    "directionality_holdout": [
+        "total_net_flow_sum",
+        "avg_daily_net_flow",
+        "in_active_days",
+        "out_active_days",
+        "both_active_days",
+        "in_active_day_ratio",
+        "out_active_day_ratio",
+        "both_active_day_ratio",
+        "in_out_day_balance",
+    ],
+    "volatility_concentration_holdout": [
+        "std_daily_tx_count",
+        "std_daily_total_in",
+        "std_daily_total_out",
+        "std_daily_net_flow",
+        "std_daily_total_flow",
+        "tx_count_cv",
+        "total_flow_cv",
+        "tx_concentration_ratio",
+        "flow_concentration_ratio",
+    ],
+    "temporal_persistence_holdout": [
+        "active_days_observed",
+        "activity_span_days",
+        "activity_density",
+        "in_active_days",
+        "out_active_days",
+        "both_active_days",
+        "in_active_day_ratio",
+        "out_active_day_ratio",
+        "both_active_day_ratio",
+    ],
+}
+
+
+RAW_MEDIAN_COLS = [
     "active_days_observed",
     "activity_span_days",
     "activity_density",
-    "in_active_days",
-    "out_active_days",
-    "both_active_days",
-    "in_active_day_ratio",
-    "out_active_day_ratio",
-    "both_active_day_ratio",
+    "total_tx",
+    "tx_per_active_day",
+    "total_in_sum",
+    "total_out_sum",
+    "total_net_flow_sum",
+    "total_flow_sum",
+    "avg_daily_tx_count",
+    "max_daily_tx_count",
 ]
 
 
@@ -50,8 +118,12 @@ def clean_wallet(series: pd.Series) -> pd.Series:
     return series.astype("string").str.strip().str.lower()
 
 
-def load_k5_labels() -> pd.DataFrame:
-    labels = pd.read_csv(K5_LABELS, dtype={"wallet": "string"})
+def label_path(k: int) -> Path:
+    return ROOT / f"results/eoa_only_kmeans{k}/wallet_eoa_only_kmeans_clusters.csv"
+
+
+def load_labels(k: int) -> pd.DataFrame:
+    labels = pd.read_csv(label_path(k), dtype={"wallet": "string"})
     labels["wallet"] = clean_wallet(labels["wallet"])
     labels["cluster"] = labels["cluster"].astype(int)
     return labels.drop_duplicates("wallet")
@@ -62,7 +134,14 @@ def feature_columns(path: Path) -> list[str]:
     return [c for c in cols if c not in {"wallet", "cluster", "old_cluster"}]
 
 
-def align_to_reference(reference: np.ndarray, candidate: np.ndarray, k: int = 5) -> tuple[np.ndarray, pd.DataFrame]:
+def load_scaled_features() -> pd.DataFrame:
+    print("Loading scaled EOA features...", flush=True)
+    features = pd.read_csv(SCALED_FEATURES, dtype={"wallet": "string"})
+    features["wallet"] = clean_wallet(features["wallet"])
+    return features.drop(columns=["cluster", "old_cluster"], errors="ignore")
+
+
+def align_to_reference(reference: np.ndarray, candidate: np.ndarray, k: int) -> tuple[np.ndarray, pd.DataFrame]:
     crosstab = pd.crosstab(reference, candidate)
     crosstab = crosstab.reindex(index=range(k), columns=range(k), fill_value=0)
     row_ind, col_ind = linear_sum_assignment(-crosstab.to_numpy())
@@ -76,6 +155,7 @@ def align_to_reference(reference: np.ndarray, candidate: np.ndarray, k: int = 5)
         recovered = aligned[ref_mask] == ref_cluster
         rows.append(
             {
+                "k": k,
                 "reference_cluster": ref_cluster,
                 "matched_candidate_cluster": matched_candidate,
                 "reference_wallets": int(ref_mask.sum()),
@@ -86,54 +166,70 @@ def align_to_reference(reference: np.ndarray, candidate: np.ndarray, k: int = 5)
     return aligned, pd.DataFrame(rows)
 
 
-def run_persistence_holdout() -> tuple[pd.DataFrame, pd.DataFrame]:
-    print("Loading scaled EOA features for persistence holdout...", flush=True)
-    labels = load_k5_labels().rename(columns={"cluster": "reference_cluster"})
-    features = pd.read_csv(SCALED_FEATURES, dtype={"wallet": "string"})
-    features["wallet"] = clean_wallet(features["wallet"])
-    features = features.drop(columns=["cluster", "old_cluster"], errors="ignore")
-    df = features.merge(labels, on="wallet", how="inner")
-
-    all_features = feature_columns(SCALED_FEATURES)
-    missing = sorted(set(PERSISTENCE_FEATURES) - set(all_features))
-    if missing:
-        raise ValueError(f"Missing persistence features: {missing}")
-    retained = [c for c in all_features if c not in set(PERSISTENCE_FEATURES)]
-
+def run_one_holdout(
+    df: pd.DataFrame,
+    k: int,
+    scenario: str,
+    removed_features: list[str],
+    all_features: list[str],
+) -> tuple[dict, pd.DataFrame]:
+    retained = [c for c in all_features if c not in set(removed_features)]
     X = df[retained].to_numpy(dtype=np.float32, copy=True)
     reference = df["reference_cluster"].to_numpy(dtype=int)
+
     model = MiniBatchKMeans(
-        n_clusters=5,
-        random_state=42,
+        n_clusters=k,
+        random_state=RANDOM_STATE,
         batch_size=8192,
         n_init=10,
         max_iter=200,
     )
     candidate = model.fit_predict(X)
-    aligned, recovery = align_to_reference(reference, candidate)
-    summary = pd.DataFrame(
-        [
-            {
-                "scenario": "temporal_persistence_holdout",
-                "sample_wallets": int(len(df)),
-                "removed_feature_count": int(len(PERSISTENCE_FEATURES)),
-                "retained_feature_count": int(len(retained)),
-                "ari_vs_reference": float(adjusted_rand_score(reference, candidate)),
-                "nmi_vs_reference": float(normalized_mutual_info_score(reference, candidate)),
-                "exact_agreement_after_matching": float((aligned == reference).mean()),
-                "mean_cluster_recovery_after_matching": float(recovery["recovery_rate"].mean()),
-                "min_cluster_recovery_after_matching": float(recovery["recovery_rate"].min()),
-                "removed_features": "; ".join(PERSISTENCE_FEATURES),
-            }
-        ]
-    )
-    recovery.insert(0, "scenario", "temporal_persistence_holdout")
+    aligned, recovery = align_to_reference(reference, candidate, k=k)
+    recovery.insert(1, "scenario", scenario)
+
+    summary = {
+        "k": k,
+        "scenario": scenario,
+        "sample_wallets": int(len(df)),
+        "removed_feature_count": int(len(removed_features)),
+        "retained_feature_count": int(len(retained)),
+        "ari_vs_reference": float(adjusted_rand_score(reference, candidate)),
+        "nmi_vs_reference": float(normalized_mutual_info_score(reference, candidate)),
+        "exact_agreement_after_matching": float((aligned == reference).mean()),
+        "mean_cluster_recovery_after_matching": float(recovery["recovery_rate"].mean()),
+        "min_cluster_recovery_after_matching": float(recovery["recovery_rate"].min()),
+        "removed_features": "; ".join(removed_features),
+    }
     return summary, recovery
+
+
+def run_feature_holdouts(features: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    all_features = feature_columns(SCALED_FEATURES)
+    summaries = []
+    recoveries = []
+    missing_by_scenario = {
+        scenario: sorted(set(removed) - set(all_features))
+        for scenario, removed in FEATURE_GROUPS.items()
+        if sorted(set(removed) - set(all_features))
+    }
+    if missing_by_scenario:
+        raise ValueError(f"Missing holdout features: {missing_by_scenario}")
+
+    for k in K_VALUES:
+        print(f"Running feature holdouts for K{k}...", flush=True)
+        labels = load_labels(k).rename(columns={"cluster": "reference_cluster"})
+        df = features.merge(labels, on="wallet", how="inner")
+        for scenario, removed in FEATURE_GROUPS.items():
+            summary, recovery = run_one_holdout(df, k, scenario, removed, all_features)
+            summaries.append(summary)
+            recoveries.append(recovery)
+    return pd.DataFrame(summaries), pd.concat(recoveries, ignore_index=True)
 
 
 def package_internal_metrics() -> pd.DataFrame:
     sensitivity = pd.read_csv(ROOT / "results/eoa_only_kmeans6/k_sensitivity_full/k_sensitivity_summary.csv")
-    sensitivity = sensitivity[sensitivity["k"].isin([4, 5, 6])].copy()
+    sensitivity = sensitivity[sensitivity["k"].isin(K_VALUES)].copy()
     rows = []
     for row in sensitivity.itertuples(index=False):
         sizes = pd.read_csv(ROOT / f"results/eoa_only_kmeans{int(row.k)}/cluster_sizes.csv")
@@ -152,8 +248,8 @@ def package_internal_metrics() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def write_profile_heatmap() -> Path:
-    profile = pd.read_csv(ROOT / "results/eoa_only_kmeans5/cluster_feature_medians_robust_scaled.csv")
+def write_profile_heatmap(k: int) -> Path:
+    profile = pd.read_csv(ROOT / f"results/eoa_only_kmeans{k}/cluster_feature_medians_robust_scaled.csv")
     profile = profile.set_index("cluster")
     fig, ax = plt.subplots(figsize=(12.5, 3.8), constrained_layout=True)
     values = profile.to_numpy(dtype=float)
@@ -161,18 +257,17 @@ def write_profile_heatmap() -> Path:
     ax.set_yticks(range(len(profile.index)), [f"C{c}" for c in profile.index])
     ax.set_xticks(range(len(profile.columns)))
     ax.set_xticklabels(profile.columns, rotation=90, fontsize=7)
-    ax.set_ylabel("Behaviour K5 role")
-    ax.set_title("Behaviour K5 robust-scaled feature medians")
+    ax.set_ylabel(f"Behaviour K{k} role")
+    ax.set_title(f"Behaviour K{k} robust-scaled feature medians")
     fig.colorbar(im, ax=ax, label="Median scaled value")
-    out = OUT_DIR / "k5_profile_heatmap.pdf"
+    out = OUT_DIR / f"k{k}_profile_heatmap.pdf"
     fig.savefig(out)
-    fig.savefig(OUT_DIR / "k5_profile_heatmap.png", dpi=220)
+    fig.savefig(OUT_DIR / f"k{k}_profile_heatmap.png", dpi=220)
     plt.close(fig)
     return out
 
 
-def compute_k5_raw_medians() -> pd.DataFrame:
-    labels = load_k5_labels()
+def load_raw_features_for_medians() -> pd.DataFrame:
     usecols = [
         "wallet",
         "active_days_observed",
@@ -186,25 +281,18 @@ def compute_k5_raw_medians() -> pd.DataFrame:
         "avg_daily_tx_count",
         "max_daily_tx_count",
     ]
-    print("Loading raw features for K5 role medians...", flush=True)
+    print("Loading raw features for role medians...", flush=True)
     raw = pd.read_csv(RAW_FEATURES, usecols=usecols, dtype={"wallet": "string"})
     raw["wallet"] = clean_wallet(raw["wallet"])
+    return raw
+
+
+def compute_raw_medians(k: int, raw: pd.DataFrame) -> pd.DataFrame:
+    labels = load_labels(k)
     df = raw.merge(labels, on="wallet", how="inner")
     df["tx_per_active_day"] = df["total_tx"] / df["active_days_observed"].replace(0, np.nan)
-    median_cols = [
-        "active_days_observed",
-        "activity_span_days",
-        "activity_density",
-        "total_tx",
-        "tx_per_active_day",
-        "total_in_sum",
-        "total_out_sum",
-        "total_net_flow_sum",
-        "total_flow_sum",
-        "avg_daily_tx_count",
-        "max_daily_tx_count",
-    ]
-    medians = df.groupby("cluster")[median_cols].median().reset_index()
+    medians = df.groupby("cluster")[RAW_MEDIAN_COLS].median().reset_index()
+    medians.insert(0, "k", k)
     medians["wallets"] = df.groupby("cluster").size().reindex(medians["cluster"]).to_numpy()
     return medians
 
@@ -230,54 +318,70 @@ def write_burstiness_note() -> None:
     (OUT_DIR / "burstiness_formula_check.md").write_text("\n".join(note) + "\n", encoding="utf-8")
 
 
-def write_summary(
-    holdout: pd.DataFrame,
-    internal: pd.DataFrame,
-    medians: pd.DataFrame,
-    combined_holdout: pd.DataFrame,
-) -> None:
-    c2 = medians[medians["cluster"] == 2].iloc[0]
-    c4 = medians[medians["cluster"] == 4].iloc[0]
+def write_summary(holdouts: pd.DataFrame, internal: pd.DataFrame) -> None:
+    compact_holdouts = holdouts[
+        [
+            "k",
+            "scenario",
+            "ari_vs_reference",
+            "nmi_vs_reference",
+            "exact_agreement_after_matching",
+            "mean_cluster_recovery_after_matching",
+            "min_cluster_recovery_after_matching",
+        ]
+    ].copy()
+    persistence = compact_holdouts[compact_holdouts["scenario"] == "temporal_persistence_holdout"].copy()
+    best_by_k = (
+        compact_holdouts[compact_holdouts["scenario"] != "all_features_resample_baseline"]
+        .sort_values(["k", "exact_agreement_after_matching"], ascending=[True, False])
+        .groupby("k")
+        .head(1)
+    )
+    weakest_by_k = (
+        compact_holdouts[compact_holdouts["scenario"] != "all_features_resample_baseline"]
+        .sort_values(["k", "exact_agreement_after_matching"], ascending=[True, True])
+        .groupby("k")
+        .head(1)
+    )
+
     lines = [
         "# Feature and Role Checks V2",
         "",
         "## Outputs",
         "",
-        "- `persistence_holdout_summary.csv`: missing temporal-persistence holdout row for Table V.",
-        "- `feature_holdout_summary_with_persistence.csv`: previous full holdout table plus the new persistence row.",
+        "- `feature_holdout_summary_k4_k5_k6.csv`: comparable feature-family holdout validation for K4, K5, and K6.",
+        "- `feature_holdout_cluster_recovery_k4_k5_k6.csv`: per-role recovery rates after Hungarian matching.",
         "- `internal_metrics_k4_k5_k6.csv`: K4/K5/K6 silhouette, Davies-Bouldin, seed stability, and size balance for Table III.",
-        "- `k5_profile_heatmap.pdf/png`: robust-scaled feature median heatmap for Behaviour K5.",
-        "- `k5_raw_role_medians.csv`: raw median features for correcting C2/C4 role descriptions.",
-        "- `burstiness_formula_check.md`: formula note for replacing the misleading burstiness wording.",
-        "",
-        "## Persistence Holdout Result",
-        "",
-        holdout.to_markdown(index=False),
-        "",
-        "## Combined Holdout Table",
-        "",
-        combined_holdout[
-            [
-                "scenario",
-                "ari_vs_reference",
-                "nmi_vs_reference",
-                "exact_agreement_after_matching",
-                "mean_cluster_recovery_after_matching",
-                "min_cluster_recovery_after_matching",
-            ]
-        ].to_markdown(index=False),
+        "- `k4_profile_heatmap.pdf/png`, `k5_profile_heatmap.pdf/png`, `k6_profile_heatmap.pdf/png`: robust-scaled feature median heatmaps.",
+        "- `k4_raw_role_medians.csv`, `k5_raw_role_medians.csv`, `k6_raw_role_medians.csv`: raw medians for role interpretation.",
+        "- `raw_role_medians_k4_k5_k6.csv`: combined raw median table.",
+        "- `burstiness_formula_check.md`: formula note for replacing misleading burstiness wording.",
         "",
         "## Internal Metrics",
         "",
         internal.to_markdown(index=False),
         "",
-        "## C2/C4 Wording Check",
+        "## Feature Holdout Comparison",
         "",
-        f"C2 median active days: `{c2['active_days_observed']:.2f}`; median total transactions: `{c2['total_tx']:.2f}`; median transactions per active day: `{c2['tx_per_active_day']:.2f}`.",
-        f"C4 median active days: `{c4['active_days_observed']:.2f}`; median total transactions: `{c4['total_tx']:.2f}`; median transactions per active day: `{c4['tx_per_active_day']:.2f}`.",
+        compact_holdouts.to_markdown(index=False),
         "",
-        "Interpretation: C2 should be described as concentrated high transaction intensity over few active days, not persistent dense activity across the year.",
-        "C4 can be described as the most persistent/high-active-day K5 role, but not as continuously active across the full year.",
+        "## Temporal Persistence Holdout",
+        "",
+        persistence.to_markdown(index=False),
+        "",
+        "## Strongest Holdout Recovery Per K",
+        "",
+        best_by_k.to_markdown(index=False),
+        "",
+        "## Weakest Holdout Recovery Per K",
+        "",
+        weakest_by_k.to_markdown(index=False),
+        "",
+        "## Role-Wording Notes",
+        "",
+        "Use the raw median tables to describe each role cautiously.",
+        "For K5, C2 remains a concentrated high-intensity role over few active days rather than a persistent dense role.",
+        "For K5, C4 remains the most persistent/high-active-day K5 role, but the median active-day count is still far from continuous full-year activity.",
         "",
         "## Burstiness Wording",
         "",
@@ -289,32 +393,45 @@ def write_summary(
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    holdout, recovery = run_persistence_holdout()
-    holdout.to_csv(OUT_DIR / "persistence_holdout_summary.csv", index=False)
-    recovery.to_csv(OUT_DIR / "persistence_holdout_cluster_recovery.csv", index=False)
+    features = load_scaled_features()
+    holdouts, recovery = run_feature_holdouts(features)
+    holdouts.to_csv(OUT_DIR / "feature_holdout_summary_k4_k5_k6.csv", index=False)
+    recovery.to_csv(OUT_DIR / "feature_holdout_cluster_recovery_k4_k5_k6.csv", index=False)
 
-    old_holdout_path = ROOT / "results/k5_feature_holdout_validation_full/feature_holdout_summary.csv"
-    if old_holdout_path.exists():
-        old_holdout = pd.read_csv(old_holdout_path)
-        combined = pd.concat([old_holdout, holdout], ignore_index=True)
-    else:
-        combined = holdout.copy()
-    combined.to_csv(OUT_DIR / "feature_holdout_summary_with_persistence.csv", index=False)
+    # Preserve the original K5-specific filenames used by the current draft.
+    k5_holdouts = holdouts[holdouts["k"] == 5].drop(columns=["k"])
+    k5_recovery = recovery[recovery["k"] == 5].drop(columns=["k"])
+    k5_holdouts[k5_holdouts["scenario"] == "temporal_persistence_holdout"].to_csv(
+        OUT_DIR / "persistence_holdout_summary.csv", index=False
+    )
+    k5_recovery[k5_recovery["scenario"] == "temporal_persistence_holdout"].to_csv(
+        OUT_DIR / "persistence_holdout_cluster_recovery.csv", index=False
+    )
+    k5_holdouts.to_csv(OUT_DIR / "feature_holdout_summary_with_persistence.csv", index=False)
 
     internal = package_internal_metrics()
     internal.to_csv(OUT_DIR / "internal_metrics_k4_k5_k6.csv", index=False)
 
-    heatmap_path = write_profile_heatmap()
-    medians = compute_k5_raw_medians()
-    medians.to_csv(OUT_DIR / "k5_raw_role_medians.csv", index=False)
+    heatmap_paths = [write_profile_heatmap(k) for k in K_VALUES]
+
+    raw = load_raw_features_for_medians()
+    median_tables = []
+    for k in K_VALUES:
+        medians = compute_raw_medians(k, raw)
+        medians.to_csv(OUT_DIR / f"k{k}_raw_role_medians.csv", index=False)
+        median_tables.append(medians)
+    all_medians = pd.concat(median_tables, ignore_index=True)
+    all_medians.to_csv(OUT_DIR / "raw_role_medians_k4_k5_k6.csv", index=False)
 
     write_burstiness_note()
-    write_summary(holdout, internal, medians, combined)
+    write_summary(holdouts, internal)
 
-    print(holdout.to_string(index=False))
+    print(holdouts.to_string(index=False))
     print(internal.to_string(index=False))
-    print(medians.to_string(index=False))
-    print(f"Saved heatmap to {heatmap_path}")
+    print(all_medians.to_string(index=False))
+    print("Saved heatmaps:")
+    for path in heatmap_paths:
+        print(f"- {path}")
     print(f"Saved feature/role checks to {OUT_DIR}")
 
 
