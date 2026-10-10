@@ -35,6 +35,7 @@ Thumbs.db
 .env
 config.local.yaml
 tmp/
+results_v2/temporal_k4_k5_k6_smoke/
 
 # Keep selected compact result CSVs in results/
 !results/**/*.csv
