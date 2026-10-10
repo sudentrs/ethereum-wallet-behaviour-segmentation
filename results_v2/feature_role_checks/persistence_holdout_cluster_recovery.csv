@@ -1,0 +1,6 @@
+scenario,reference_cluster,matched_candidate_cluster,reference_wallets,recovered_wallets_after_matching,recovery_rate
+temporal_persistence_holdout,0,2,776004,666232,0.8585419662785243
+temporal_persistence_holdout,1,3,923286,571595,0.6190876933041333
+temporal_persistence_holdout,2,0,154864,95616,0.617419154871371
+temporal_persistence_holdout,3,1,183079,123445,0.674271762463199
+temporal_persistence_holdout,4,4,406635,75739,0.18625794631549178
