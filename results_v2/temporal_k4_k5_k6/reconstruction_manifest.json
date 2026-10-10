@@ -1,0 +1,23 @@
+{
+  "input_fingerprint": "9f11c9489d19e9dd6991b40ec73435c0d7f5a037e064a90a78e92bb7097fc7fc",
+  "wallet_count": 2443868,
+  "daily_rows": 39853742,
+  "bucket_count": 512,
+  "months": [
+    "202201",
+    "202202",
+    "202203",
+    "202204",
+    "202205",
+    "202206",
+    "202207",
+    "202208",
+    "202209",
+    "202210",
+    "202211",
+    "202212"
+  ],
+  "assignment_method": "unannualised monthly features; annual scaler; annual median prototypes",
+  "scaling_stats": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\results_v2\\temporal_k4_k5_k6\\legacy_mixed_annual_scaling_stats.csv",
+  "reconstruction_share_tolerance": 1e-06
+}
