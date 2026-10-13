@@ -205,6 +205,14 @@ It reads the K5 wallet labels and a raw monthly TSV file, then produces role-to-
 
 This is the downstream network check for the post-contract-removal K5 branch.
 
+### `scripts/run_monthly_network_null_validation.py`
+
+Repeats the same-role transaction-network null test across monthly ERC-20 transfer files.
+
+It reads an EOA cluster-label file, streams each monthly TSV in chunks, counts labelled role-to-role transfer edges, samples labelled transaction edges, and compares the observed same-role transaction ratio against a shuffled wallet-label null model.
+
+This is the full-year follow-up to the original September-only K5 network validation.
+
 ## Temporal Analysis
 
 ### `src/temporal/cluster_transition_analysis.py`
@@ -339,16 +347,13 @@ Main output:
 
 ### `src/reporting/build_final_academic_deliverable_pack.py`
 
-Builds the final advisor-facing academic deliverable pack from audited result tables.
+Deprecated project-deliverable helper from the class-report phase.
 
-It creates final paper figures, a robustness summary, a paper contribution note, a Word academic report, and an advisor presentation in PPTX and PDF form.
+It can still regenerate older Word/PPT artifacts if needed locally, but those generated files are not part of the final paper-focused repository.
 
 Main outputs:
 
 - `results/final_academic_pack/final_deliverable_manifest.md`
-- `reports/Final_Academic_Project_Report_Ethereum_Wallet_Behaviour.docx`
-- `presentations/Final_Academic_Project_Advisor_Deck.pptx`
-- `presentations/Final_Academic_Project_Advisor_Deck.pdf`
 
 ### `src/reporting/build_cluster_stability_complete_report.py`
 
@@ -356,13 +361,13 @@ Builds a detailed report document focused on completed findings and paper-proces
 
 ### `src/reporting/build_final_report.py`
 
-Builds the earlier final report artifact.
+Deprecated helper that builds the earlier class final-report artifact.
 
 This is included because other report-building scripts import helper content from it.
 
 ### `src/reporting/build_full_length_template_integrated_report.py`
 
-Builds the full-length final report following the final-report template structure.
+Deprecated helper that builds the full-length class final report following the final-report template structure.
 
 ## Archive Scripts Not Included In `src/`
 

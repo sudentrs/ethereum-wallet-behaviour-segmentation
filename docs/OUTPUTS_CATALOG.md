@@ -240,33 +240,19 @@ Compact subcluster diagnostics.
 
 Use this to explain that KMeans6 gives the broad role layer, while subclusters show finer internal structure.
 
-## `reports/`
+## `overleaf/`
 
-### `final_report.docx`
+Current paper package for Overleaf.
 
-Latest full-length final report produced from the project materials.
+### `main.tex`
 
-### `Final_Academic_Project_Report_Ethereum_Wallet_Behaviour.docx`
+IEEE-style paper source assembled from the current EOA-only K4/K5/K6 analysis.
 
-Advisor-facing academic synthesis report built from the current K5, temporal signal, network validation, and two-step return outputs.
+### `figures/`
 
-## `presentations/`
+Paper figures referenced by `main.tex`.
 
-### `final_project_presentation.pdf`
-
-Final presentation PDF.
-
-### `final_project_presentation.pptx`
-
-Editable PowerPoint version of the final presentation.
-
-### `Final_Academic_Project_Advisor_Deck.pptx`
-
-Editable advisor-facing deck summarizing the final academic contribution and evidence.
-
-### `Final_Academic_Project_Advisor_Deck.pdf`
-
-PDF version of the advisor-facing deck.
+The older class-facing Word reports and presentation decks were removed from the final repository so the repo stays focused on code, reproducible outputs, and the paper package.
 
 ## `results/final_academic_pack/`
 
@@ -282,4 +268,4 @@ Short note defining the research question, academic gap, contribution, and claim
 
 ### `figures/`
 
-Final selected figure pack for paper/report/presentation use.
+Final selected figure pack for paper use.

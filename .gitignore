@@ -62,3 +62,8 @@ results/academic_paper_pack/feature_space_proofs/k*/k*_feature_proof_sample.csv
 results_v2/network_k4_k5_k6_B99/
 results_v2/network_k4_k5_k6_smoke/
 results/figure_review_contact_sheet.png
+
+# Class-facing generated deliverables are not part of the final paper repo
+reports/
+presentations/
+docs/EOA_ONLY_FINAL_PROGRESS_REPORT.md

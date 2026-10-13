@@ -1,6 +1,6 @@
 # Figure And Table Reproducibility Audit
 
-This audit tracks which scripts regenerate each figure/table used in the report, presentation, or paper drafts.
+This audit tracks which scripts regenerate each figure/table used in the paper draft and reproducible analysis package.
 
 Status values:
 
@@ -49,23 +49,19 @@ Status values:
 | K-taxonomy signal network null tests | `results/temporal_signal_k_taxonomy_comparison/k_taxonomy_signal_network_null_tests.csv` | `src/validation/build_temporal_signal_k_taxonomy_comparison.py` | 10,000-wallet signal assignments, K4/K5/K6 labels, sampled September transaction edges | Regenerable |
 | Paper-ready temporal signal section | `results/temporal_signal_k_taxonomy_comparison/paper_ready_temporal_signal_section.md` | `src/reporting/build_temporal_signal_paper_section.py` | 10,000-wallet signal outputs, K-taxonomy comparison, event-adjacent tests, two-step return tests | Regenerable |
 | Final academic figure pack | `results/final_academic_pack/figures/` | `src/reporting/build_final_academic_deliverable_pack.py` | K-taxonomy comparison, signal validation, network null tests, two-step return tests, selected existing figures | Regenerable |
-| Final academic synthesis report | `reports/Final_Academic_Project_Report_Ethereum_Wallet_Behaviour.docx` | `src/reporting/build_final_academic_deliverable_pack.py` | Final academic figure pack and audited result tables | Regenerable / structurally checked |
-| Final advisor deck | `presentations/Final_Academic_Project_Advisor_Deck.pptx` and `presentations/Final_Academic_Project_Advisor_Deck.pdf` | `src/reporting/build_final_academic_deliverable_pack.py` | Final academic figure pack and audited result tables | Regenerable / structurally checked |
+| Overleaf paper source | `overleaf/main.tex` | Manual paper assembly from audited result tables and copied figures | Current K4/K5/K6 EOA-only outputs | Static source / figure paths checked |
 | Frequency plot by K5 role | `results/temporal_signal_analysis/figures/frequency_power_by_k5_role.png` | `src/validation/build_temporal_signal_analysis_pack.py` | Normalized FFT power from daily transaction-count signals | Regenerable |
 | Frequency plot by wavelength cluster | `results/temporal_signal_analysis/figures/frequency_power_by_wavelength_cluster.png` | `src/validation/build_temporal_signal_analysis_pack.py` | Normalized FFT power and wavelength/spectral cluster labels | Regenerable |
 | Flow-frequency plot by wavelength cluster | `results/temporal_signal_analysis/figures/flow_frequency_power_by_wavelength_cluster.png` | `src/validation/build_temporal_signal_analysis_pack.py` | Normalized FFT power from daily total-flow signals | Regenerable |
 | Subcluster summary | `results/subcluster_analysis/subcluster_summary.csv` | `src/validation/cluster_behavior_subcluster_analysis.py` | Expanded KMeans6 feature table and labels | Partially regenerable |
 | Subcluster report | `results/subcluster_analysis/cluster_behavior_subcluster_report.md` | `src/validation/cluster_behavior_subcluster_analysis.py` | Subcluster outputs | Regenerable |
-| Final report | `reports/final_report.docx` | `src/reporting/build_full_length_template_integrated_report.py` | Selected analysis outputs and report template | Static artifact / partially regenerable |
-| Final presentation | `presentations/final_project_presentation.pdf` and `.pptx` | Presentation build artifacts from original workspace | Selected figures and summary results | Static artifact |
 
 ## Open Audit Items
 
 The following should be checked before any publication submission:
 
-- Every figure embedded in `reports/final_report.docx`.
-- Every slide graphic in `presentations/final_project_presentation.pptx`.
-- Any manually copied value in report text or slide text.
+- Every figure embedded in `overleaf/main.tex`.
+- Any manually copied value in paper text.
 - Any value that came from an older run before the post-Gate-1 pipeline.
 
 ## Rule For Future Submissions

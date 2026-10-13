@@ -10,7 +10,7 @@ Do not commit the whole original workspace because it contains:
 - Local virtual environments.
 - Temporary render folders.
 - Intermediate CSV/parquet files.
-- Old duplicate reports and presentations.
+- Class-facing reports and presentations.
 - Extracted paper text.
 
 ## Recommended Commit Contents
@@ -21,8 +21,7 @@ Commit:
 - `docs/`
 - `src/`
 - `results/` selected compact summaries
-- `reports/final_report.docx`, if your instructor allows report files in the repo
-- `presentations/final_project_presentation.pdf`, if useful
+- `overleaf/` paper source and selected paper figures
 - `.gitignore`
 - `requirements.txt`
 
@@ -40,6 +39,7 @@ Do not commit:
 - `venv/`
 - `__pycache__/`
 - temporary render directories
+- generated `.docx`, `.pptx`, and class-facing PDF deliverables
 - huge generated CSVs unless needed as a small reproducibility sample
 
 ## Suggested First Commands
