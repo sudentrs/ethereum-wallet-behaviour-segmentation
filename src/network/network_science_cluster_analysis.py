@@ -490,7 +490,7 @@ def main():
     parser = argparse.ArgumentParser(description="Network-science analysis for Ethereum wallet clusters.")
     parser.add_argument("--month", default="202209")
     parser.add_argument("--base-dir", default=".")
-    parser.add_argument("--label-col", default="cluster_1", help="Use cluster_1 for KMeans6, cluster_2 for the other assistant's labels.")
+    parser.add_argument("--label-col", default="cluster_1", help="Cluster-label column to analyze, such as cluster_1 or cluster_2.")
     parser.add_argument("--sample-per-cluster", type=int, default=4000)
     parser.add_argument("--chunksize", type=int, default=750000)
     parser.add_argument("--random-state", type=int, default=42)
