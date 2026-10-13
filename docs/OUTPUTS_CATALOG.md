@@ -252,20 +252,10 @@ IEEE-style paper source assembled from the current EOA-only K4/K5/K6 analysis.
 
 Paper figures referenced by `main.tex`.
 
-The older class-facing Word reports and presentation decks were removed from the final repository so the repo stays focused on code, reproducible outputs, and the paper package.
+The older generated Word reports and presentation decks were removed from the final repository so the repo stays focused on code, reproducible outputs, and the paper package.
 
 ## `results/final_academic_pack/`
 
-Final deliverable pack for explaining the project academically.
+Older synthesis folder retained for traceability.
 
-### `robustness_summary.md`
-
-Claim-calibration summary explaining which findings are strong and which need careful wording.
-
-### `paper_contribution_note.md`
-
-Short note defining the research question, academic gap, contribution, and claim boundary.
-
-### `figures/`
-
-Final selected figure pack for paper use.
+Current paper figures should come from `results_v2/paper_visuals/` and `overleaf/figures/`.

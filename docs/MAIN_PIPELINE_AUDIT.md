@@ -52,9 +52,7 @@ These are included for project history and reproducibility of older exploratory 
 
 ### Reporting
 
-- `src/reporting/build_final_report.py`
-- `src/reporting/build_cluster_stability_complete_report.py`
-- `src/reporting/build_full_length_template_integrated_report.py`
+- older class-report generation scripts, now removed from the paper-focused repository
 
 ## Still Not Fully One-Command Reproducible
 

@@ -138,9 +138,9 @@ Do not say:
 
 The current stability evidence does not support that.
 
-## Supervisor-Aligned Recommendation
+## Paper-Focused Recommendation
 
-The supervisor's plan says that after Gate 1, all downstream numbers must be regenerated and weak claims should not be carried forward.
+After Gate 1, all downstream numbers should be regenerated on the EOA-only dataset and weak claims should not be carried forward.
 
 Based on that expectation, the recommended path is:
 

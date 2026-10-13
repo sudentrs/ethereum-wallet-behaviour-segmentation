@@ -345,30 +345,6 @@ Main output:
 
 `results/temporal_signal_k_taxonomy_comparison/paper_ready_temporal_signal_section.md`
 
-### `src/reporting/build_final_academic_deliverable_pack.py`
-
-Deprecated project-deliverable helper from the class-report phase.
-
-It can still regenerate older Word/PPT artifacts if needed locally, but those generated files are not part of the final paper-focused repository.
-
-Main outputs:
-
-- `results/final_academic_pack/final_deliverable_manifest.md`
-
-### `src/reporting/build_cluster_stability_complete_report.py`
-
-Builds a detailed report document focused on completed findings and paper-process validation.
-
-### `src/reporting/build_final_report.py`
-
-Deprecated helper that builds the earlier class final-report artifact.
-
-This is included because other report-building scripts import helper content from it.
-
-### `src/reporting/build_full_length_template_integrated_report.py`
-
-Deprecated helper that builds the full-length class final report following the final-report template structure.
-
 ## Archive Scripts Not Included In `src/`
 
 The original workspace also contains earlier exploratory scripts for:

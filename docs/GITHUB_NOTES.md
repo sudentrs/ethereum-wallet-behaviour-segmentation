@@ -39,7 +39,7 @@ Do not commit:
 - `venv/`
 - `__pycache__/`
 - temporary render directories
-- generated `.docx`, `.pptx`, and class-facing PDF deliverables
+- generated `.docx`, `.pptx`, and non-paper PDF deliverables
 - huge generated CSVs unless needed as a small reproducibility sample
 
 ## Suggested First Commands

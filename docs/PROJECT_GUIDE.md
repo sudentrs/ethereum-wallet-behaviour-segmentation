@@ -2,102 +2,100 @@
 
 ## Big Picture
 
-This project began as an AI-governed crypto-bank simulator.
+This repository supports an academic study of Ethereum wallet behaviour segmentation.
 
-The project later shifted toward an empirical research question: before simulating blockchain users, can real Ethereum wallets be grouped into behavioural roles using transaction data?
+The current project focuses on externally owned accounts (EOAs), not smart contracts.
 
-The final project is therefore not mainly a simulator. It is a data-analysis and validation pipeline for Ethereum wallet behaviour segmentation.
+The central goal is to test whether unsupervised wallet clusters can be interpreted as meaningful behavioural states rather than arbitrary model outputs.
 
-## Final Research Question
+## Research Question
 
-Can Ethereum wallets be organized into interpretable behavioural roles that are reproducible across feature sets, aligned with transaction-network structure, and persistent enough over time to support meaningful analysis of wallet behaviour?
+Can Ethereum EOAs be organized into behavioural states that remain meaningful across aggregate wallet features, transaction-network evidence, and temporal activity patterns?
 
 ## Why This Matters
 
-Ethereum transaction data is public but hard to interpret directly.
+Ethereum transaction data is public but difficult to understand directly.
 
-Millions of wallet addresses interact with contracts, exchanges, bridges, DeFi protocols, and other wallets.
+Millions of wallet addresses interact at different activity levels, value-flow scales, and temporal rhythms.
 
-Instead of treating every address separately, this project asks whether wallets can be summarized into broader behavioural roles.
+Wallet segmentation gives a compact way to describe this population, but clustering alone is not enough.
 
-## What We Actually Did
+Because unsupervised learning has no ground-truth labels, a proposed wallet taxonomy should be tested against evidence that was not directly used to create the clusters.
 
-### 1. Feature Engineering
+## Current Analysis Path
 
-Raw daily transaction data was transformed into wallet-level features.
+### 1. Data Preparation
 
-The features describe activity intensity, value flow, directionality, persistence, volatility, and concentration.
+Raw ERC-20 transfer data is converted into wallet-level and wallet-day activity tables.
 
-### 2. Behavioural Clustering
+Smart contract addresses are filtered out so the main analysis focuses on EOAs.
 
-KMeans with six clusters was used as the main segmentation model.
+### 2. Feature Engineering
 
-The output was a six-role behavioural vocabulary for Ethereum wallets.
+Wallets are represented using activity, value-flow, directionality, concentration, volatility, and temporal-persistence features.
 
-### 3. Network Validation
+Features are robust-scaled before clustering.
 
-The clusters were checked against transaction-network structure.
+### 3. Behavioural Clustering
 
-The main idea was: if the roles are meaningful, wallets with similar roles should show non-random structure in the transaction graph.
+The current paper compares K4, K5, and K6 KMeans taxonomies.
 
-### 4. Temporal Analysis
+K5 is used as the main descriptive taxonomy because it provides a richer behavioural vocabulary while retaining stronger seed stability than K6.
 
-Wallets were assigned monthly behavioural states.
+K4 and K6 remain important robustness comparisons.
 
-Monthly transitions were used to measure persistence, role movement, and temporary return patterns.
+### 4. Feature And Role Interpretation
 
-### 5. Paper-Focused Robustness Checks
+Cluster profiles, feature-family holdouts, and role summaries are used to check whether the clusters are interpretable.
 
-Additional validation was added:
+The role labels should be read as behavioural states, not verified real-world identities.
 
-- Bipartite/Hungarian cluster matching.
-- Distance-metric cluster correspondence.
-- Cross-feature-set Spearman analysis.
-- Permutation testing against random labels.
-- Minimum observation/subsampling experiment.
-- Within-cluster subcluster analysis.
+### 5. Network Validation
 
-## Main Findings
+Monthly transaction-network tests compare observed same-role transaction concentration against shuffled-label null models.
 
-The six roles are interpretable from transaction features.
+This checks whether the behavioural taxonomy also appears in transaction-flow structure.
 
-The roles align strongly with transaction-network structure.
+### 6. Temporal Validation
 
-Wallet roles show moderate monthly persistence rather than random movement.
+Monthly state assignments are used to measure self-transition, role movement, and two-step return behaviour.
 
-Cross-analysis checks show non-random role correspondence.
+This treats wallet labels as dynamic behavioural states that may persist, change, or recur.
 
-The feature sets are related but not redundant.
+### 7. Temporal Signal Analysis
 
-Some smaller/specialized roles appear less stable and require careful wording.
+Full-population daily activity signals are used to compare aggregate K5 roles with time-domain and frequency-domain activity states.
 
-## Careful Wording
+This layer tests whether aggregate roles carry daily rhythm signatures.
+
+## Main Claim Boundary
 
 Use:
 
-> behavioural roles
+> Ethereum EOAs can be described through behavioural states that are supported by multiple validation layers.
 
 Avoid:
 
-> verified real-world identities
+> The clusters identify wallet owners or permanent real-world wallet identities.
 
 Use:
 
-> K=6 is an interpretable and validated solution under our tests.
+> K5 is a defensible descriptive taxonomy under the current evidence.
 
 Avoid:
 
-> K=6 is the true number of Ethereum wallet types.
+> K5 is the only true number of Ethereum wallet types.
 
 Use:
 
-> stability supports reproducibility under tested perturbations.
+> Network evidence for K5 is mixed and time-varying.
 
 Avoid:
 
-> stability proves correctness.
+> K5 is a stable transaction-community partition in every month.
 
 ## Best Contribution Statement
 
-This project contributes an unsupervised Ethereum wallet segmentation framework that discovers behavioural roles from transaction features and validates them through transaction-network structure, random-label testing, cross-feature-set correspondence, subsampling stability, and temporal transition analysis.
+This project contributes a layered validation framework for Ethereum EOA wallet segmentation.
 
+The framework combines aggregate feature profiles, feature-family perturbations, transaction-network null tests, monthly transition analysis, two-step return tests, and temporal signal analysis to evaluate whether unsupervised wallet roles are academically defensible.
