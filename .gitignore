@@ -47,3 +47,18 @@ results/**/sampled_edges_for_null_test.csv
 results/**/wallet_monthly_behavior_states.csv
 results/**/wallet_trajectory_types.csv
 results/academic_paper_pack/feature_space_proofs/k*/k*_feature_proof_sample.csv
+
+# LaTeX / Overleaf build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+# Smoke-test and scratch outputs
+results_v2/network_k4_k5_k6_B99/
+results_v2/network_k4_k5_k6_smoke/
+results/figure_review_contact_sheet.png

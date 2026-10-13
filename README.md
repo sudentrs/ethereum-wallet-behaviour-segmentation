@@ -1,85 +1,105 @@
 # Ethereum Wallet Behaviour Segmentation
 
-This repository contains the curated research code and selected outputs for an Ethereum wallet behaviour segmentation project.
+This repository contains the code, documentation, and selected reproducible outputs for an academic study of Ethereum externally owned account (EOA) behaviour.
 
-The project studies whether Ethereum wallets can be grouped into interpretable behavioural roles using transaction-derived features, and whether those roles are supported by network structure and temporal behaviour.
+The current paper asks whether Ethereum EOAs can be organized into behavioural states that remain meaningful across aggregate wallet features, transaction-network evidence, and temporal activity patterns. The project uses ERC-20 transfer activity from 2022, removes smart-contract addresses, compares K4/K5/K6 k-means taxonomies, and treats K5 as the main descriptive role layer while retaining K4 and K6 as robustness and sensitivity comparisons.
 
 ## Research Question
 
-Can Ethereum wallets be organized into interpretable behavioural roles that are reproducible across feature sets, aligned with transaction-network structure, and persistent enough over time to support meaningful analysis of wallet behaviour?
+Can Ethereum externally owned accounts be organized into behavioural states that remain meaningful across aggregate features, transaction-network evidence, and temporal activity patterns?
 
-## Main Contribution
+## Current Paper Claim
 
-The project contributes an unsupervised wallet-role discovery workflow:
+The paper does not claim that Ethereum contains one natural set of permanent wallet identities. Instead, it presents a layered validation framework:
 
-1. Build wallet-level behavioural features from Ethereum transaction activity.
-2. Cluster wallets into six behavioural roles.
-3. Interpret the roles using feature profiles.
-4. Validate the roles using transaction-network structure.
-5. Test whether cross-analysis alignment is stronger than random labels.
-6. Analyze monthly role transitions, persistence, and return patterns.
-7. Check robustness through feature-set correspondence, subsampling, and subcluster analysis.
+1. Build EOA-only wallet-level behavioural features from ERC-20 transfers.
+2. Compare candidate k-means resolutions K4, K5, and K6.
+3. Use K5 as a descriptive behavioural taxonomy because it has the highest seed stability and richer role vocabulary.
+4. Retain K4 as the stronger conservative network comparison and K6 as a finer-resolution sensitivity comparison.
+5. Validate roles through feature profiles, feature-family holdouts, transaction-network null tests, monthly transitions, two-step return tests, and full-population temporal signal analysis.
+
+## Dataset
+
+The analysis uses the ERC-20 Trading 2022 dataset from Harvard Dataverse:
+
+- Somin, S. ERC-20 Trading 2022. Harvard Dataverse. DOI: 10.7910/DVN/5P82QC
+- Somin, S., Altshuler, Y., and Pentland, A. Crypto-asset trading on top of Ethereum Blockchain comprehensive dataset. Scientific Data, 2025.
+
+Raw monthly transfer files are not committed to this repository. See `data/README.md` and `docs/PIPELINE.md` for expected local paths and preparation steps.
 
 ## Repository Layout
 
 ```text
 src/
-  data_preparation/ Raw TSV extraction, reformatting, daily aggregation, and legacy event helpers.
-  features/        Feature engineering and scaling scripts.
-  clustering/      Cluster comparison and distance-based correspondence scripts.
-  network/         Transaction-network validation scripts.
-  temporal/        Monthly wallet-state transition analysis.
-  validation/      Paper-focused validation, stability, and subcluster scripts.
-  reporting/       Scripts used to build project reports.
+  data_preparation/   TSV extraction, wallet-direction rows, daily aggregation, EOA filtering helpers.
+  features/           Wallet-level feature construction and robust scaling.
+  clustering/         EOA-only k-means runs, K sensitivity checks, role descriptions.
+  network/            Transaction-network validation and role-interaction analysis.
+  temporal/           Monthly state assignment and transition analysis.
+  validation/         Feature holdouts, temporal signal analysis, clustering stability checks.
+  reporting/          Report and paper-support artifact builders.
 
-results/
-  paper_process/       Compact outputs from paper-focused validation.
-  network_validation/  Network evidence and role-interaction summaries.
-  temporal_analysis/   Monthly transition and stability outputs.
-  subcluster_analysis/ Within-role subcluster outputs.
-
-reports/
-  final_report.docx
-
-presentations/
-  final_project_presentation.pdf
-  final_project_presentation.pptx
+scripts/
+  run_feature_role_checks_v2.py       K4/K5/K6 feature and holdout checks.
+  run_k4_k5_k6_network_results_v2.py  Monthly network null tests for K4/K5/K6.
+  run_temporal_validation_v2.py       Self-transition and two-step return validation.
+  build_paper_visuals.py              Paper-ready figures copied into results_v2/paper_visuals.
+  build_k_evidence_matrix.py          K4/K5/K6 evidence summary.
 
 docs/
-  PROJECT_GUIDE.md
-  PIPELINE.md
-  OUTPUTS_CATALOG.md
-  GITHUB_NOTES.md
+  PIPELINE.md                         Reproduction guide and analysis stages.
+  SCRIPT_INDEX.md                     Script-purpose index.
+  FIGURE_TABLE_AUDIT.md               Figure/table provenance audit when available.
 
-data/
-  README.md
+overleaf/
+  main.tex                            Current paper source for Overleaf.
+  figures/                            Paper figures referenced by main.tex.
+
+results_v2/
+  feature_role_checks/                Internal metrics and K5 feature-family holdouts.
+  network_k4_k5_k6_B999/              Final monthly network null tests with 999 permutations.
+  temporal_k4_k5_k6/                  Monthly temporal validation outputs.
+  paper_visuals/                      Paper-ready visual outputs.
 ```
+
+## Selected Current Results
+
+- EOA filtering retained 2,443,868 externally owned accounts from 2,738,243 initial addresses.
+- K5 is used as the main descriptive taxonomy, not as the statistically strongest resolution across every criterion.
+- K4 has the strongest conservative same-role network-null evidence.
+- K5 has the highest seed stability among the compared annual resolutions and provides a richer descriptive role vocabulary.
+- K5 network validation is mixed and time-varying: only 1 of 12 monthly snapshots remains significant after Holm correction, although Fisher's combined statistic rejects the global monthly null under its calibration.
+- K5 temporal validation shows 50.00% observed self-transition versus 32.32% chance self-transition, with Cohen's kappa = 0.2613.
+- K5 two-step return behaviour is significant across 10/10 monthly triples under the stratified future-state null.
+- Full-population temporal signal analysis shows that annual K5 roles carry daily activity signatures, but these are complementary rather than fully independent evidence because some temporal-persistence features also enter annual clustering.
+
+## Reproducing The Paper Outputs
+
+A clean rerun requires the raw ERC-20 Trading 2022 monthly files, local storage for large intermediate tables, and an Ethereum RPC endpoint for contract/EOA filtering if contract labels need to be regenerated.
+
+Install Python dependencies:
+
+```powershell
+pip install -r requirements.txt
+```
+
+Then follow the stage order in `docs/PIPELINE.md`:
+
+1. Prepare raw monthly ERC-20 transfer files.
+2. Build wallet-day and wallet-level features.
+3. Filter to externally owned accounts.
+4. Run EOA-only K4/K5/K6 clustering.
+5. Run feature-role checks and holdouts.
+6. Run monthly network validation with B=999 permutations.
+7. Run temporal validation and two-step return tests.
+8. Run full EOA temporal signal analysis.
+9. Build paper-ready figures.
+10. Compile the Overleaf paper from `overleaf/main.tex`.
 
 ## What Is Not Included
 
-Large raw files, local virtual environments, temporary renders, and full intermediate datasets should not be committed to GitHub.
+The repository intentionally excludes raw TSV files, large parquet intermediates, large wallet-label CSVs, API keys, and local environment files. These are ignored by `.gitignore` and should be regenerated or downloaded from the cited data source.
 
-Use `data/README.md` to document where raw data came from and which local files are required to reproduce the analysis.
+## Notes For Reviewers And Collaborators
 
-## Key Results
-
-- Approximately 2.74 million wallets were processed.
-- Six behavioural wallet roles were identified.
-- Network validation showed strong role structure.
-- Temporal analysis found moderate monthly persistence.
-- Cross-feature-set and permutation tests showed non-random correspondence.
-- Two-step transition analysis suggested that some role changes are temporary, with many wallets returning to a prior state after one intermediate month.
-
-## How To Read This Repo
-
-Start with:
-
-1. `docs/PROJECT_GUIDE.md`
-2. `docs/PIPELINE.md`
-3. `docs/SCRIPT_INDEX.md`
-4. `docs/MAIN_PIPELINE_AUDIT.md`
-5. `docs/FIGURE_TABLE_AUDIT.md`
-6. `docs/K_SELECTION_ASSESSMENT.md`
-7. `docs/OUTPUTS_CATALOG.md`
-
-Then inspect the scripts in `src/` according to the pipeline stage you need.
+The repo is organized for traceability rather than as a one-command production package. Some exploratory scripts remain for project history, but the current paper should be read through the EOA-only K4/K5/K6 path documented in `docs/PIPELINE.md` and the selected outputs in `results_v2/`.

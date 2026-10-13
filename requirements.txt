@@ -1,10 +1,11 @@
 pandas
-tabulate
 numpy
-matplotlib
 scipy
 scikit-learn
 networkx
-python-docx
-duckdb
+matplotlib
 pyarrow
+duckdb
+tabulate
+python-docx
+Pillow
