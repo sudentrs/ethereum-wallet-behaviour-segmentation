@@ -67,3 +67,8 @@ results/figure_review_contact_sheet.png
 reports/
 presentations/
 docs/EOA_ONLY_FINAL_PROGRESS_REPORT.md
+
+# Recomputable revision caches; compact review results remain tracked
+results_v3/**/*.signature
+results_v3/**/monthly_tests_partial.csv
+results_v3/token_value_audit/wallet_day_comparison.csv

@@ -30,12 +30,13 @@ def load_rpc_url(cli_value: str | None) -> str:
     raise SystemExit("Provide --rpc-url or set ETH_RPC_URL.")
 
 
-def load_cache(path: Path) -> dict[str, dict[str, str]]:
+def load_cache(path: Path, block: str | None = None) -> dict[str, dict[str, str]]:
     if not path.exists():
         return {}
     with path.open(newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
-        return {row["address"].lower(): row for row in reader}
+        return {row["address"].lower(): row for row in reader
+                if block is None or row.get("block") == block}
 
 
 def append_cache(path: Path, rows: list[dict[str, str]]) -> None:
@@ -84,7 +85,7 @@ def classify_addresses(
     sleep_seconds: float,
     timeout: int,
 ) -> pd.DataFrame:
-    cache = load_cache(cache_path)
+    cache = load_cache(cache_path, block=block)
     missing = [address for address in addresses if address.lower() not in cache]
     print(f"Addresses requested: {len(addresses):,}")
     print(f"Already cached: {len(addresses) - len(missing):,}")

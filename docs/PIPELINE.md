@@ -1,5 +1,10 @@
 # Analysis Pipeline
 
+The methodological review revision is documented in
+`docs/REVIEW_REVISION_STATUS.md`. New `results_v3/` experiments compare
+resolutions without a preferred K5 and correct the monthly-window mismatch.
+The older temporal and token-value results described below are provisional.
+
 This guide explains how the current EOA-only Ethereum wallet segmentation paper is reproduced from raw ERC-20 transfer data to paper figures.
 
 The repository contains the scripts and selected compact outputs. It does not contain raw monthly transfer files, large intermediate parquet files, large wallet-label CSVs, or API keys.
@@ -89,9 +94,9 @@ Main scripts:
 
 Current interpretation:
 
-- K4: conservative comparison with strongest same-role network-null evidence.
-- K5: main descriptive taxonomy with the highest seed stability and richer role vocabulary.
-- K6: finer-resolution sensitivity comparison with lower seed stability.
+- K4/K5/K6: exploratory neighbouring resolutions with no preferred taxonomy.
+- K5 has the highest reported annual seed agreement among these candidates.
+- Network rankings change when the label null is conditioned on activity; see `results_v3/conditioned_network/`.
 
 Large wallet-label CSVs are intentionally not tracked in GitHub. They should be regenerated locally or shared separately.
 

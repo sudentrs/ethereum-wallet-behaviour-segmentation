@@ -1,0 +1,12 @@
+{
+  "python": "3.11.5 | packaged by Anaconda, Inc. | (main, Sep 11 2023, 13:26:23) [MSC v.1916 64 bit (AMD64)]",
+  "packages": {
+    "numpy": "1.26.4",
+    "pandas": "1.5.3",
+    "scipy": "1.11.1",
+    "scikit-learn": "1.6.0",
+    "matplotlib": "3.7.2",
+    "joblib": "1.2.0",
+    "threadpoolctl": "3.5.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "seed": 492,
+  "permutations": 999,
+  "sampled_wallets": 500,
+  "positive_power_wallets": 500,
+  "zero_power_excluded": 0,
+  "observed_days": 365,
+  "transform": "log1p then subtract wallet mean; exclude DC; normalize by total non-DC power",
+  "null": "Within-wallet permutation of all daily counts including zeros; full histogram preserved",
+  "inference": "Three upper-tail tests on sample-mean summaries; negative entropy tests concentration; no claim of recurring cycles or independent population coverage"
+}

@@ -1,0 +1,16 @@
+{
+  "raw_rows_read": 18914888,
+  "sampled_annual_wallets": 2000,
+  "invalid_selected_transfers": 0,
+  "informative_matched_rows": 3701,
+  "merge_coverage": {
+    "both": 3702,
+    "right_only": 1392,
+    "left_only": 0
+  },
+  "raw_match_fraction": 0.0,
+  "normalized_match_fraction": 0.5285058092407457,
+  "tolerance": "relative 1e-6, absolute 1e-9; float diagnostic only, not an exact accounting audit",
+  "scope": "One supplied month, uniform annual EOA sample; does not establish the units of every historical table or comparability between tokens",
+  "fixed_1e18_match_fraction": 1.0
+}

@@ -2,7 +2,7 @@
 
 This repository contains the code, documentation, and selected reproducible outputs for an academic study of Ethereum externally owned account (EOA) behaviour.
 
-The current paper asks whether Ethereum EOAs can be organized into behavioural states that remain meaningful across aggregate wallet features, transaction-network evidence, and temporal activity patterns. The project uses ERC-20 transfer activity from 2022, removes smart-contract addresses, compares K4/K5/K6 k-means taxonomies, and treats K5 as the main descriptive role layer while retaining K4 and K6 as robustness and sensitivity comparisons.
+The current paper asks which Ethereum wallet behaviour findings survive changes in segmentation resolution and representation. The project uses ERC-20 transfer activity from 2022 and compares K4/K5/K6 candidate partitions without selecting a preferred taxonomy. The manuscript is under methodological revision; see `docs/REVIEW_REVISION_STATUS.md` for completed tests and unresolved requirements.
 
 ## Research Question
 
@@ -14,8 +14,8 @@ The paper does not claim that Ethereum contains one natural set of permanent wal
 
 1. Build EOA-only wallet-level behavioural features from ERC-20 transfers.
 2. Compare candidate k-means resolutions K4, K5, and K6.
-3. Use K5 as a descriptive behavioural taxonomy because it has the highest seed stability and richer role vocabulary.
-4. Retain K4 as the stronger conservative network comparison and K6 as a finer-resolution sensitivity comparison.
+3. Compare seed stability, representation sensitivity, and cross-resolution overlap without declaring an overall winner.
+4. Treat the K4-K6 range as exploratory unless the broader K2-K10 diagnostics establish a defensible restriction.
 5. Validate roles through feature profiles, feature-family holdouts, transaction-network null tests, monthly transitions, two-step return tests, and full-population temporal signal analysis.
 
 ## Dataset
@@ -65,15 +65,22 @@ results_v2/
 ## Selected Current Results
 
 - EOA filtering retained 2,443,868 externally owned accounts from 2,738,243 initial addresses.
-- K5 is used as the main descriptive taxonomy, not as the statistically strongest resolution across every criterion.
+- No preferred annual resolution is selected.
 - K4 has the strongest conservative same-role network-null evidence.
 - K5 has the highest seed stability among the compared annual resolutions and provides a richer descriptive role vocabulary.
-- K5 network validation is mixed and time-varying: only 1 of 12 monthly snapshots remains significant after Holm correction, although Fisher's combined statistic rejects the global monthly null under its calibration.
-- K5 temporal validation shows 50.00% observed self-transition versus 32.32% chance self-transition, with Cohen's kappa = 0.2613.
-- K5 two-step return behaviour is significant across 10/10 monthly triples under the stratified future-state null.
+- Original K5 network validation is mixed: 1 of 12 monthly snapshots remains significant after Holm correction. Independence-calibrated Fisher significance is not used because wallets recur across months.
+- Original temporal results use mismatched annual preprocessing/prototypes and monthly observations. They are provisional; the corrected count-only monthly analysis is separate and uses frozen Jan-Jun models for Jul-Dec evaluation.
+- A January token-value audit found fixed-10^18 scaling in sampled prepared amounts, requiring token-aware reconstruction before value-based interpretations can be trusted.
 - Full-population temporal signal analysis shows that annual K5 roles carry daily activity signatures, but these are complementary rather than fully independent evidence because some temporal-persistence features also enter annual clustering.
 
 ## Reproducing The Paper Outputs
+
+The latest review experiments are in `results_v3/`: resolution diagnostics,
+corrected monthly states, timing surrogates, token-value provenance,
+activity-conditioned network tests, and participation prediction. Their
+manifests describe sampling and inferential limits. Earlier `results/` and
+`results_v2/` remain for traceability and are not automatically endorsed as
+submission-ready evidence.
 
 A clean rerun requires the raw ERC-20 Trading 2022 monthly files, local storage for large intermediate tables, and an Ethereum RPC endpoint for contract/EOA filtering if contract labels need to be regenerated.
 

@@ -1,0 +1,8 @@
+{
+  "task": "Next-month activity conditional on current-month activity",
+  "training_month_pairs": "Jan-Feb through May-Jun",
+  "evaluation_month_pairs": "Jul-Aug through Nov-Dec",
+  "training_rows": 250000,
+  "training_sampling": "up to 50000 active wallets per month, uniform",
+  "limitations": "Retrospective annual EOA cohort; wallets recur between training and evaluation. Tests generalize in time within this cohort, not to unseen people. No population-wide inactivity prediction. This task evaluates new monthly count states and does not independently validate annual pooled-value roles."
+}

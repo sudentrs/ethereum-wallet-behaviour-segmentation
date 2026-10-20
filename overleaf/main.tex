@@ -24,17 +24,17 @@ Sabanci University, Istanbul, Turkiye}
 % Abstract
 % ============================================================
 \begin{abstract}
-Public blockchains expose large-scale transaction histories, but this transparency does not automatically make wallet behaviour understandable.
-This study addresses whether unsupervised Ethereum wallet segments can be interpreted as meaningful behavioural roles rather than arbitrary clustering outputs.
-We propose a layered validation framework for Ethereum externally owned accounts.
-After removing smart contract addresses, we construct wallet-level behavioural features, compare alternative k-means resolutions, and evaluate candidate taxonomies through feature profiles, feature-family holdouts, transaction-network null tests, monthly state transitions, two-step return behaviour, and full-population temporal signal analysis.
-The analysis focuses on 2,443,868 externally owned accounts and represents daily activity through both time-domain features and frequency-domain features.
-The results show that Ethereum wallet roles are interpretable and temporally structured, but they should be read as behavioural states rather than fixed real-world identities.
-Across candidate resolutions, K4 provides the strongest conservative validation profile, K5 provides the highest seed stability among the compared annual resolutions and an interpretable descriptive taxonomy, and K6 provides finer-grained structure with weaker stability.
-For this reason, K5 is used as the main descriptive role layer, while K4 and K6 are treated as robustness and sensitivity comparisons.
-Network validation provides mixed evidence for the five-cluster taxonomy: same-role transaction concentration remains significant after Holm correction in only one of twelve monthly snapshots, although K4 and K6 show stronger network-null support.
-Temporal validation shows moderate month-to-month persistence and statistically significant conditional two-step return behaviour, subject to limitations of the monthly assignment and scaling procedure.
-Overall, this study contributes a reproducible framework for making Ethereum wallet behaviour readable at population scale through multiple validation layers.
+Ethereum transaction records expose large-scale activity, but interpreting wallet populations requires more than a clustering output.
+We investigate behavioural segmentation of 2,443,868 addresses classified as externally owned accounts using ERC-20 transfer data from 2022.
+A layered evaluation compares feature profiles, feature-family holdouts, transaction-network null tests, monthly states, and temporal signals.
+We examine $k=4,5,6$ as neighbouring candidate resolutions without selecting a preferred taxonomy because stability, separation, and network criteria favour different partitions.
+A consistent exploratory diagnostic sweep across $k=2$--10 and full-cohort overlap analysis examine this resolution dependence.
+The existing annual partitions are sensitive to feature representation, and same-role transaction concentration varies across resolutions and months.
+Signal analysis describes complementary activity rhythms rather than independent proof of the annual taxonomy.
+The original temporal findings require reassessment because monthly observations were assigned using annual preprocessing and prototypes.
+We therefore distinguish those provisional results from a corrected count-only analysis with common monthly representations and frozen preprocessing.
+Pooled token amounts and historical address classification remain sources of uncertainty.
+Our contribution is an evaluation framework for determining which wallet-level findings survive changes in resolution and representation, with explicit limits on identity and causal interpretation.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -78,8 +78,10 @@ To study this problem, we use the ERC-20 Trading 2022 dataset from Harvard Datav
 The initial address set contains 2,738,243 addresses.
 After filtering smart contract addresses, the final analysis focuses on 2,443,868 Ethereum externally owned accounts.
 We construct wallet-level aggregate features, compare alternative k-means resolutions, and evaluate candidate taxonomies through multiple validation layers.
-Across the tested resolutions, K4 provides the strongest conservative validation profile, K5 provides the highest seed stability among the compared annual resolutions and an interpretable descriptive taxonomy, and K6 provides finer-grained structure with weaker stability.
-For this reason, we use K5 as the main behavioural role taxonomy while treating K4 and K6 as robustness and sensitivity comparisons.
+We compare $k=4,5,6$ as neighbouring resolutions to examine how behavioural interpretations and validation results change with granularity.
+These are candidate partitions rather than estimates of a uniquely correct number of wallet roles.
+Because the evaluation criteria favour different resolutions, we do not designate a preferred taxonomy.
+The range is an exploratory comparison; it is not established as optimal by excluding all other values of $k$.
 We then validate the taxonomy through transaction-network analysis, monthly transition matrices, two-step return tests, feature-family holdouts, and full-population temporal signal analysis.
 The signal layer represents each wallet as a daily activity sequence and studies both direct time-domain properties and frequency-domain properties.
 
@@ -94,40 +96,10 @@ Instead, it shows how a candidate taxonomy can be made more defensible by testin
 Our findings suggest that Ethereum wallet behaviour is multi-layered.
 Aggregate roles, transaction-network position, monthly state movement, and daily activity rhythm provide related but distinct views of the same wallet population.
 
-% ============================================================
-% 2 Motivation
-% ============================================================
-\section{Motivation}
-
-Ethereum is difficult to understand directly from raw transaction data.
-Although individual wallet activities can be observed through transaction records or block explorers, these tools do not explain how millions of wallets behave collectively as a population.
-Relying only on manually labelled entities also provides a limited view, because most wallets do not have verified real-world labels.
-Researchers, analysts, and system designers therefore need methods that can summarize large-scale wallet behaviour in a systematic and interpretable way.
-
-Behavioural segmentation can help address this problem by converting millions of addresses into a smaller set of wallet states.
-For example, analysts may want to know whether an ecosystem is dominated by low-activity wallets, persistent wallets, high-transaction wallets, high-intensity wallets, irregularly active wallets, or transitional wallets.
-Such a segmentation can help describe the composition of the Ethereum ecosystem, monitor how activity patterns evolve over time, and support later applications such as anomaly detection and ecosystem monitoring.
-
-However, segmentation is only useful academically if the discovered groups are shown to be meaningful.
-A central challenge is that wallet behaviour is dynamic.
-A wallet may be inactive in one month, receiver-oriented in another month, and temporarily high-activity during a later period.
-Therefore, a cluster label should not be treated as a permanent wallet identity.
-Instead, wallet labels should be interpreted as behavioural states that can persist, change, or return over time.
-
-This creates a validation problem.
-In unsupervised learning, there are no ground-truth labels that directly prove whether the discovered groups are correct.
-Internal metrics such as silhouette score can describe cluster compactness, but they do not prove that the clusters correspond to meaningful blockchain behaviour.
-For wallet segmentation to become a research contribution, the discovered roles must be tested through additional evidence layers, including evidence that is not directly used by the clustering algorithm.
-
-This motivates the layered design of this study.
-The aggregate feature layer asks whether wallets can be grouped into interpretable roles.
-The feature-holdout layer asks whether the taxonomy depends on a single feature family.
-The network layer asks whether those roles align with transaction flows.
-The temporal transition layer asks whether role movement is structured across months.
-The two-step return layer asks whether wallets temporarily leave and return to previous states more often than expected by chance.
-The temporal signal layer asks whether static roles carry distinct daily activity rhythms.
-Together, these analyses evaluate the interpretability, robustness, network structure, and temporal associations of the discovered wallet roles.
-The goal is not only to produce wallet clusters, but to determine what kind of evidence is needed before an unsupervised Ethereum wallet taxonomy should be trusted.
+Practically, segmentation can summarize participation and interaction
+in the ERC-20 ecosystem and support later ecosystem-monitoring studies.
+An address is not equivalent to a person, and these applications
+require evaluation against simple activity-based baselines.
 
 \section{Related Work}
 
@@ -208,8 +180,8 @@ This paper addresses that gap by evaluating externally owned account roles throu
     activity table is constructed for externally owned accounts
     (EOAs). (B) Aggregate wallet features are transformed and
     robust-scaled before k-means clustering compares candidate
-    resolutions; $k=5$ is used as the main descriptive behavioural
-    taxonomy. (C) A parallel branch represents daily wallet activity
+    resolutions $k=4,5,6$ without selecting a preferred taxonomy.
+    (C) A parallel branch represents daily wallet activity
     as signals, extracts frequency-domain and time-domain features,
     and performs temporal signal clustering. (D) Feature-space,
     transaction-network, temporal-state, and cross-representation
@@ -274,11 +246,21 @@ modelled as separate data sources.
 The resulting features therefore describe ERC-20-transfer-derived
 behaviour rather than all Ethereum account activity.
 
-Token values are used as provided by the processed records.
-Because ERC-20 tokens differ in units, decimals, and economic
-meaning, value-flow features are interpreted as transfer-scale
-indicators rather than comparable measures of economic wealth
-across tokens.
+Token-value comparability is an unresolved representation issue.
+The repository contains both a decimals-normalized extraction route
+and a wallet-direction route that forwards raw integer values.
+An audit of January prepared amounts on a uniform sample of
+2,000 annual EOAs found 3,701 informative matched wallet-day-direction
+rows. All matched raw values divided by a fixed $10^{18}$ within
+the audit tolerance, whereas 52.9\% matched token-specific decimals
+normalization. This sample does not establish provenance for every
+historical table, but demonstrates that the prepared amounts can
+distort token denominations. Value-based role interpretations remain
+provisional until the representations are rebuilt and compared.
+Even decimals-normalized quantities cannot be summed across tokens
+as comparable economic amounts without additional valuation.
+Count-only sensitivity analysis avoids this denomination issue;
+token-aware validation is still required for the pooled-value taxonomy.
 
 The prepared wallet-day records support two analytical branches:
 aggregate behavioural role discovery and temporal signal analysis.
@@ -352,22 +334,26 @@ The reference clustering uses a fixed random seed, while
 seed-stability diagnostics repeat clustering under multiple
 initializations.
 
-We select $k=5$ as the main descriptive taxonomy because it has
-the highest seed stability and provides more behavioural detail
-than $k=4$.
-K4 provides stronger monthly network-null evidence;
-K5 is therefore not claimed to be the statistically strongest
-resolution.
-We refer to the selected taxonomy as \emph{Behaviour K5},
-retain K4 as a conservative comparison, and use K6 as a
-finer-resolution sensitivity comparison.
+We compare neighbouring resolutions $k=4,5,6$ without choosing an
+overall winner. K5 has the highest reported seed agreement among
+these candidates, whereas K4 has stronger monthly same-role
+network concentration and K6 has the highest reported silhouette.
+These criteria measure different properties and do not establish
+a unique optimum. We use \emph{Behaviour K5} only as the name of
+the five-cluster partition. Detailed K5 illustrations below are
+examples, not evidence that it is preferable to K4 or K6.
+The boundaries of the range remain exploratory pending a broader
+diagnostic sweep under a common protocol. K-means partitions are
+not necessarily nested: cluster identifiers are local to each fit.
 
 Internal compactness and separation are assessed using
 silhouette~\cite{rousseeuw1987silhouettes} and the
 Davies--Bouldin index~\cite{davies1979separation}.
 The comparison considers seed stability, cluster-size balance,
 internal metrics, network validation, and temporal validation.
-Feature-family holdouts separately assess the selected K5 taxonomy.
+Feature-family holdouts assess sensitivity to the representation;
+the detailed K5 table is an illustration and must not be interpreted
+as a complete cross-resolution comparison.
 Table~\ref{tab:k456_comparison} summarizes the evidence.
 
 \begin{table*}[t]
@@ -394,37 +380,18 @@ Table~\ref{tab:k456_comparison} summarizes the evidence.
         \bottomrule
     \end{tabular}
     
-    \medskip
-    
-    \begin{tabular}{c c r c c c}
-        \toprule
-        $k$ & Network Holm & Mean obs.--null &
-        Self-transition (chance) & $\kappa$ & Two-step Holm \\
-        \midrule
-        4 & 12/12 & 0.1096 &
-        51.36\% (34.66\%) & 0.2555 & 10/10 \\
-        5 & 1/12 & 0.0047 &
-        50.00\% (32.32\%) & 0.2613 & 10/10 \\
-        6 & 11/12 & 0.0403 &
-        46.90\% (28.58\%) & 0.2566 & 10/10 \\
-        \bottomrule
-    \end{tabular}
-    
     \smallskip
-
     \parbox{0.95\textwidth}{\footnotesize
-    Network Holm counts significant months among twelve tests;
-    two-step Holm counts significant triples among ten tests.
-    Temporal quantities are conditional on the monthly
-    assignment procedure.
-    K4 is the conservative comparison, K5 the stable descriptive
-    taxonomy, and K6 the finer-resolution sensitivity comparison.}
+    These are annual-partition diagnostics. Corrected count-only
+    monthly models are evaluated separately; matching values of
+    $k$ do not imply matching state meanings. No preferred
+    resolution is selected.}
 \end{table*}
 
 The Behaviour K5 solution contains 2,443,868 EOAs.
 Its smallest role contains 154,864 wallets (6.34\%),
 and its largest contains 923,286 wallets (37.78\%).
-The selected taxonomy provides a descriptive vocabulary without
+This candidate partition provides a descriptive vocabulary without
 highly fragmented role definitions.
 
 \subsection{Feature Holdout Validation}
@@ -497,10 +464,10 @@ The upper-tail Monte Carlo estimate is
 \end{equation}
 
 Holm correction~\cite{holm1979sequential} is applied across twelve monthly tests per $k$.
-Fisher combined $p$-values~\cite{fisher1932methods} are also reported.
-The standard chi-squared calibration assumes independent tests;
-shared wallets across months may induce dependence, so the combined
-value is interpreted as a supplementary summary.
+Monthly tests share wallets. Therefore, an independence-calibrated
+Fisher combined value is not used as evidence of global significance.
+Monthly effects and Holm-adjusted tests are the inferential results;
+any Fisher value retained in an older table is descriptive only.
 
 For full-year role mixing, monthly transfer-count matrices
 are pooled into $M$.
@@ -522,83 +489,43 @@ Wallets with different behaviours may interact systematically,
 so weak same-role concentration does not by itself invalidate
 a descriptive role taxonomy.
 
-\subsection{Temporal Transition Analysis}
+\subsection{Consistent Monthly State Analysis}
 
-Wallet roles are treated as dynamic behavioural states.
-For each month, wallet-level feature vectors are transformed
-and compared with the full-year behavioural prototypes.
-Each observed wallet-month is assigned to its nearest prototype.
+Monthly count states use transactions per calendar day, active-day
+fraction, transactions per active day, calendar-day count coefficient
+of variation, peak-day transaction share, and active-span fraction.
+Intensity and coefficient-of-variation features receive log1p
+transforms; fractions retain their scale. Calendar-day statistics
+include zero-count days within the month.
 
-Transitions include only wallets observed in both adjacent months.
-Absence in a month is treated as missing data, not as a state.
-The analysis contains 7,351,546 consecutive wallet-month
-observations for each tested resolution.
+A common RobustScaler and mini-batch k-means prototypes for each
+$k=4,5,6$ are fitted on up to 20,000 uniformly sampled active
+wallet-months from each of January--June, using seed 492 and ten
+initializations. Preprocessing and prototypes are frozen before
+July--December evaluation. Monthly identifiers are separate from
+annual role identifiers. The EOA cohort is retrospective.
 
-For each adjacent pair, observed self-transition is the proportion
-of shared wallets whose states agree.
-Chance agreement is
-\begin{equation}
-    P_{e,t}
-    =
-    \sum_c p_t(c)p_{t+1}(c),
-\end{equation}
-where both marginals are calculated among wallets present
-in that pair.
+A missing wallet-month remains missing rather than a behavioural
+state. Adjacent-month persistence conditions on activity in both
+months. Chance agreement is the dot product of pair-specific state
+marginals. Observed and chance rates are pooled using pair-size
+weights, and Cohen's coefficient~\cite{cohen1960agreement} is $\kappa=(p_{\mathrm{observed}}-p_{\mathrm{chance}})/
+(1-p_{\mathrm{chance}})$.
+Transition matrices and conditional next-state entropy use pooled
+held-out pair counts. Repeated observations of a wallet are not
+interpreted as independent unique wallets.
 
-Annual observed agreement $P_o$ and expected agreement $P_e$
-are weighted by pair size.
-Cohen's chance-corrected agreement~\cite{cohen1960agreement} is then
-\begin{equation}
-    \kappa
-    =
-    \frac{P_o-P_e}{1-P_e}.
-\end{equation}
-Monthly $\kappa$ values are not averaged.
+\subsection{Conditional Two-Step Returns}
 
-The monthly assignment procedure has two limitations.
-First, counts, totals, and active-day features accumulate over
-the observation window and are smaller in one month than
-in the full-year representation.
-Second, the monthly assignment procedure combines scaling estimated on
-the mixed annual address population with EOA-only prototypes.
-
-These mismatches may affect monthly assignments.
-The reported temporal results therefore remain conditional on
-the monthly assignment procedure.
-Annualisation has not been applied, and chance correction
-does not remove assignment bias.
-
-\subsection{Two-Step Return Test}
-
-For each consecutive triple $(t,t+1,t+2)$, we retain wallets
-observed in all three months and then restrict the cohort to
-wallets whose state changes between $t$ and $t+1$.
-The observed return rate is the proportion whose state at
-$t+2$ equals their state at $t$.
-
-The null model preserves initial and middle states and permutes
-final states only within middle-state strata among these eligible
-first-step switchers.
-It therefore preserves the selected cohort's middle-to-final
-state margins while breaking wallet-specific return structure.
-
-Each triple uses $B=999$ permutations.
-Independent reproducible streams use root seed 42 together
-with the resolution and triple index.
-Upper-tail Monte Carlo $p$-values use the add-one estimator,
-and Holm correction is applied across ten triples per $k$.
-
-The minimum attainable Monte Carlo estimate is
-$1/(999+1)=0.001$.
-Reaching this resolution does not identify the true tail probability.
-Pooled rates are weighted by eligible switcher observations;
-wallets may occur in multiple windows.
-
-The test asks whether the initial state carries information
-about the final state beyond the middle state.
-It cannot fully separate temporary excursions from stable
-wallet heterogeneity or regular alternation, and does not
-establish user intent.
+Return tests include wallets active in three consecutive held-out
+months that change state at the first transition. Final states are
+shuffled within middle-state strata among these switchers.
+We use 999 Monte Carlo permutations, add-one upper-tail $p$-values,
+and Holm correction across twelve tests: four held-out triples for
+each of three resolutions. This tests initial--final association
+conditional on the middle state and selected cohort margins.
+It does not separate temporary excursions from stable wallet
+heterogeneity, regular alternation, or causal event responses.
 
 \subsection{Full EOA Temporal Signal Analysis}
 
@@ -627,6 +554,15 @@ $(\sigma-\mu)/(\sigma+\mu)$ and can exceed one.
 
 Frequency-domain features are derived from the discrete Fourier
 transform of daily transaction and flow signals.
+Daily non-negative counts are transformed with $\log(1+x)$ and
+centred by their wallet-specific mean. We apply a real-valued FFT
+with a one-day sampling interval, remove the zero-frequency (DC)
+component, and normalize the remaining squared magnitudes to sum
+to one. Low, medium, and high bands use $[0,1/60)$,
+$[1/60,1/14)$, and $[1/14,0.5]$ cycles per day; weekly and
+monthly bands use $[1/8,1/6)$ and $[1/35,1/25)$.
+For zero non-DC power, normalized power, dominant frequency, and
+spectral entropy are set to zero; no periodicity is assigned.
 They include dominant frequency, peak power share,
 low-, medium-, and high-frequency power shares,
 weekly and monthly band power shares, and spectral entropy.
@@ -665,9 +601,11 @@ This heuristic selects signal models rather than annual wallet roles.
 The frequency-domain comparison supports $k=3$.
 For time-domain features, the automatic score favours $k=3$,
 but this solution places most wallets in one state.
-The $k=5$ solution is retained for behavioural interpretation
-because it is more balanced and more stable than the
-time-domain $k=3$ solution.
+We report $k=3$ as the score-selected time-domain solution.
+The five-state profiles below are an exploratory illustration of
+a different granularity; improved balance does not override the
+reported selection score. Conclusions based on those profiles
+require a sensitivity comparison with the three-state solution.
 
 Analysis scripts produce the feature, clustering, holdout,
 network, transition, return, and signal outputs.
@@ -677,8 +615,7 @@ network, transition, return, and signal outputs.
 
 The results are organized around the layered validation logic of
 the study. We compare the candidate behavioural resolutions
-$k=4$, $k=5$, and $k=6$, then evaluate Behaviour K5 as the main
-descriptive wallet-role taxonomy through feature-family holdouts,
+$k=4$, $k=5$, and $k=6$, with detailed K5 illustrations of feature-family holdouts,
 transaction-network validation, monthly transitions, two-step
 returns, and full-population temporal signal analysis.
 
@@ -688,12 +625,14 @@ K4 provides the strongest conservative network evidence. K5 has the highest seed
 descriptive vocabulary. K6 offers finer structure, but lower seed
 stability.
 
-We therefore retain K5 as the primary descriptive taxonomy,
-K4 as a conservative robustness reference, and K6 as a
-finer-resolution sensitivity comparison. K5 is not claimed to be
-statistically strongest across all validation layers.
+We do not select a primary taxonomy. The current results establish
+trade-offs among three candidate partitions. K5-specific profiles
+and signal associations do not establish that those findings
+generalize to K4 and K6.
 
-\subsection{Static Wallet Roles}
+\input{review_results}
+
+\subsection{Static Wallet Roles: Five-Cluster Illustration}
 
 Behaviour K5 produces five interpretable EOA roles differing in
 transaction intensity, directionality, transfer scale, temporal
@@ -701,8 +640,10 @@ persistence, and volatility. These roles describe behavioural
 states rather than verified real-world user identities.
 
 Table~\ref{tab:behavior_k5_roles} summarizes the roles, and
-Figure~\ref{fig:k5_profiles} shows their median robust-scaled
-feature profiles. C1 is the largest role and C2 the smallest.
+Figure~\ref{fig:k5_profiles} compares count-feature medians across all
+three candidate partitions. Within K5, C1 is the largest role and
+C2 the smallest. Descriptions involving pooled token amounts are
+provisional in light of the token-denomination audit.
 
 C2 concentrates transactions into few active days: its medians
 are 3 active days, 15 transactions, and 5 transactions per active
@@ -767,10 +708,12 @@ the year.
 \begin{figure*}[t]
     \centering
     \includegraphics[width=\textwidth]
-    {figures/fig_k5_profile_heatmap.pdf}
-    \caption{Median robust-scaled feature profiles of Behaviour
-    K5 roles. Colours show scaled feature medians; values are
-    clipped at the displayed colour limits.}
+    {figures/review_count_profiles.pdf}
+    \caption{Comparable count-based profiles of all K4/K5/K6
+    roles. Cell numbers are raw feature medians. Colours give
+    within-feature percentiles among the fifteen role medians;
+    they are not wallet-level percentiles. Identifiers are local
+    to each candidate partition.}
     \label{fig:k5_profiles}
 \end{figure*}
 
@@ -906,16 +849,13 @@ the results.
         Mean observed same-role ratio & 0.2860 \\
         Mean shuffled-label null ratio & 0.2813 \\
         Mean observed-minus-null & 0.0047 \\
-        Fisher combined $p$ & $1.8437\times10^{-4}$ \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-The Fisher combined value provides evidence against the global
-monthly null under its independence calibration, while only one
-month survives Holm correction. Global evidence does not imply
-uniform monthly significance: the evidence is concentrated in a
-few months, consistent with time-varying network structure.
+Only one month survives Holm correction for K5. Because monthly
+tests share wallets, we do not infer global significance from an
+independence-calibrated combination of the monthly $p$-values.
 
 K5 should therefore not be interpreted as a uniformly strong
 transaction-community partition. Its behavioural roles can
@@ -923,138 +863,6 @@ support analysis of interactions, but same-role concentration
 is not consistently stronger than the shuffled-label null.
 K4 and K6 provide stronger monthly network-null evidence.
 
-\subsection{Temporal Transitions}
-
-The temporal analysis contains 7,351,546 consecutive
-wallet-month observations for K5.
-Observed self-transition is 50.00\%, compared with 32.32\%
-expected under independent consecutive states with the
-pair-specific marginals. Cohen's $\kappa$ is 0.2613.
-
-Figure~\ref{fig:self_transition_chance} compares observed
-and chance-expected rates across resolutions.
-Figure~\ref{fig:k5_transitions} shows K5 state-to-state
-transition probabilities.
-Table~\ref{tab:transition_predictiveness} reports the pooled
-K5 metrics.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]
-    {figures/fig_k456_self_transition_vs_chance.pdf}
-    \caption{Observed and chance-expected self-transition
-    rates for K4, K5 and K6. Rates use pair-size weighting;
-    annotations show Cohen's $\kappa$.
-    Results are conditional on the monthly
-    assignment and scaling procedure.}
-    \label{fig:self_transition_chance}
-\end{figure}
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]
-    {figures/fig_k5_transition_matrix.pdf}
-    \caption{Behaviour K5 monthly transition probabilities,
-    pooled over adjacent months among wallets observed in
-    both months. Rows denote current states and columns
-    denote next states. Results are conditional on the
-    monthly assignment and scaling procedure.}
-    \label{fig:k5_transitions}
-\end{figure}
-
-Knowing the current state reduces next-state entropy by 9.5\%.
-The labels therefore contain measurable but non-deterministic
-temporal information.
-
-\begin{table}[t]
-    \centering
-    \caption{Temporal transition predictiveness of
-    Behaviour K5 states.}
-    \label{tab:transition_predictiveness}
-    \begin{tabular}{l r}
-        \toprule
-        Metric & Value \\
-        \midrule
-        Wallet-month pairs & 7,351,546 \\
-        Observed self-transition rate & 50.00\% \\
-        Chance self-transition rate & 32.32\% \\
-        Cohen's $\kappa$ & 0.2613 \\
-        Next-state entropy & 1.783 bits \\
-        Conditional entropy & 1.613 bits \\
-        Normalized entropy reduction & 9.5\% \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-These results remain conditional on the monthly assignment
-procedure. Accumulating features are smaller in one month than
-over the full year, and the monthly assignment method combines
-mixed-population scaling with EOA-only prototypes.
-These factors may affect state assignments; the results do
-not establish causal behavioural persistence.
-
-\subsection{Two-Step Return Behaviour}
-
-The return test includes wallets observed in three consecutive
-months that change state on the first transition.
-Final states are permuted within middle-state strata among
-these eligible switchers, using $B=999$ permutations.
-Holm correction covers ten monthly triples.
-
-For K5, observed return is 34.06\%, compared with a weighted
-conditional-null mean of 26.24\%.
-All ten triples remain significant after Holm correction.
-
-Figure~\ref{fig:two_step_return} shows observed and
-stratified-null rates for each triple.
-Table~\ref{tab:two_step_return} reports the pooled
-descriptive rates.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]
-    {figures/fig_k5_two_step_return_vs_null.pdf}
-    \caption{Behaviour K5 two-step return rates among
-    first-step switchers observed in all three months.
-    Final states are permuted within middle-state strata
-    using 999 permutations. Shading shows the central
-    95\% null interval, not a confidence interval for
-    the observed return rate. Results are conditional
-    on the monthly assignment procedure.}
-    \label{fig:two_step_return}
-\end{figure}
-
-All ten raw Monte Carlo estimates reach the attainable
-resolution $1/(999+1)=0.001$, with zero exceedances.
-Holm-adjusted values are 0.010.
-The permutation resolution does not identify the true
-tail probability.
-
-\begin{table}[t]
-    \centering
-    \caption{Two-step return behaviour for Behaviour K5.
-    Pooled observations may include the same wallet
-    in multiple monthly windows.}
-    \label{tab:two_step_return}
-    \begin{tabular}{l r}
-        \toprule
-        Metric & Value \\
-        \midrule
-        Eligible switcher observations & 2,352,160 \\
-        Observed return rate & 34.06\% \\
-        Weighted conditional-null return rate & 26.24\% \\
-        Observed-minus-null & 0.0782 \\
-        Permutations & 999 \\
-        Significant triples before correction & 10/10 \\
-        Significant triples after Holm correction & 10/10 \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-The result supports conditional return structure under the
-current assignment procedure. It does not establish user intent
-and cannot fully separate temporary excursions from stable
-wallet heterogeneity or regular alternation.
 
 \subsection{Time-Domain Signal Results}
 
@@ -1067,8 +875,9 @@ Automatic model selection favours $k=3$, which has the
 strongest silhouette score, but this solution places 76.41\%
 of wallets in one cluster and has lower seed stability than
 the $k=5$ solution.
-We retain time-domain $k=5$ for its more balanced
-descriptive state vocabulary.
+The five-state results below are exploratory descriptions rather
+than the score-selected solution. The three-state solution remains
+the primary result under the stated automatic selection rule.
 
 \begin{table}[t]
     \centering
@@ -1298,19 +1107,25 @@ The results support a layered interpretation of Ethereum wallet
 behaviour. Aggregate clustering provides a descriptive vocabulary
 of roles, while network validation shows that behavioural
 similarity does not necessarily imply transaction-community
-structure. For Behaviour K5, same-role transfer concentration is
+structure. Under the original unrestricted-label null, K5 same-role transfer concentration is
 significant in only one of twelve monthly networks after Holm
 correction, compared with twelve months for K4 and eleven for K6.
-K5 should therefore be interpreted as a descriptive behavioural
-taxonomy rather than a consistently assortative network partition.
+The activity-conditioned rerun changes this comparison: K4 has
+two significant months, while K5 and K6 each have twelve.
+Full role-mixing mutual information is significant in every month
+for all three candidates under either null. Network interpretation
+therefore depends on both the partition and the null model;
+behavioural roles may also organize complementary cross-role flows.
+Only 15.1\% of raw transfers survive the two-labelled-EOA,
+non-self endpoint requirement, limiting the network scope.
 
 Model selection involves a trade-off between resolutions.
-K4 provides stronger conservative network evidence. K5 has the highest seed
+K4 provides stronger concentration under unrestricted shuffling. K5 has the highest reported annual seed
 stability and offers a more detailed role vocabulary than K4.
 K6 provides finer structure, but lower seed stability. These findings motivate
-the use of K5 as the main descriptive taxonomy, with K4 and K6
-retained as robustness and sensitivity comparisons. They do not
-establish that K5 is statistically strongest across all criteria.
+a comparative interpretation across all three candidate partitions.
+They do not establish that K5 is strongest across all criteria or
+that K6 is a subdivision of K5.
 
 The role profiles also distinguish transaction intensity from
 persistence. C2 concentrates transactions into few active days,
@@ -1333,38 +1148,21 @@ features, but the association between annual roles and daily
 signal states should not be treated as fully independent
 validation.
 
-Temporal transitions provide evidence of persistence beyond
-chance under the current state-assignment procedure.
-For K5, observed self-transition is 50.00\%, compared with
-32.32\% expected from the pair-specific state marginals,
-giving Cohen's $\kappa=0.2613$.
-Knowing the current state reduces next-state entropy by 9.5\%.
-These results indicate measurable but non-deterministic
-temporal structure.
+The mismatched annual-prototype temporal results were excluded
+from the main findings.
 
-The stratified two-step return test provides additional
-conditional evidence. Among first-step switchers observed in
-three consecutive months, K5 returns to its initial state in
-34.06\% of eligible observations, compared with a weighted
-conditional-null mean of 26.24\%. All ten triples remain
-significant after Holm correction.
-Because final states are permuted within middle-state strata,
-the result indicates an association between initial and final
-states beyond the selected cohort's middle-to-final margins.
-It does not establish user intent or distinguish temporary
-excursions fully from stable wallet heterogeneity and regular
-alternation.
-
-Both temporal analyses remain conditional on the monthly
-assignment procedure. Counts, totals, and active-day features
-accumulate over the observation window, making monthly values
-smaller than annual values. The monthly assignment method also combines
-scaling estimated on the mixed annual address population with
-EOA-only prototypes. These mismatches may affect assignments;
-chance correction and stratified permutations do not remove
-that concern. Recomputing states under consistent population
-scaling and comparable observation windows is necessary to
-assess the sensitivity of the temporal findings.
+Those historical statistics cannot validate the annual roles
+because of the monthly/annual preprocessing mismatch. The separate
+corrected analysis fits common monthly count representations on
+January--June and evaluates frozen models on July--December.
+Its pooled chance-corrected agreement is 0.250, 0.226, and 0.178
+for K4, K5, and K6, with significant conditional returns at all
+three resolutions. These are distinct monthly taxonomies, rather
+than repaired identifiers for the original annual roles.
+State-only participation predictions improve on a constant
+baseline but underperform a direct activity logistic model in
+every evaluation month. Incremental predictive utility is therefore
+not established by this experiment.
 
 Daily signal analysis provides a complementary representation.
 C3 is enriched in the intermittent-switching state TD4 and
@@ -1385,12 +1183,12 @@ smart-contract wallets, and bytecode queried at the latest
 block does not establish an address's historical classification
 throughout 2022.
 
-Our central claim is that Behaviour K5 provides a useful
-descriptive vocabulary whose strengths and limitations can be
-examined through multiple validation layers.
-The evidence supports feature-space differentiation and
-conditional temporal structure, alongside weaker same-role
-network concentration than the conservative K4 alternative.
+Our central question is which behavioural findings survive changes
+in segmentation resolution and representation. The present results
+show criterion-dependent trade-offs; a complete robustness claim
+requires comparable tests across all candidate partitions.
+The evidence supports feature-space differentiation and conditional
+temporal structure, but network rankings depend on the chosen null.
 Wallet roles remain behavioural descriptions rather than
 verified identities, and the validation results establish
 associations rather than causality.
@@ -1400,22 +1198,34 @@ associations rather than causality.
 This paper presents a layered validation framework for Ethereum EOA wallet segmentation.
 Rather than treating clustering as the final result, we evaluate wallet roles using static feature profiles, feature-family holdouts, transaction-network structure, temporal transitions, two-step return behaviour, and full-population temporal signal analysis.
 
-The findings show that Ethereum wallet behaviour is multi-dimensional.
-Static K5 roles provide an interpretable aggregate taxonomy, while K4 and K6 show how the result changes under conservative and fine-grained resolutions.
-Transaction-network analysis shows that network evidence is resolution-dependent: K4 provides the strongest conservative network support, K5 provides a richer descriptive taxonomy with weaker same-role network evidence, and K6 provides finer-grained structure with lower seed stability.
-Temporal analysis shows that wallet behaviour changes in structured ways over time.
-For K5, wallets show moderate chance-corrected persistence and statistically significant conditional two-step return behaviour.
-Full EOA signal analysis further shows that these roles carry temporal signatures: some roles are enriched in sparse long-gap states, while others are enriched in intermittent switching and concentrated frequency-domain states.
+K4, K5, and K6 are candidate partitions at neighbouring resolutions;
+no preferred taxonomy is selected. Broader sample diagnostics,
+representation perturbations, and full-cohort overlap show that the
+result depends on granularity and feature design. Network rankings
+change after conditioning on in/out activity, while full role mixing
+remains structured for all three resolutions in the retained subgraph.
 
-Overall, the study demonstrates that Ethereum wallet segmentation becomes more academically defensible when clustering is combined with multiple validation layers.
-The main conclusion is not that there is one permanent or natural set of wallet identities, but that behavioural wallet states can be discovered, interpreted, and evaluated through feature-space, network, temporal-transition, and temporal-signal evidence.
-At the same time, the findings should be interpreted carefully.
-Wallet labels are behavioural states rather than verified real-world identities, and temporal results remain conditional on the current monthly assignment and scaling procedure.
+A corrected count-only monthly analysis uses common preprocessing
+and frozen monthly prototypes. It finds above-chance persistence
+and conditional two-step returns across all three resolutions in
+held-out months. Count-preserving timing surrogates also support
+temporal organization in a uniform wallet sample. These findings
+do not establish permanent identities or recurring annual cycles.
+State-only participation predictors underperform a direct activity
+baseline, so incremental predictive utility remains unproven.
 
-Future work can extend this framework by applying formal event-study methods, improving role labels through external metadata where appropriate, recomputing temporal transitions under a fully consistent monthly scaling procedure, and comparing the framework across multiple blockchain ecosystems.
+The token-value audit identifies a substantive denomination issue
+in sampled prepared amounts. Token-aware reconstruction and
+comparison are required before economic interpretations of the
+annual partitions can be supported. Historical EOA sensitivity and
+comparable signal-association tests across resolutions also remain
+necessary. The framework is useful for exposing these limitations;
+statistical significance alone does not establish a trusted taxonomy.
 
 \section*{Code and Data Availability}
-All analysis code is available at \url{https://github.com/sudentrs/ethereum-wallet-behaviour-segmentation}.
+The analysis repository is \url{https://github.com/sudentrs/ethereum-wallet-behaviour-segmentation}.
+Before submission, the revision scripts, compact outputs, and their
+environment and provenance manifests must be included in a tagged release.
 The ERC-20 Trading 2022 data are available from Harvard Dataverse \cite{somin2025erc2022,somin2025dataset}.
 The repository contains the analysis scripts, figure-generation scripts, and reproducibility notes used to generate the reported validation outputs.
 Raw monthly transfer files and large derived label tables are not stored in the repository and should be regenerated or downloaded from the cited data source.
@@ -1481,8 +1291,6 @@ N. X. Vinh, J. Epps, and J. Bailey, ``Information theoretic measures for cluster
 \bibitem{holm1979sequential}
 S. Holm, ``A simple sequentially rejective multiple test procedure,'' \emph{Scandinavian Journal of Statistics}, vol. 6, no. 2, pp. 65--70, 1979. [Online]. Available: \url{https://www.jstor.org/stable/4615733}
 
-\bibitem{fisher1932methods}
-R. A. Fisher, \emph{Statistical Methods for Research Workers}, 4th ed. Edinburgh: Oliver and Boyd, 1932.
 
 \bibitem{newman2003mixing}
 M. E. J. Newman, ``Mixing patterns in networks,'' \emph{Physical Review E}, vol. 67, article 026126, 2003, doi: \href{https://doi.org/10.1103/PhysRevE.67.026126}{10.1103/PhysRevE.67.026126}.

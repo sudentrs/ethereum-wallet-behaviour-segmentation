@@ -1,5 +1,11 @@
 # EOA-Only K5 Downstream Validation Decision Memo
 
+Historical memo: the K5-preference statements and early monthly sampling
+results below describe a preceding analysis. They are retained for provenance,
+not current model-selection or publication claims. The current study compares
+K4/K5/K6 without a preferred taxonomy. Consult `REVIEW_REVISION_STATUS.md`,
+`results_v2/network_k4_k5_k6_B999/` and `results_v3/` for later checks.
+
 ## Purpose
 
 This memo summarizes the downstream validation work completed after selecting EOA-only `K=5` as the preferred richer role-taxonomy candidate.
@@ -51,6 +57,8 @@ Main outputs:
 - `results/eoa_only_kmeans5/network_validation/network_validation_summary.csv`
 - `results/eoa_only_kmeans5/network_validation/cluster_adjacency_tx_counts.csv`
 - `results/eoa_only_kmeans5/network_validation/figures/cluster_adjacency_tx_counts_log_heatmap.png`
+- `results/eoa_only_kmeans5/network_validation_monthly/monthly_network_validation_summary.csv`
+- `results/eoa_only_kmeans5/network_validation_monthly/monthly_network_null_validation_report.md`
 
 The September 2022 transaction-network validation processed:
 
@@ -71,6 +79,22 @@ Interpretation:
 The K5 roles do not show stronger within-role transaction concentration than shuffled labels in this sampled network test. Therefore, the network evidence for K5 should be reported as mixed, not strong.
 
 This is important because it means K5 is more strongly supported by feature-space stability and temporal behaviour than by same-role transaction-network modularity.
+
+Follow-up full-year monthly validation repeated the same-role network-null test across all 2022 ERC-20 transfer snapshots using 200,000 sampled labelled edges per month.
+The follow-up result is more nuanced:
+
+- months processed: `12`
+- significant months with upper-tail p-value below `0.05`: `5`
+- significant months: `202203`, `202207`, `202210`, `202211`, `202212`
+- mean observed same-cluster ratio: `0.2877`
+- mean shuffled-label null ratio: `0.2757`
+- mean observed-minus-null difference: `0.0120`
+
+Interpretation:
+
+K5 same-role transaction concentration is time-varying.
+It is stronger than the shuffled-label null model in some months, but not consistently across the full 2022 observation window.
+Therefore, the earlier single-month limitation can be replaced with a full-year repeated-test statement, but the conclusion should still be cautious: K5 has mixed and time-varying network-homophily evidence rather than uniformly strong network validation.
 
 ### 4. Temporal validation
 
@@ -160,7 +184,7 @@ The better framing is:
 
 Use:
 
-> After removing contract addresses, `K=5` provides the strongest balance between statistical defensibility, interpretability, cluster size, and temporal persistence among richer EOA-only wallet-role segmentations. The roles are best interpreted as behavioural states rather than verified real-world identities. Temporal validation shows moderate persistence and meaningful two-step return behaviour, while transaction-network validation gives mixed evidence: role-to-role flows are structured, but same-role transaction concentration is not stronger than a shuffled-label null test.
+> After removing contract addresses, `K=5` provides the strongest balance between statistical defensibility, interpretability, cluster size, and temporal persistence among richer EOA-only wallet-role segmentations. The roles are best interpreted as behavioural states rather than verified real-world identities. Temporal validation shows moderate persistence and meaningful two-step return behaviour, while transaction-network validation gives mixed and time-varying evidence: role-to-role flows are structured, and same-role transaction concentration exceeds a shuffled-label null in some months but not consistently across the full 2022 observation window.
 
 Avoid:
 

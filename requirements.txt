@@ -9,3 +9,5 @@ duckdb
 tabulate
 python-docx
 Pillow
+joblib
+threadpoolctl

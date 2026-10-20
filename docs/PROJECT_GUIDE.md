@@ -1,5 +1,9 @@
 # Project Guide
 
+No preferred annual resolution is selected. Consult
+`docs/REVIEW_REVISION_STATUS.md` for the corrected count-only monthly
+pipeline, the token-denomination audit, and remaining submission requirements.
+
 ## Big Picture
 
 This repository supports an academic study of Ethereum wallet behaviour segmentation.
@@ -40,9 +44,9 @@ Features are robust-scaled before clustering.
 
 The current paper compares K4, K5, and K6 KMeans taxonomies.
 
-K5 is used as the main descriptive taxonomy because it provides a richer behavioural vocabulary while retaining stronger seed stability than K6.
-
-K4 and K6 remain important robustness comparisons.
+K4, K5, and K6 are neighbouring candidate partitions. A broader K2-K10
+sample sweep does not establish a unique optimum or uniquely justify this
+range. Different validation criteria favour different resolutions.
 
 ### 4. Feature And Role Interpretation
 
@@ -80,7 +84,7 @@ Avoid:
 
 Use:
 
-> K5 is a defensible descriptive taxonomy under the current evidence.
+> The candidate taxonomies require validation across resolutions, representations, and null models.
 
 Avoid:
 

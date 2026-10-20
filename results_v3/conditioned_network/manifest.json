@@ -1,0 +1,21 @@
+{
+  "months": [
+    "202201",
+    "202202",
+    "202203",
+    "202204",
+    "202205",
+    "202206",
+    "202207",
+    "202208",
+    "202209",
+    "202210",
+    "202211",
+    "202212"
+  ],
+  "permutations": 999,
+  "seed": 492,
+  "sample_edges": 50000,
+  "null": "Wallet labels permuted among full-month eligible EOA endpoints; conditioned variant preserves label counts within joint floor(log2(in_event_count+1)),floor(log2(out_event_count+1)) strata",
+  "scope": "Full-month transfer-count coverage; tests use a uniform transfer-event sample. Event counts are not unique-neighbour degree. MI tests any role interaction structure including cross-role mixing. Holm separately within k/null/metric over months; no joint claim across all families. Exact-degree effects can remain within bins."
+}

@@ -117,7 +117,7 @@ def spectral_features(signal: np.ndarray, prefix: str) -> dict[str, float]:
     total_power_safe = total_power if total_power else 1.0
     norm_power = power_no_dc / total_power_safe
     dominant_idx = int(np.argmax(power_no_dc)) if len(power_no_dc) else 0
-    dominant_freq = float(freqs_no_dc[dominant_idx]) if len(freqs_no_dc) else 0.0
+    dominant_freq = float(freqs_no_dc[dominant_idx]) if total_power > 0 and len(freqs_no_dc) else 0.0
     dominant_period = 1.0 / dominant_freq if dominant_freq > 0 else 0.0
     peak_share = float(power_no_dc[dominant_idx] / total_power_safe) if len(power_no_dc) else 0.0
 
@@ -137,7 +137,7 @@ def spectral_features(signal: np.ndarray, prefix: str) -> dict[str, float]:
         f"{prefix}_high_frequency_power_share": band_share(1 / 14, 0.5 + 1e-9),
         f"{prefix}_weekly_band_power_share": band_share(1 / 8, 1 / 6),
         f"{prefix}_monthly_band_power_share": band_share(1 / 35, 1 / 25),
-        f"{prefix}_spectral_entropy": float(np.nan_to_num(entropy(norm_power, base=2), nan=0.0)),
+        f"{prefix}_spectral_entropy": float(entropy(norm_power, base=2)) if total_power > 0 else 0.0,
     }
 
 

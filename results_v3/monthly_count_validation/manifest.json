@@ -1,0 +1,119 @@
+{
+  "training_months": [
+    "202201",
+    "202202",
+    "202203",
+    "202204",
+    "202205",
+    "202206"
+  ],
+  "evaluation_months": [
+    "202207",
+    "202208",
+    "202209",
+    "202210",
+    "202211",
+    "202212"
+  ],
+  "cohort_size": 2443868,
+  "cohort_sha256": "4fc40626ece193d58cc5a9dc5333879bbadc725468b3b85904d325a01fe65df3",
+  "features": [
+    "tx_per_calendar_day",
+    "active_day_fraction",
+    "tx_per_active_day",
+    "daily_count_cv",
+    "peak_count_share",
+    "span_fraction"
+  ],
+  "seed": 492,
+  "permutations": 999,
+  "source": [
+    {
+      "month": "202201",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202201.csv",
+      "size": 507389115,
+      "mtime_ns": 1772959245244941300,
+      "active_wallets": 830309
+    },
+    {
+      "month": "202202",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202202.csv",
+      "size": 432611249,
+      "mtime_ns": 1772959289378239300,
+      "active_wallets": 846549
+    },
+    {
+      "month": "202203",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202203.csv",
+      "size": 548621458,
+      "mtime_ns": 1772959343407865100,
+      "active_wallets": 984649
+    },
+    {
+      "month": "202204",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202204.csv",
+      "size": 453522302,
+      "mtime_ns": 1772959367285258600,
+      "active_wallets": 967399
+    },
+    {
+      "month": "202205",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202205.csv",
+      "size": 482139466,
+      "mtime_ns": 1772959392553786100,
+      "active_wallets": 1010310
+    },
+    {
+      "month": "202206",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202206.csv",
+      "size": 382938748,
+      "mtime_ns": 1772959412700164100,
+      "active_wallets": 895866
+    },
+    {
+      "month": "202207",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202207.csv",
+      "size": 463094192,
+      "mtime_ns": 1772959437303896700,
+      "active_wallets": 1036233
+    },
+    {
+      "month": "202208",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202208.csv",
+      "size": 468342152,
+      "mtime_ns": 1772959462234055700,
+      "active_wallets": 1012028
+    },
+    {
+      "month": "202209",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202209.csv",
+      "size": 623553299,
+      "mtime_ns": 1772959495554599700,
+      "active_wallets": 1196575
+    },
+    {
+      "month": "202210",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202210.csv",
+      "size": 534845896,
+      "mtime_ns": 1772959523797483600,
+      "active_wallets": 1064560
+    },
+    {
+      "month": "202211",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202211.csv",
+      "size": 637211855,
+      "mtime_ns": 1772959557747412000,
+      "active_wallets": 1158839
+    },
+    {
+      "month": "202212",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202212.csv",
+      "size": 669532376,
+      "mtime_ns": 1772959593517102600,
+      "active_wallets": 988214
+    }
+  ],
+  "feature_units": "counts only; no token amounts",
+  "absence": "missing, not a state",
+  "interpretation": "Monthly state IDs are separate from annual IDs. Training samples are balanced by month, not by wallet. Daily inputs must be unique wallet-day rows. Held-out evaluation fixes models but is conditional on the retrospectively defined annual EOA cohort."
+}
