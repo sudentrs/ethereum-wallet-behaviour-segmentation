@@ -64,7 +64,8 @@ results_v2/
 
 ## Selected Current Results
 
-- EOA filtering retained 2,443,868 externally owned accounts from 2,738,243 initial addresses.
+- The original present-day code filter retained 2,443,868 addresses from 2,738,243 initial addresses; this is not a verified historical 2022 EOA cohort.
+- A historical probability audit found 69/400 excluded addresses code-free at all twelve 2022 month ends (weighted estimate 19.16%, conservative 95% interval 12.74%-27.02%); 67 also have verified 2022 transaction-origination evidence. A separate full-population historical rebuild is pending, not a completed correction. See `docs/HISTORICAL_COHORT_REBUILD.md`.
 - No preferred annual resolution is selected.
 - K4 has the strongest conservative same-role network-null evidence.
 - K5 has the highest seed stability among the compared annual resolutions and provides a richer descriptive role vocabulary.

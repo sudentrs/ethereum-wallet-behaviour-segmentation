@@ -1,0 +1,19 @@
+{
+  "seed": 20221020,
+  "per_stratum": 200,
+  "raw_addresses": 2738243,
+  "retained_addresses": 2443868,
+  "excluded_addresses": 294375,
+  "sample_addresses": 400,
+  "known_positive_addresses_in_previous_audit": 33,
+  "cached_positive_addresses_in_probability_sample": 0,
+  "rpc_calls": 0,
+  "inputs_sha256": {
+    "data\\processed\\wallet_kmeans6_expanded_daily_features.csv": "9bdb41d0998aa79f74e521614426153bf659afa951e1575304162b98571d167d",
+    "scripts\\prepare_historical_exclusion_audit.py": "9ed85f2415d8a5cd404c6b944814f7b574905af0aa9daab75da11354df86e28c",
+    "results\\eoa_only_kmeans4\\wallet_eoa_only_kmeans_clusters.csv": "4fc40626ece193d58cc5a9dc5333879bbadc725468b3b85904d325a01fe65df3",
+    "results\\eoa_only_kmeans5\\wallet_eoa_only_kmeans_clusters.csv": "25023fe57f6484ecbdfef62cd75a8d39aba0c3aaa2f06d2891fdf3eb79ad2070",
+    "results\\eoa_only_kmeans6\\wallet_eoa_only_kmeans_clusters.csv": "35f98a6ed745e98b9a186ea2f5e0384b775e0bddbe1d873ae49cf913ccbe219e",
+    "data\\interim\\excluded_code_type_audit\\historical_origination_audit.csv": "0c7dec0486a0bb15d8017dbab657da9a1ee4291bd895cab2bdfe7fad66db8992"
+  }
+}

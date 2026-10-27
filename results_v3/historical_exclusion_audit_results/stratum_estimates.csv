@@ -1,0 +1,3 @@
+activity_stratum,population_n,sample_n,empty_all_month_ends_n,unresolved_n,weighted_lower_contribution,weighted_upper_contribution,confidence_lower_population_count,confidence_upper_population_count
+high_gt_10,272339,200,39,0,53106.105,53106.105,35443,74633
+medium_3_to_10,22036,200,30,0,3305.4,3305.4,2054,4915

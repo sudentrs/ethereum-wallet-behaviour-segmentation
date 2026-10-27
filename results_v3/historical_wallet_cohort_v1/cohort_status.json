@@ -1,0 +1,15 @@
+{
+  "raw_population": 2738243,
+  "baseline_retained": 2443868,
+  "snapshot_excluded": 1552,
+  "snapshot_included": 69,
+  "snapshot_unresolved": 2736622,
+  "definition": "empty_code_at_all_12_pinned_2022_month_ends_v1",
+  "new_code_queries_this_run": 0,
+  "verified_origination_addresses": 100,
+  "complete": false,
+  "pins_sha256": "5d18ee5ae531132b56ca78d587e11659cd3cfdd52a881b6076b75791d5c2221e",
+  "note": "Partial evidence registry, not a corrected full EOA cohort, until complete.",
+  "builder_sha256": "9f073a6810f509f0e8465ce5288b2f6ec294216c0e1610379e0494b3c0822e3e",
+  "maximum_remaining_address_month_checks": 32838555
+}

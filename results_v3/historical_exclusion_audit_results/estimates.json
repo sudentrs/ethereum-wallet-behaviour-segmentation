@@ -1,0 +1,31 @@
+{
+  "estimand": "Share of excluded addresses with empty code at all 12 observed 2022 month-end blocks",
+  "excluded_population_n": 294375,
+  "sample_n": 400,
+  "snapshot_checks_complete": true,
+  "unresolved_outcomes_n": 0,
+  "weighted_identification_lower": 0.19163143949044587,
+  "weighted_identification_upper": 0.19163143949044587,
+  "point_estimate_if_outcomes_resolved": 0.19163143949044587,
+  "confidence_95_lower": 0.1273783439490446,
+  "confidence_95_upper": 0.2702267515923567,
+  "interval_method": "Exact hypergeometric inversion per stratum and bounding outcome; Bonferroni simultaneous 95% conservative interval",
+  "limitations": [
+    "Snapshot code-free status is not continuous EOA identity.",
+    "Origination evidence is a separate outcome.",
+    "Excluded-population audit does not validate retained addresses.",
+    "No cohort or manuscript changed."
+  ],
+  "origination_verified_n": 67,
+  "origination_unresolved_n": 333,
+  "weighted_confirmed_origination_share": 0.1908828704883227,
+  "origination_note": "Weighted confirmed share is a proof-yield estimate and lower identification bound, not a point estimate of all historically EOA-active addresses. Nonmatches remain unresolved. Evidence was verified through one provider, not independent signature recovery.",
+  "origination_positive_and_all_month_ends_empty_n": 67,
+  "evidence_sha256": {
+    "data\\interim\\historical_exclusion_probability_audit\\address_results.csv": "f24f7ec4e6f99e9cbd3597ed995209f7ac82d07705247dd69e3a209037b8dce2",
+    "data\\interim\\historical_exclusion_probability_audit\\address_month_cache.csv": "31260b1efed9f56a0eb8d036ad2c038ab66e51a794722562ded281945962136a",
+    "data\\interim\\historical_exclusion_probability_audit\\month_end_blocks.csv": "5d18ee5ae531132b56ca78d587e11659cd3cfdd52a881b6076b75791d5c2221e",
+    "data\\interim\\historical_exclusion_probability_audit\\sample_identity.json": "03200ae329b953e18b36789cd1d91d196261405d516eff63b1de73fc63aa4aba",
+    "data\\interim\\historical_exclusion_probability_origination\\historical_origination_audit.csv": "510bd1332e4fdf5c0d8b63559ed53c2efe96457984803fb7271180e78eea6a8b"
+  }
+}

@@ -24,6 +24,7 @@ data/processed/
 outputs/
 wallet_eoa_only_kmeans6_features_robust_scaled/
 results/**/wallet_eoa_only_kmeans_clusters.csv
+results/**/wallet_eoa_only_kmeans*_features_robust_scaled.csv
 *_render/
 tmp_*/
 
@@ -72,3 +73,4 @@ docs/EOA_ONLY_FINAL_PROGRESS_REPORT.md
 results_v3/**/*.signature
 results_v3/**/monthly_tests_partial.csv
 results_v3/token_value_audit/wallet_day_comparison.csv
+results/**/wallet_eoa_only_kmeans*_features_robust_scaled.csv

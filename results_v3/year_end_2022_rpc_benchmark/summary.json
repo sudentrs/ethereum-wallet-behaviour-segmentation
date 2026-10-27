@@ -1,0 +1,24 @@
+{
+  "definition": "empty_code_at_last_block_of_2022_not_year_long_EOA_identity",
+  "block_number": 16308189,
+  "block_hash": "0x08e18ebab4778e0d622340fd63c591631747bb45334302ea96d3953362c4aa46",
+  "unique_check_budget": 1200,
+  "max_code_attempts_with_retries": 3600,
+  "global_http_start_cap_per_second": 4,
+  "cached_year_end_addresses": 2150,
+  "remaining_year_end_addresses": 2736093,
+  "best_measured_profile": {
+    "profile": 0,
+    "batch_size": 20,
+    "workers": 1,
+    "selected_addresses": 400,
+    "successful_checks": 400,
+    "failed_unresolved_checks": 0,
+    "attempted_code_checks_including_retries": 400,
+    "batch_error_responses": 0,
+    "elapsed_seconds": 7.337804300012067,
+    "successful_checks_per_second": 54.51221968393763
+  },
+  "projected_remaining_hours_at_best_short_run_rate": 13.94230206988397,
+  "caveat": "Short benchmark only; not sustained provider capacity or quota. No full run started. Cached month-end observations reused; no cohort definition overwritten."
+}

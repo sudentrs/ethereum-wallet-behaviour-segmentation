@@ -1,0 +1,20 @@
+{
+  "date_local": "2026-10-21",
+  "new_successful_address_block_checks": 1000,
+  "elapsed_seconds_whole_process": 59.51,
+  "snapshot": "2022-12",
+  "new_addresses_disqualified_by_nonempty_code": 787,
+  "new_addresses_empty_in_december_but_still_unresolved": 213,
+  "snapshot_included_total_after_run": 69,
+  "snapshot_excluded_total_after_run": 1118,
+  "snapshot_unresolved_total_after_run": 2737056,
+  "remaining_address_month_checks_upper_bound": 32844459,
+  "notes": [
+    "Duration includes local setup, chain/block validation, code batches and final status export.",
+    "Validation calls and potential retries are additional to the code-check budget.",
+    "Previously excluded addresses were processed in address order; this is not a probability sample.",
+    "Do not extrapolate the observed exclusion percentage to the full population.",
+    "No full cohort exported, no downstream analyses rerun, no main-cohort or manuscript changes.",
+    "No credentials stored in this artifact."
+  ]
+}

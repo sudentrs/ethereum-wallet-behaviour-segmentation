@@ -1,0 +1,3 @@
+profile,batch_size,workers,selected_addresses,successful_checks,failed_unresolved_checks,attempted_code_checks_including_retries,batch_error_responses,elapsed_seconds,successful_checks_per_second
+0,20,1,400,400,0,400,0,7.337804300012067,54.51221968393763
+1,50,2,400,350,50,950,12,20.746134700020775,16.87061252907268
