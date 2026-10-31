@@ -1,0 +1,10 @@
+{
+  "definition": "empty_code_at_last_block_of_2022_not_year_long_EOA_identity",
+  "block_number": 16308189,
+  "block_hash": "0x08e18ebab4778e0d622340fd63c591631747bb45334302ea96d3953362c4aa46",
+  "cohort_sha256": "e53c1bf3f66fd5752738858713bd1f39c0129adebd7d4a95df7651edc717ff04",
+  "cohort_file": "cohort_members.csv",
+  "compressed_file": "cohort_members.csv.gz",
+  "compressed_sha256": "01c9cebe456e3a2cabc9e50aa74be99e094477d746012d2163d553fd2c7c6472",
+  "wallet_count": 2508997
+}

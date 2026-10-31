@@ -1,0 +1,17 @@
+{
+  "definition": "empty_code_at_last_block_of_2022_not_year_long_EOA_identity",
+  "block_number": 16308189,
+  "block_hash": "0x08e18ebab4778e0d622340fd63c591631747bb45334302ea96d3953362c4aa46",
+  "population": 2738243,
+  "cached": 2738243,
+  "included": 2508997,
+  "excluded": 229246,
+  "remaining": 0,
+  "complete": true,
+  "state": "complete",
+  "new_checks_this_run": 1723063,
+  "attempts_this_run": 2206823,
+  "batch_errors_this_run": 24188,
+  "rpc_workers": 9,
+  "elapsed_seconds": 11587.92
+}
