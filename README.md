@@ -19,6 +19,7 @@ The annual representation contains 16 count/activity/direction features and no p
 Across $k=2$--$6$, K3 is the selected working resolution because it is the most stable non-coarse alternative across three full-population seeds.
 The conclusion is qualified by feature-family holdouts: K3 depends especially on persistence/concentration features.
 
+A corrected twelve-month K3 transaction-network null test finds same-state transfer concentration above the shuffled-label null in every snapshot.
 A separate frozen monthly K3 model, trained on January--June and evaluated on July--December, shows above-chance state persistence and two-step return.
 Monthly state identifiers are deliberately distinct from annual K3 labels.
 
@@ -59,7 +60,7 @@ See `overleaf/main.tex` for the formal citations and `docs/PIPELINE.md` for earl
 - ERC-20 amounts are excluded from the current main representation because pooled token units are not economically comparable.
 - K3 is a reproducible working segmentation, not ground truth.
 - Monthly states are conditional on active wallet-months; absence is not modelled as a state.
-- A corrected-cohort transaction-network null test remains to be run before making any network-structure claim.
+- The network result covers only transfers with two cohort endpoints (13.7%--19.3% of raw monthly transfers) and is evidence of label--network alignment, not causality or community identity.
 
 Older `results/` and `results_v2/` outputs are retained for provenance only.
 They use earlier cohort and/or value-feature choices and are not evidence for the current manuscript.

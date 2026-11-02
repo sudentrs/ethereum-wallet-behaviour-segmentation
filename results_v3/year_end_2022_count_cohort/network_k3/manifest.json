@@ -1,0 +1,86 @@
+{
+  "labels_npy": "C:\\Users\\sudet\\Desktop\\491-2\\p4912\\data\\interim\\year_end_2022_count_cohort\\annual_fits_final2\\k3_seed492_labels.npy",
+  "labels_npy_sha256": "efb7359b926ceaa3497a2aa16c318b95919c22d7592a4e5649493dc472e633e4",
+  "wallet_source": "C:\\Users\\sudet\\Desktop\\491-2\\p4912\\data\\interim\\year_end_2022_count_cohort\\wallet_count_activity_features.csv",
+  "wallet_source_sha256": "7651023a9493f1dae1004f19a330182412c4a0eccbc643084cdb0daba4f1b6f5",
+  "sample_edges": 200000,
+  "permutations": 999,
+  "seed": 492,
+  "test": "upper-tail same-label fraction under endpoint-wallet label permutation",
+  "raw_sources": [
+    {
+      "month": "202201",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202201.tsv\\202201.tsv",
+      "bytes": 4825728943,
+      "mtime_ns": 1751333819000000000
+    },
+    {
+      "month": "202202",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202202.tsv\\202202.tsv",
+      "bytes": 4342557398,
+      "mtime_ns": 1751334532000000000
+    },
+    {
+      "month": "202203",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202203.tsv\\202203.tsv",
+      "bytes": 5608553103,
+      "mtime_ns": 1751335212000000000
+    },
+    {
+      "month": "202204",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202204.tsv\\202204.tsv",
+      "bytes": 4911550263,
+      "mtime_ns": 1751336024000000000
+    },
+    {
+      "month": "202205",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202205.tsv\\202205.tsv",
+      "bytes": 4723508948,
+      "mtime_ns": 1751336574000000000
+    },
+    {
+      "month": "202206",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202206.tsv\\202206.tsv",
+      "bytes": 3707716162,
+      "mtime_ns": 1751337129000000000
+    },
+    {
+      "month": "202207",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202207.tsv\\202207.tsv",
+      "bytes": 4785824682,
+      "mtime_ns": 1751337544000000000
+    },
+    {
+      "month": "202208",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202208.tsv\\202208.tsv",
+      "bytes": 5162689977,
+      "mtime_ns": 1751338226000000000
+    },
+    {
+      "month": "202209",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202209.tsv\\202209.tsv",
+      "bytes": 5921669072,
+      "mtime_ns": 1751338845000000000
+    },
+    {
+      "month": "202210",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202210.tsv\\202210.tsv",
+      "bytes": 5983271471,
+      "mtime_ns": 1751339757000000000
+    },
+    {
+      "month": "202211",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202211.tsv\\202211.tsv",
+      "bytes": 6498450262,
+      "mtime_ns": 1751340826000000000
+    },
+    {
+      "month": "202212",
+      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\202212.tsv\\202212.tsv",
+      "bytes": 6138663487,
+      "mtime_ns": 1751341685000000000
+    }
+  ],
+  "summary_sha256": "2c3d7101aa56a98b150d31d4214e7cfbf043d820c710c17a8d8e52806bdd1f0e",
+  "interpretation": "The null preserves sampled transfer edges and label composition among endpoint wallets. It tests label-network alignment, not causal preference or transaction-community identity."
+}

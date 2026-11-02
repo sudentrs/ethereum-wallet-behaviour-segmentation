@@ -16,12 +16,12 @@
 Public Ethereum data make wallet activity observable but do not make wallet populations directly interpretable.
 This study examines whether a reproducible behavioural segmentation can be recovered after controlling two common sources of ambiguity: address cohort definition and token-value representation.
 Using 2022 ERC-20 transfer activity, we define a year-end code-free cohort of 2,508,997 addresses and cluster a 16-feature count/activity/direction representation that excludes pooled token amounts.
-We compare $k=2$--$6$, quantify full-population seed stability and feature-family sensitivity, and conduct a held-out monthly state analysis using a separate count-only representation.
+We compare $k=2$--$6$, quantify full-population seed stability and feature-family sensitivity, conduct a corrected-cohort transaction-network null test, and conduct a held-out monthly state analysis using a separate count-only representation.
 The three-cluster solution provides a useful working resolution: it has adjusted Rand indices of 0.908--0.971 across three seeds, whereas $k=4$--$6$ are substantially less stable.
 Its roles describe sustained activity, distributed lower activity, and short-span concentrated activity.
 However, the solution is sensitive to removing persistence/concentration features, so it is not presented as a natural or permanent taxonomy.
-In held-out July--December monthly data, state persistence exceeds chance agreement in every adjacent pair and two-step returns exceed a shuffled future-state null after Holm correction.
-The contribution is therefore a controlled and falsifiable workflow for behavioural segmentation, with explicit limits on identity, economic interpretation, and network claims.
+In all twelve monthly transaction snapshots, same-state transfer concentration exceeds a shuffled-label null; held-out July--December state persistence also exceeds chance agreement and two-step returns exceed a shuffled future-state null after Holm correction.
+The contribution is therefore a controlled and falsifiable workflow for behavioural segmentation, with explicit limits on identity and economic interpretation.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -47,7 +47,7 @@ Second, ERC-20 amounts have token-specific units and are not safely pooled acros
 The main representation consequently excludes all transfer-value features.
 
 Our contribution is a reproducible workflow, not a claim that Ethereum contains one uniquely correct number of permanent wallet types.
-It provides (i) a documented year-end code-free cohort and count/activity representation, (ii) a full-population resolution and seed-stability comparison, (iii) feature-family holdouts that expose representation dependence, and (iv) a temporally held-out monthly state analysis with frozen preprocessing.
+It provides (i) a documented year-end code-free cohort and count/activity representation, (ii) a full-population resolution and seed-stability comparison, (iii) feature-family holdouts that expose representation dependence, (iv) a transaction-network shuffled-label test, and (v) a temporally held-out monthly state analysis with frozen preprocessing.
 
 \section{Related Work}
 Address-clustering and deanonymization studies use transaction structure to infer links or user profiles \cite{victor2020address,beres2021blockchain}.
@@ -93,6 +93,14 @@ For each held-out adjacent pair, we compare observed self-transition probability
 For four held-out triples, we restrict to wallets that changed in the first step and test whether returning to the initial state exceeds a shuffled future-state null with 999 permutations.
 We apply Holm correction across the four return tests \cite{holm1979sequential}.
 
+\subsection{Transaction-Network Null Test}
+We separately test whether annual K3 labels align with ERC-20 transfer interactions.
+For each month, we retain transfer records whose sender and recipient both belong to the year-end code-free cohort, then draw a uniform 200,000-edge sample.
+The observed statistic is the same-label edge fraction.
+The null preserves sampled edges and randomly permutes annual K3 labels among the unique endpoint wallets 999 times.
+Thus, the test asks whether same-state transfer concentration exceeds the level expected after breaking the association between wallet identity and its K3 label while retaining the sampled network and label composition.
+It is a network-homophily test, not a causal test and not a community-detection evaluation.
+
 \section{Results}
 \subsection{Resolution and Seed Stability}
 Figure~\ref{fig:resolution} shows that compactness and stability do not select the same resolution.
@@ -134,6 +142,23 @@ Removing activity-level features gives ARI 0.591 and matched agreement 0.868 ver
 Removing persistence/concentration features gives ARI 0.350 and agreement 0.617.
 Thus K3 is reproducible under initialization but meaningfully dependent on the joint representation, especially temporal persistence and concentration features.
 
+\subsection{Transaction-Network Alignment}
+The corrected network analysis supports an association between annual K3 labels and transfer endpoints.
+Across all twelve months, the observed same-state transaction fraction exceeds the shuffled-label null at the 999-permutation resolution (raw $p=0.001$ in every month; Holm-adjusted $p=0.012$ across the twelve monthly tests).
+The observed fraction ranges from 0.502 to 0.603 (mean 0.559), compared with null means from 0.415 to 0.482 (mean 0.468).
+The mean observed-minus-null difference is 0.092.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/k3_network_observed_vs_null.png}
+\caption{Monthly annual-K3 same-state transaction concentration against the shuffled-label null. Each month uses 200,000 sampled transfers with two cohort endpoints and 999 label permutations.}
+\label{fig:network}
+\end{figure}
+
+Coverage is limited: only 13.7\%--19.3\% of raw monthly ERC-20 transfers have two endpoints in the year-end code-free cohort and can enter this test.
+The result therefore concerns the retained within-cohort interaction subgraph rather than the full ERC-20 network.
+It supports label--network alignment under this null, but cannot distinguish direct same-state preference from shared applications, degree effects, or other unmodelled mechanisms.
+
 \subsection{Held-Out Monthly States}
 The monthly model is deliberately independent of the annual labels.
 Across July--December adjacent pairs, 571,659--786,661 wallets are active in both months.
@@ -156,19 +181,21 @@ The primary conclusion is deliberately narrower than a claim of a universal Ethe
 After year-end cohort control and removal of pooled token-value features, the count/activity representation yields a reproducible three-state working resolution.
 Its seed stability is strong, but its feature-family sensitivity demonstrates that the labels summarize a particular behavioural representation rather than intrinsic wallet identities.
 
-The temporal evidence strengthens the state interpretation: active wallets show above-chance persistence and above-null two-step return in held-out months.
+The network and temporal evidence strengthen the state interpretation in different ways.
+Within the observed cohort subgraph, annual K3 labels align with transfer endpoints more than shuffled labels do.
+Active wallets also show above-chance persistence and above-null two-step return in held-out months.
 It does not show that an address remains in an annual K3 role over time, because annual and monthly representations answer different questions.
 It also does not model inactive months as a state, explain why transitions occur, or establish causal effects of market events.
 
 We intentionally do not carry forward the previous pooled-value role claims, present-day EOA claims, or K4--K6 network results into this version.
-A direct transaction-network null test must be rerun using the corrected cohort and K3 labels before any network-structure claim is made.
+The corrected K3 network result is limited to the sampled within-cohort subgraph and does not establish a mechanism for the observed alignment.
 Additional work should audit historical code status at transfer-time or monthly block boundaries, compare token-aware economic representations, repeat the analysis across years and chains, and externally validate any application-specific labels.
 
 \section{Conclusion}
 This study presents a controlled workflow for Ethereum wallet segmentation rather than treating a k-means output as a final result.
 For 2,508,997 year-end code-free addresses, a count/activity-only K3 representation provides a stable and interpretable working partition, while finer K4--K6 alternatives are unstable across seeds.
 Feature-family holdouts show that this conclusion depends especially on persistence/concentration information.
-A separate frozen monthly model finds above-chance persistence and two-step return in held-out data.
+A corrected network null test finds above-null same-state transfer concentration in every monthly snapshot, and a separate frozen monthly model finds above-chance persistence and two-step return in held-out data.
 Together, these results support the cautious claim that large Ethereum populations can be summarized as reproducible behavioural states under a documented representation, not as fixed real-world identities.
 
 \section*{Code and Data Availability}
