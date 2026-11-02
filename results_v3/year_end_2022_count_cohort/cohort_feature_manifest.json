@@ -1,0 +1,32 @@
+{
+  "definition": "empty_code_at_last_block_of_2022_not_year_long_EOA_identity",
+  "representation": "count_and_activity_only_v1",
+  "excluded_feature_family": "pooled_token_value_and_value_derived_features",
+  "feature_columns": [
+    "active_days_observed",
+    "activity_span_days",
+    "activity_density",
+    "total_tx",
+    "avg_daily_tx_count",
+    "max_daily_tx_count",
+    "std_daily_tx_count",
+    "in_active_days",
+    "out_active_days",
+    "both_active_days",
+    "in_active_day_ratio",
+    "out_active_day_ratio",
+    "both_active_day_ratio",
+    "in_out_day_balance",
+    "tx_count_cv",
+    "tx_concentration_ratio"
+  ],
+  "cohort_file": "results_v3\\year_end_2022_full_cohort\\cohort_members.csv.gz",
+  "cohort_sha256": "01c9cebe456e3a2cabc9e50aa74be99e094477d746012d2163d553fd2c7c6472",
+  "source_feature_file": "data\\processed\\wallet_kmeans6_expanded_daily_features.csv",
+  "source_feature_sha256": "9bdb41d0998aa79f74e521614426153bf659afa951e1575304162b98571d167d",
+  "output_file": "data\\interim\\year_end_2022_count_cohort\\wallet_count_activity_features.csv",
+  "output_sha256": "7651023a9493f1dae1004f19a330182412c4a0eccbc643084cdb0daba4f1b6f5",
+  "cohort_wallets": 2508997,
+  "written_wallets": 2508997,
+  "legacy_cluster_column_retained_for_traceability_only": true
+}

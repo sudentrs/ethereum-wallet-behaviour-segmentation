@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 import joblib
+import duckdb
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -31,29 +32,35 @@ FEATURES = ["tx_per_calendar_day", "active_day_fraction", "tx_per_active_day",
             "daily_count_cv", "peak_count_share", "span_fraction"]
 
 
-def month_features(path, universe, month, chunksize):
-    parts = []
+def month_features(path, cohort_parquet, month):
+    """Aggregate one wallet-day source without retaining chunk-level copies in RAM."""
     days = calendar.monthrange(int(month[:4]), int(month[4:]))[1]
-    for d in pd.read_csv(path, usecols=["wallet", "date", "tx_count"],
-                         dtype={"wallet": str}, chunksize=chunksize):
-        d.wallet = d.wallet.str.lower().str.strip().str.removeprefix("0x")
-        d = d[d.wallet.isin(universe)].copy()
-        d["date"] = pd.to_datetime(d.date, errors="raise")
-        if not d.date.dt.strftime("%Y%m").eq(month).all():
-            raise ValueError(f"Dates outside {month} in {path}")
-        d["tx_count"] = pd.to_numeric(d.tx_count, errors="raise")
-        if not np.isfinite(d.tx_count).all() or (d.tx_count < 0).any():
-            raise ValueError("Non-finite or negative transaction counts")
-        d = d[d.tx_count > 0]
-        d["sq"] = d.tx_count ** 2
-        parts.append(d.groupby("wallet").agg(n=("date", "count"),
-            total=("tx_count", "sum"), squares=("sq", "sum"),
-            peak=("tx_count", "max"), first=("date", "min"), last=("date", "max")))
-    if not parts:
+    con = duckdb.connect()
+    try:
+        a = con.execute("""
+            WITH daily AS (
+                SELECT lower(trim(wallet)) AS wallet, "date" AS day,
+                       tx_count::DOUBLE AS tx_count
+                FROM read_csv_auto(?, header=true,
+                    columns={'wallet':'VARCHAR', 'date':'DATE',
+                             'total_in':'DOUBLE', 'total_out':'DOUBLE',
+                             'tx_count':'DOUBLE'})
+            ), eligible AS (
+                SELECT d.* FROM daily AS d
+                INNER JOIN read_parquet(?) AS c USING (wallet)
+                WHERE d.tx_count > 0
+            )
+            SELECT wallet, count(*) AS n, sum(tx_count) AS total,
+                   sum(tx_count * tx_count) AS squares, max(tx_count) AS peak,
+                   min(day) AS first, max(day) AS last
+            FROM eligible
+            GROUP BY wallet
+        """, [str(path), str(cohort_parquet)]).fetchdf()
+    finally:
+        con.close()
+    if a.empty:
         raise ValueError(f"No eligible activity in {path}")
-    a = pd.concat(parts).groupby(level=0).agg(
-        n=("n", "sum"), total=("total", "sum"), squares=("squares", "sum"),
-        peak=("peak", "max"), first=("first", "min"), last=("last", "max"))
+    a = a.set_index("wallet")
     if (a.n > days).any():
         raise ValueError("More active observations than days; verify unique wallet-day input")
     mean = a.total / days
@@ -85,16 +92,23 @@ def main():
     p.add_argument("--seed", type=int, default=492)
     p.add_argument("--sample-per-month", type=int, default=20000)
     p.add_argument("--chunksize", type=int, default=1000000)
+    p.add_argument("--k-values", default="4,5,6",
+                   help="Comma-separated monthly state resolutions; separate from annual labels.")
     args = p.parse_args()
     if args.permutations < 99 or args.sample_per_month < 100:
         p.error("Use at least 99 permutations and 100 training rows per month")
+    k_values = [int(value) for value in args.k_values.split(",") if value.strip()]
+    if not k_values or min(k_values) < 2:
+        p.error("k-values must contain integers >= 2")
     args.out_dir.mkdir(parents=True, exist_ok=True)
     cohort = pd.read_csv(args.cohort, usecols=["wallet"], dtype=str).wallet
     cohort = cohort.str.lower().str.strip().str.removeprefix("0x")
     if cohort.duplicated().any():
         raise ValueError("Duplicate cohort wallets")
-    universe = set(cohort)
-    cohort_digest = hashlib.sha256("\n".join(sorted(universe)).encode()).hexdigest()
+    cohort_digest = hashlib.sha256("\n".join(sorted(cohort)).encode()).hexdigest()
+    cohort_parquet = args.out_dir / "cohort_wallets.parquet"
+    if not cohort_parquet.exists():
+        pd.DataFrame({"wallet": cohort}).to_parquet(cohort_parquet, index=False)
     source = []
     samples = []
     for month in MONTHS:
@@ -104,7 +118,7 @@ def main():
         cache = args.out_dir / f"monthly_features_{month}.csv.gz"
         marker = cache.with_suffix(".signature")
         if not cache.exists() or not marker.exists() or marker.read_text() != sig:
-            f = month_features(path, universe, month, args.chunksize)
+            f = month_features(path, cohort_parquet, month)
             f.to_csv(cache, index=False, compression="gzip")
             marker.write_text(sig)
         else:
@@ -118,7 +132,7 @@ def main():
     scaler = RobustScaler().fit(transform(train))
     x = scaler.transform(transform(train))
     models = {k: MiniBatchKMeans(n_clusters=k, n_init=10, random_state=args.seed,
-                                batch_size=4096).fit(x) for k in [4, 5, 6]}
+                                batch_size=4096).fit(x) for k in k_values}
     joblib.dump(dict(scaler=scaler, models=models, features=FEATURES), args.out_dir / "frozen_monthly_models.joblib")
     states = {k: np.full((len(cohort), 12), -1, dtype=np.int8) for k in models}
     index = pd.Index(cohort)
@@ -183,6 +197,7 @@ def main():
     pd.DataFrame(entropy).to_csv(args.out_dir / "heldout_entropy.csv", index=False)
     manifest = dict(training_months=MONTHS[:6], evaluation_months=MONTHS[6:],
         cohort_size=len(cohort), cohort_sha256=hashlib.sha256(args.cohort.read_bytes()).hexdigest(),
+        k_values=k_values,
         features=FEATURES, seed=args.seed, permutations=args.permutations,
         source=source, feature_units="counts only; no token amounts", absence="missing, not a state",
         interpretation="Monthly state IDs are separate from annual IDs. Training samples are balanced by month, not by wallet. Daily inputs must be unique wallet-day rows. Held-out evaluation fixes models but is conditional on the retrospectively defined annual EOA cohort.")

@@ -21,8 +21,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--labels",
         type=Path,
-        default=Path("results/eoa_only_kmeans5/wallet_eoa_only_kmeans_clusters.csv"),
+        default=None,
         help="CSV with wallet and cluster columns.",
+    )
+    parser.add_argument(
+        "--labels-npy",
+        type=Path,
+        default=None,
+        help="One-dimensional NumPy label array aligned to --wallet-source.",
+    )
+    parser.add_argument(
+        "--wallet-source",
+        type=Path,
+        default=None,
+        help="CSV whose wallet column supplies the row order for --labels-npy.",
     )
     parser.add_argument(
         "--raw-root",
@@ -66,6 +78,18 @@ def load_labels(path: Path) -> pd.Series:
         raise ValueError(f"{path} must contain wallet and cluster columns")
     labels["wallet"] = labels["wallet"].str.lower()
     return labels.set_index("wallet")["cluster"].astype("int16")
+
+
+def load_npy_labels(labels_path: Path, wallet_source: Path) -> pd.Series:
+    """Load labels without exporting a multi-million-row CSV solely for validation."""
+    labels = np.load(labels_path, mmap_mode="r")
+    wallets = pd.read_csv(wallet_source, usecols=["wallet"], dtype={"wallet": "string"})["wallet"]
+    wallets = wallets.str.lower().str.strip().str.removeprefix("0x")
+    if labels.ndim != 1 or len(labels) != len(wallets):
+        raise ValueError("labels-npy must be one-dimensional and aligned to wallet-source rows")
+    if wallets.duplicated().any():
+        raise ValueError("wallet-source contains duplicate wallets")
+    return pd.Series(np.asarray(labels, dtype=np.int16), index=wallets, name="cluster")
 
 
 def update_sample(
@@ -228,7 +252,7 @@ def write_report(summary: pd.DataFrame, out_dir: Path, label_name: str) -> None:
     (out_dir / "monthly_network_null_validation_report.md").write_text("\n".join(lines), encoding="utf-8")
 
 
-def write_figures(summary: pd.DataFrame, out_dir: Path) -> None:
+def write_figures(summary: pd.DataFrame, out_dir: Path, label_name: str) -> None:
     try:
         import matplotlib.pyplot as plt
     except ImportError:
@@ -243,7 +267,7 @@ def write_figures(summary: pd.DataFrame, out_dir: Path) -> None:
     ax.plot(months, summary["null_mean"], marker="o", label="Shuffled-label null mean")
     ax.set_xlabel("Month")
     ax.set_ylabel("Same-cluster transaction ratio")
-    ax.set_title("Monthly K5 same-cluster transaction concentration")
+    ax.set_title(f"Monthly {label_name} same-cluster transaction concentration")
     ax.tick_params(axis="x", rotation=45)
     ax.legend()
     fig.tight_layout()
@@ -266,8 +290,13 @@ def write_figures(summary: pd.DataFrame, out_dir: Path) -> None:
 
 def main() -> None:
     args = parse_args()
+    if (args.labels is None) == (args.labels_npy is None or args.wallet_source is None):
+        raise ValueError("Provide either --labels or both --labels-npy and --wallet-source")
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    labels = load_labels(args.labels)
+    labels = (load_labels(args.labels) if args.labels is not None
+              else load_npy_labels(args.labels_npy, args.wallet_source))
+    label_name = (args.labels.parent.name if args.labels is not None
+                  else args.labels_npy.stem.replace("_labels", "").replace("_", " ").upper())
     rng = np.random.default_rng(args.seed)
 
     summaries = []
@@ -280,8 +309,8 @@ def main() -> None:
 
     summary_df = pd.DataFrame(summaries)
     summary_df.to_csv(args.out_dir / "monthly_network_validation_summary.csv", index=False)
-    write_report(summary_df, args.out_dir, args.labels.parent.name)
-    write_figures(summary_df, args.out_dir)
+    write_report(summary_df, args.out_dir, label_name)
+    write_figures(summary_df, args.out_dir, label_name)
 
 
 if __name__ == "__main__":

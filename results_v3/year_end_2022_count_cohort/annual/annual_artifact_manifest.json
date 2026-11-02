@@ -1,0 +1,121 @@
+{
+  "purpose": "audited provenance for the annual K2--K6 count/activity models",
+  "matrix_file": "data\\interim\\year_end_2022_count_cohort\\wallet_count_activity_scaled.npy",
+  "matrix_sha256": "f8bb1e112957759c50bcd7266ba77531c4222c90d068f8f2bf7cd73a4bc8c8b7",
+  "wallet_source": "data\\interim\\year_end_2022_count_cohort\\wallet_count_activity_features.csv",
+  "wallet_source_sha256": "7651023a9493f1dae1004f19a330182412c4a0eccbc643084cdb0daba4f1b6f5",
+  "wallet_count": 2508997,
+  "feature_columns": [
+    "active_days_observed",
+    "activity_span_days",
+    "activity_density",
+    "total_tx",
+    "avg_daily_tx_count",
+    "max_daily_tx_count",
+    "std_daily_tx_count",
+    "in_active_days",
+    "out_active_days",
+    "both_active_days",
+    "in_active_day_ratio",
+    "out_active_day_ratio",
+    "both_active_day_ratio",
+    "in_out_day_balance",
+    "tx_count_cv",
+    "tx_concentration_ratio"
+  ],
+  "runs": [
+    {
+      "k": 2,
+      "seed": 492,
+      "labels_file": "k2_seed492_labels.npy",
+      "labels_sha256": "4849a225849ab45df30093cae2c87da2336c4a9ca5c6805530ed45cc69cbbdcb"
+    },
+    {
+      "k": 2,
+      "seed": 493,
+      "labels_file": "k2_seed493_labels.npy",
+      "labels_sha256": "765914c7addef78f5e0b743c9672f78fff2e39749a959074b692055cca1437d7"
+    },
+    {
+      "k": 2,
+      "seed": 494,
+      "labels_file": "k2_seed494_labels.npy",
+      "labels_sha256": "4dd1f0b1bb283a453681b2759f29c7f6cb83735e3ea05211bd6612c07dade619"
+    },
+    {
+      "k": 3,
+      "seed": 492,
+      "labels_file": "k3_seed492_labels.npy",
+      "labels_sha256": "efb7359b926ceaa3497a2aa16c318b95919c22d7592a4e5649493dc472e633e4"
+    },
+    {
+      "k": 3,
+      "seed": 493,
+      "labels_file": "k3_seed493_labels.npy",
+      "labels_sha256": "3f4411b9c632e3e55370a179624fe4902417a3dbc9a741ea6c0c71d7e9eb4e77"
+    },
+    {
+      "k": 3,
+      "seed": 494,
+      "labels_file": "k3_seed494_labels.npy",
+      "labels_sha256": "dd280704aa8b28a9ad63b6fcc71da18f06f010efad4c5fca6fdd1d270d8f5226"
+    },
+    {
+      "k": 4,
+      "seed": 492,
+      "labels_file": "k4_seed492_labels.npy",
+      "labels_sha256": "c69b97a27106b49b625457184e07e1d5eb251e962d4df24c171d57fa1273e56f"
+    },
+    {
+      "k": 4,
+      "seed": 493,
+      "labels_file": "k4_seed493_labels.npy",
+      "labels_sha256": "029825db8dea02d8612ef0c0f286060bed942486a59b391dc63a36b802ea072d"
+    },
+    {
+      "k": 4,
+      "seed": 494,
+      "labels_file": "k4_seed494_labels.npy",
+      "labels_sha256": "5442fce093135ad1d41371458e12e5309c1aecbd716b2567418bb5b43a3ebd61"
+    },
+    {
+      "k": 5,
+      "seed": 492,
+      "labels_file": "k5_seed492_labels.npy",
+      "labels_sha256": "32a22fe3aeae72cf186150fc95c504dd3a32103601521208b55c486bf7fcd398"
+    },
+    {
+      "k": 5,
+      "seed": 493,
+      "labels_file": "k5_seed493_labels.npy",
+      "labels_sha256": "bd1dc92bcd984b61b0fca35096d92a75fd3d4a081f4513b986b98e4fe7563079"
+    },
+    {
+      "k": 5,
+      "seed": 494,
+      "labels_file": "k5_seed494_labels.npy",
+      "labels_sha256": "fa70a511b40d1110c1ae1dfeba692d4f1c9f0df1748e5928df0b59f005c69dbd"
+    },
+    {
+      "k": 6,
+      "seed": 492,
+      "labels_file": "k6_seed492_labels.npy",
+      "labels_sha256": "81305b96a9ea474bcbc5bc85d2bae3c83b7c315adf4056fd708d36f7fc7c1dbb"
+    },
+    {
+      "k": 6,
+      "seed": 493,
+      "labels_file": "k6_seed493_labels.npy",
+      "labels_sha256": "c61f37e6e5f10034f7cb4864835c73cacc6efdc28c49ad8bd5c163b345b9acc8"
+    },
+    {
+      "k": 6,
+      "seed": 494,
+      "labels_file": "k6_seed494_labels.npy",
+      "labels_sha256": "fa9b0be1d08ad2089e388f0740cc48df997698b2745e10a7b69a8280048ab06d"
+    }
+  ],
+  "scikit_learn": "1.6.0",
+  "python": "3.11.5",
+  "note": "Model settings are reported in each run summary. This manifest was regenerated from existing label artifacts after a partial rerun overwrote the original fit manifest."
+}
