@@ -18,8 +18,22 @@
   "cohort_size": 2508997,
   "cohort_sha256": "01c9cebe456e3a2cabc9e50aa74be99e094477d746012d2163d553fd2c7c6472",
   "k_values": [
-    3
+    2,
+    3,
+    4,
+    5,
+    6
   ],
+  "holm_test_count": 20,
+  "training_sample_per_month": 20000,
+  "training_sampling_order": "lexicographically sorted normalized wallet IDs within each month",
+  "training_sample_sha256": "62c3ce68b6b1de19bb76178934d7893f35344dc669948e8382f3c5ba37c210d3",
+  "python": "3.12.3",
+  "numpy": "1.26.4",
+  "pandas": "2.3.1",
+  "duckdb": "2.0.0",
+  "scikit_learn": "1.8.0",
+  "cohort_membership_sha256": "651c4ede9f1c90662ad9afdae56186b04cea72ff437d5c400c8aef7084dccb1e",
   "features": [
     "tx_per_calendar_day",
     "active_day_fraction",
@@ -33,90 +47,204 @@
   "source": [
     {
       "month": "202201",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202201.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202201.csv",
       "size": 507389115,
-      "mtime_ns": 1772959245244941300,
-      "active_wallets": 862241
+      "mtime_ns": 1793655546422365200,
+      "sha256": "fcb423c0ec828ff8fc3723c722540f85e10b156c0b86ecfac33cfd7187ec9359",
+      "active_wallets": 862241,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     },
     {
       "month": "202202",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202202.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202202.csv",
       "size": 432611249,
-      "mtime_ns": 1772959289378239300,
-      "active_wallets": 877980
+      "mtime_ns": 1793655464127404200,
+      "sha256": "3019dfbc1fa623f046f012a1908dd9c9f7ab652e25403bf79db8f37ad94dd8c4",
+      "active_wallets": 877980,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     },
     {
       "month": "202203",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202203.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202203.csv",
       "size": 548621458,
-      "mtime_ns": 1772959343407865100,
-      "active_wallets": 1019469
+      "mtime_ns": 1793655715420538900,
+      "sha256": "63fc1526a932baa7384955fc74cd9fa78e5a192c9259f15bb45580941d5515bd",
+      "active_wallets": 1019469,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     },
     {
       "month": "202204",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202204.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202204.csv",
       "size": 453522302,
-      "mtime_ns": 1772959367285258600,
-      "active_wallets": 1001773
+      "mtime_ns": 1793655408912522100,
+      "sha256": "c11a505034b4c82624919fae0bd57596c385207e7c6585c39d45e9aa6c028411",
+      "active_wallets": 1001773,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     },
     {
       "month": "202205",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202205.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202205.csv",
       "size": 482139466,
-      "mtime_ns": 1772959392553786100,
-      "active_wallets": 1044558
+      "mtime_ns": 1793655698020778600,
+      "sha256": "b5038d8caf9fb7aa5c32f304d31b7bc29fe752483a4e172277d48562c5238993",
+      "active_wallets": 1044558,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     },
     {
       "month": "202206",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202206.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202206.csv",
       "size": 382938748,
-      "mtime_ns": 1772959412700164100,
-      "active_wallets": 926524
+      "mtime_ns": 1793655678092260700,
+      "sha256": "cb218c44a41d88602e57f7b59d0965d827ed1d5a42dade1f4d25990832eadf34",
+      "active_wallets": 926524,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     },
     {
       "month": "202207",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202207.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202207.csv",
       "size": 463094192,
-      "mtime_ns": 1772959437303896700,
-      "active_wallets": 1072873
+      "mtime_ns": 1793655644568861200,
+      "sha256": "55ce49f36749d21e8d30b394b6155fde231d355b6ae0d0403a6f0d4f50b7c1cc",
+      "active_wallets": 1072873,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     },
     {
       "month": "202208",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202208.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202208.csv",
       "size": 468342152,
-      "mtime_ns": 1772959462234055700,
-      "active_wallets": 1046507
+      "mtime_ns": 1793655629751293600,
+      "sha256": "6e28c468af3c4c00b58a9789940798ca227e60530958fe62f7eb90ae6ac7953f",
+      "active_wallets": 1046507,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     },
     {
       "month": "202209",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202209.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202209.csv",
       "size": 623553299,
-      "mtime_ns": 1772959495554599700,
-      "active_wallets": 1238494
+      "mtime_ns": 1793655609726351700,
+      "sha256": "f546af2a7923d0de0bde2c96990cd91775d5948ecf6925a85d7f07915345a0e5",
+      "active_wallets": 1238494,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     },
     {
       "month": "202210",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202210.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202210.csv",
       "size": 534845896,
-      "mtime_ns": 1772959523797483600,
-      "active_wallets": 1102121
+      "mtime_ns": 1793655588707957900,
+      "sha256": "891e30d2f85162c2c79b244d896e10b65245435a6e42489281ce566e42fc9539",
+      "active_wallets": 1102121,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     },
     {
       "month": "202211",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202211.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202211.csv",
       "size": 637211855,
-      "mtime_ns": 1772959557747412000,
-      "active_wallets": 1198511
+      "mtime_ns": 1793655567487064800,
+      "sha256": "a784804f2219f7c19cf150d1711b909dc779bfd8d94ed3e3025e47c05213b2fd",
+      "active_wallets": 1198511,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     },
     {
       "month": "202212",
-      "path": "C:\\Users\\sudet\\Desktop\\491-2\\dataverse_files\\wallet_daily_clean_202212.csv",
+      "path": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\tsv and wallet daily\\wallet daily clean\\wallet_daily_clean_202212.csv",
       "size": 669532376,
-      "mtime_ns": 1772959593517102600,
-      "active_wallets": 1023438
+      "mtime_ns": 1793655527739902800,
+      "sha256": "17f0c15451b2733005ce8d2eb38200716d3acac6866cc8c6f65db1cf11e456c7",
+      "active_wallets": 1023438,
+      "validation": "wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day"
     }
   ],
   "feature_units": "counts only; no token amounts",
   "absence": "missing, not a state",
-  "interpretation": "Monthly state IDs are separate from annual IDs. Training samples are balanced by month, not by wallet. Daily inputs must be unique wallet-day rows. Held-out evaluation fixes models but is conditional on the retrospectively defined annual EOA cohort."
+  "interpretation": "Monthly state IDs are separate from annual IDs. Training samples are balanced by month, not by wallet. Daily inputs must be unique wallet-day rows. Held-out evaluation fixes models but is conditional on the retrospectively defined year-end code-free cohort.",
+  "producer_script_sha256": "51f3e89f0fe6f1ed7200ef2ebb0a70810808b8745c7b113e832d1a9e1e6cb809",
+  "frozen_model_sha256": "d702c62e8efc35de08ccdc81c7af5b2591beb2a804674e5ee86476620602159d",
+  "monthly_states_sha256": "873a11c3d907f6125c8155bc3add042038e598dd59050f85d2d0822211e36024",
+  "model_settings": {
+    "2": {
+      "batch_size": 4096,
+      "compute_labels": true,
+      "init": "k-means++",
+      "init_size": null,
+      "max_iter": 100,
+      "max_no_improvement": 10,
+      "n_clusters": 2,
+      "n_init": 10,
+      "random_state": 492,
+      "reassignment_ratio": 0.01,
+      "tol": 0.0,
+      "verbose": 0
+    },
+    "3": {
+      "batch_size": 4096,
+      "compute_labels": true,
+      "init": "k-means++",
+      "init_size": null,
+      "max_iter": 100,
+      "max_no_improvement": 10,
+      "n_clusters": 3,
+      "n_init": 10,
+      "random_state": 492,
+      "reassignment_ratio": 0.01,
+      "tol": 0.0,
+      "verbose": 0
+    },
+    "4": {
+      "batch_size": 4096,
+      "compute_labels": true,
+      "init": "k-means++",
+      "init_size": null,
+      "max_iter": 100,
+      "max_no_improvement": 10,
+      "n_clusters": 4,
+      "n_init": 10,
+      "random_state": 492,
+      "reassignment_ratio": 0.01,
+      "tol": 0.0,
+      "verbose": 0
+    },
+    "5": {
+      "batch_size": 4096,
+      "compute_labels": true,
+      "init": "k-means++",
+      "init_size": null,
+      "max_iter": 100,
+      "max_no_improvement": 10,
+      "n_clusters": 5,
+      "n_init": 10,
+      "random_state": 492,
+      "reassignment_ratio": 0.01,
+      "tol": 0.0,
+      "verbose": 0
+    },
+    "6": {
+      "batch_size": 4096,
+      "compute_labels": true,
+      "init": "k-means++",
+      "init_size": null,
+      "max_iter": 100,
+      "max_no_improvement": 10,
+      "n_clusters": 6,
+      "n_init": 10,
+      "random_state": 492,
+      "reassignment_ratio": 0.01,
+      "tol": 0.0,
+      "verbose": 0
+    }
+  },
+  "scaler_settings": {
+    "copy": true,
+    "quantile_range": [
+      25.0,
+      75.0
+    ],
+    "unit_variance": false,
+    "with_centering": true,
+    "with_scaling": true
+  },
+  "log1p_features": [
+    "tx_per_calendar_day",
+    "tx_per_active_day",
+    "daily_count_cv"
+  ]
 }

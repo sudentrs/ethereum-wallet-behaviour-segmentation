@@ -1,0 +1,162 @@
+{
+  "wallet_source_sha256": "7651023a9493f1dae1004f19a330182412c4a0eccbc643084cdb0daba4f1b6f5",
+  "labels": [
+    {
+      "k": 2,
+      "seed": 492,
+      "path": "data\\interim\\year_end_2022_count_cohort\\annual_fits_reproduced\\k2_seed492_labels.npy",
+      "sha256": "4849a225849ab45df30093cae2c87da2336c4a9ca5c6805530ed45cc69cbbdcb",
+      "archived_sha256": "4849a225849ab45df30093cae2c87da2336c4a9ca5c6805530ed45cc69cbbdcb",
+      "matches_archived": true
+    },
+    {
+      "k": 3,
+      "seed": 492,
+      "path": "data\\interim\\year_end_2022_count_cohort\\annual_fits_reproduced\\k3_seed492_labels.npy",
+      "sha256": "efb7359b926ceaa3497a2aa16c318b95919c22d7592a4e5649493dc472e633e4",
+      "archived_sha256": "efb7359b926ceaa3497a2aa16c318b95919c22d7592a4e5649493dc472e633e4",
+      "matches_archived": true
+    },
+    {
+      "k": 4,
+      "seed": 492,
+      "path": "data\\interim\\year_end_2022_count_cohort\\annual_fits_reproduced\\k4_seed492_labels.npy",
+      "sha256": "c69b97a27106b49b625457184e07e1d5eb251e962d4df24c171d57fa1273e56f",
+      "archived_sha256": "c69b97a27106b49b625457184e07e1d5eb251e962d4df24c171d57fa1273e56f",
+      "matches_archived": true
+    },
+    {
+      "k": 5,
+      "seed": 492,
+      "path": "data\\interim\\year_end_2022_count_cohort\\annual_fits_reproduced\\k5_seed492_labels.npy",
+      "sha256": "32a22fe3aeae72cf186150fc95c504dd3a32103601521208b55c486bf7fcd398",
+      "archived_sha256": "32a22fe3aeae72cf186150fc95c504dd3a32103601521208b55c486bf7fcd398",
+      "matches_archived": true
+    },
+    {
+      "k": 6,
+      "seed": 492,
+      "path": "data\\interim\\year_end_2022_count_cohort\\annual_fits_reproduced\\k6_seed492_labels.npy",
+      "sha256": "81305b96a9ea474bcbc5bc85d2bae3c83b7c315adf4056fd708d36f7fc7c1dbb",
+      "archived_sha256": "81305b96a9ea474bcbc5bc85d2bae3c83b7c315adf4056fd708d36f7fc7c1dbb",
+      "matches_archived": true
+    },
+    {
+      "k": 3,
+      "seed": 493,
+      "path": "data\\interim\\year_end_2022_count_cohort\\annual_fits_reproduced\\k3_seed493_labels.npy",
+      "sha256": "3f4411b9c632e3e55370a179624fe4902417a3dbc9a741ea6c0c71d7e9eb4e77",
+      "archived_sha256": "3f4411b9c632e3e55370a179624fe4902417a3dbc9a741ea6c0c71d7e9eb4e77",
+      "matches_archived": true
+    },
+    {
+      "k": 3,
+      "seed": 494,
+      "path": "data\\interim\\year_end_2022_count_cohort\\annual_fits_reproduced\\k3_seed494_labels.npy",
+      "sha256": "99d959a37fffcd0ed6f0902b9bc58a667f60ca3c0f39092a79ce05ec2e63de29",
+      "archived_sha256": "dd280704aa8b28a9ad63b6fcc71da18f06f010efad4c5fca6fdd1d270d8f5226",
+      "matches_archived": false
+    }
+  ],
+  "sample_edges": 200000,
+  "permutations": 9999,
+  "seed": 492,
+  "script_sha256": "0e621c10e080f83fd2f1f2738ecce404ea19d967d07a5f3e3804a273cd9073e9",
+  "complete": true,
+  "months": [
+    "202201",
+    "202202",
+    "202203",
+    "202204",
+    "202205",
+    "202206",
+    "202207",
+    "202208",
+    "202209",
+    "202210",
+    "202211",
+    "202212"
+  ],
+  "test_count": 84,
+  "null": "Wallet-label permutation among sampled endpoint wallets; fixed directed transfer rows, self-transfers retained",
+  "scope": "Within-cohort edges only; no degree-preserving rewiring or causal interpretation",
+  "common_samples": true,
+  "common_permutations": true,
+  "python": "3.12.3",
+  "numpy": "1.26.4",
+  "raw_sources": [
+    {
+      "month": "202201",
+      "path": "tsv and wallet daily\\tsv\\202201.tsv\\202201.tsv",
+      "bytes": 4825728943,
+      "sha256": "227a06f4803cffba2ba12c6cd336870e2d55fdfe1dd62ecb4b011f56d47daa0b"
+    },
+    {
+      "month": "202202",
+      "path": "tsv and wallet daily\\tsv\\202202.tsv\\202202.tsv",
+      "bytes": 4342557398,
+      "sha256": "feba28c253c45aa4d6c8afb60b1a9e27786d4d095b303fea4a41cd54f080b7aa"
+    },
+    {
+      "month": "202203",
+      "path": "tsv and wallet daily\\tsv\\202203.tsv\\202203.tsv",
+      "bytes": 5608553103,
+      "sha256": "819a6cff9f8c7a7ba92f665f460a0af8885a01d8d3339e34eea8b3fd8ae23406"
+    },
+    {
+      "month": "202204",
+      "path": "tsv and wallet daily\\tsv\\202204.tsv\\202204.tsv",
+      "bytes": 4911550263,
+      "sha256": "5281a7eafba06f24a647e9f9ec48ebf3cca6130b089c8e203b74c1c0d5abfaff"
+    },
+    {
+      "month": "202205",
+      "path": "tsv and wallet daily\\tsv\\202205.tsv\\202205.tsv",
+      "bytes": 4723508948,
+      "sha256": "7c19686adb8719d6269223c07a4a53fc10e3f80948d59e551b2dd6bebec84540"
+    },
+    {
+      "month": "202206",
+      "path": "tsv and wallet daily\\tsv\\202206.tsv\\202206.tsv",
+      "bytes": 3707716162,
+      "sha256": "17cf36ddad3a1fe8035d91bf40e4076b917c06e4a06ee0330d254eac632e3796"
+    },
+    {
+      "month": "202207",
+      "path": "tsv and wallet daily\\tsv\\202207.tsv\\202207.tsv",
+      "bytes": 4785824682,
+      "sha256": "adc5d8221a48c66390df21782137553de53ee30ea2331028f24c1efa28f0e1a1"
+    },
+    {
+      "month": "202208",
+      "path": "tsv and wallet daily\\tsv\\202208.tsv\\202208.tsv",
+      "bytes": 5162689977,
+      "sha256": "5c347c6ac59a6ceb0ed583899cb23d9197a4de616dc18fa233a4c115a7ddc9df"
+    },
+    {
+      "month": "202209",
+      "path": "tsv and wallet daily\\tsv\\202209.tsv\\202209.tsv",
+      "bytes": 5921669072,
+      "sha256": "a6b366a42cf06a4592664522e1e07d03c32b8919cf70c3e6ee25f6ce8bcb6f13"
+    },
+    {
+      "month": "202210",
+      "path": "tsv and wallet daily\\tsv\\202210.tsv\\202210.tsv",
+      "bytes": 5983271471,
+      "sha256": "38124f702ae5586e7326c659de5b81492409a0dd2026f6fae47b5b424c19e941"
+    },
+    {
+      "month": "202211",
+      "path": "tsv and wallet daily\\tsv\\202211.tsv\\202211.tsv",
+      "bytes": 6498450262,
+      "sha256": "13e2d7a2709ca7e44c119d94f47fdba7ab90578e78ea391132eb62737ea1f398"
+    },
+    {
+      "month": "202212",
+      "path": "tsv and wallet daily\\tsv\\202212.tsv\\202212.tsv",
+      "bytes": 6138663487,
+      "sha256": "b20b510f86db7dce16be6f81307e45034e8fd25f0d1979a6fd01198f9b7062c8"
+    }
+  ],
+  "summary_sha256": "1cefde09eafda1569cf369cbe90d087e855b9ed3c338ed68531b8ad7ef9f5d56"
+}

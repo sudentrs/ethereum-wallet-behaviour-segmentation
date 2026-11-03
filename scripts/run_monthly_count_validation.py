@@ -37,15 +37,35 @@ def month_features(path, cohort_parquet, month):
     days = calendar.monthrange(int(month[:4]), int(month[4:]))[1]
     con = duckdb.connect()
     try:
-        a = con.execute("""
-            WITH daily AS (
-                SELECT lower(trim(wallet)) AS wallet, "date" AS day,
+        con.execute("SET threads=4")
+        con.execute("SET memory_limit='1GB'")
+        temp_dir = (cohort_parquet.parent / 'duckdb_tmp').as_posix().replace("'", "''")
+        con.execute(f"SET temp_directory='{temp_dir}'")
+        con.execute("""
+            CREATE TEMP TABLE daily AS
+                SELECT regexp_replace(lower(trim(wallet)), '^0x', '') AS wallet, "date" AS day,
                        tx_count::DOUBLE AS tx_count
                 FROM read_csv_auto(?, header=true,
                     columns={'wallet':'VARCHAR', 'date':'DATE',
                              'total_in':'DOUBLE', 'total_out':'DOUBLE',
                              'tx_count':'DOUBLE'})
-            ), eligible AS (
+        """, [str(path)])
+        invalid = con.execute("""
+            SELECT count(*) FROM daily WHERE
+                wallet IS NULL OR NOT regexp_full_match(wallet, '[0-9a-f]{40}')
+                OR day IS NULL OR strftime(day, '%Y%m') <> ?
+                OR tx_count IS NULL OR NOT isfinite(tx_count) OR tx_count < 0
+                OR tx_count <> floor(tx_count)
+        """, [month]).fetchone()[0]
+        if invalid:
+            raise ValueError(f"{invalid} invalid wallet/date/count rows in {month}")
+        duplicate = con.execute("""
+            SELECT 1 FROM daily GROUP BY wallet, day HAVING count(*) > 1 LIMIT 1
+        """).fetchone()
+        if duplicate:
+            raise ValueError(f"Duplicate wallet-day input in {month}")
+        a = con.execute("""
+            WITH eligible AS (
                 SELECT d.* FROM daily AS d
                 INNER JOIN read_parquet(?) AS c USING (wallet)
                 WHERE d.tx_count > 0
@@ -55,12 +75,14 @@ def month_features(path, cohort_parquet, month):
                    min(day) AS first, max(day) AS last
             FROM eligible
             GROUP BY wallet
-        """, [str(path), str(cohort_parquet)]).fetchdf()
+        """, [str(cohort_parquet)]).fetchdf()
     finally:
         con.close()
     if a.empty:
         raise ValueError(f"No eligible activity in {path}")
-    a = a.set_index("wallet")
+    # Hash aggregation order is not stable across DuckDB threads/runtimes.
+    # Sort before seeded sampling so the same wallets enter the frozen model.
+    a = a.sort_values('wallet',kind='stable').set_index("wallet")
     if (a.n > days).any():
         raise ValueError("More active observations than days; verify unique wallet-day input")
     mean = a.total / days
@@ -75,6 +97,29 @@ def month_features(path, cohort_parquet, month):
     return out.reset_index()
 
 
+def sha256_file(path):
+    digest = hashlib.sha256()
+    with path.open('rb') as stream:
+        for block in iter(lambda: stream.read(8*1024*1024), b''):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def cohort_cache(cohort, path):
+    """Refresh an outdated join table; monthly feature signatures include cohort identity."""
+    if cohort.isna().any() or not cohort.str.fullmatch(r'[0-9a-f]{40}').all() or cohort.duplicated().any():
+        raise ValueError('Invalid or duplicate cohort wallets')
+    expected = pd.Index(cohort).sort_values()
+    if path.exists():
+        cached = pd.read_parquet(path, columns=['wallet']).wallet
+        if not cached.duplicated().any() and pd.Index(cached).sort_values().equals(expected):
+            return
+        print('Refreshing cohort parquet: cached membership differs.', flush=True)
+    temp = path.with_suffix('.parquet.tmp')
+    pd.DataFrame({'wallet': cohort}).to_parquet(temp, index=False)
+    temp.replace(path)
+
+
 def transform(frame):
     x = frame[FEATURES].to_numpy(dtype=float)
     x[:, [0, 2, 3]] = np.log1p(x[:, [0, 2, 3]])
@@ -86,13 +131,13 @@ def transform(frame):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--data-dir", type=Path, required=True)
-    p.add_argument("--cohort", type=Path, default=ROOT / "results/eoa_only_kmeans4/wallet_eoa_only_kmeans_clusters.csv")
+    p.add_argument("--cohort", type=Path, default=ROOT / "results_v3/year_end_2022_full_cohort/cohort_members.csv.gz")
     p.add_argument("--out-dir", type=Path, default=ROOT / "results_v3/monthly_count_validation")
     p.add_argument("--permutations", type=int, default=999)
     p.add_argument("--seed", type=int, default=492)
     p.add_argument("--sample-per-month", type=int, default=20000)
     p.add_argument("--chunksize", type=int, default=1000000)
-    p.add_argument("--k-values", default="4,5,6",
+    p.add_argument("--k-values", default="3",
                    help="Comma-separated monthly state resolutions; separate from annual labels.")
     args = p.parse_args()
     if args.permutations < 99 or args.sample_per_month < 100:
@@ -107,14 +152,14 @@ def main():
         raise ValueError("Duplicate cohort wallets")
     cohort_digest = hashlib.sha256("\n".join(sorted(cohort)).encode()).hexdigest()
     cohort_parquet = args.out_dir / "cohort_wallets.parquet"
-    if not cohort_parquet.exists():
-        pd.DataFrame({"wallet": cohort}).to_parquet(cohort_parquet, index=False)
+    cohort_cache(cohort, cohort_parquet)
     source = []
     samples = []
     for month in MONTHS:
         path = args.data_dir / f"wallet_daily_clean_{month}.csv"
         stat = path.stat()
-        sig = hashlib.sha256(f"{path.resolve()}:{stat.st_size}:{stat.st_mtime_ns}:{cohort_digest}:{Path(__file__).read_bytes()!r}".encode()).hexdigest()
+        source_hash = sha256_file(path)
+        sig = hashlib.sha256(f"{source_hash}:{cohort_digest}:{Path(__file__).read_bytes()!r}".encode()).hexdigest()
         cache = args.out_dir / f"monthly_features_{month}.csv.gz"
         marker = cache.with_suffix(".signature")
         if not cache.exists() or not marker.exists() or marker.read_text() != sig:
@@ -123,11 +168,13 @@ def main():
             marker.write_text(sig)
         else:
             f = pd.read_csv(cache, dtype={"wallet": str})
+        f = f.sort_values('wallet',kind='stable').reset_index(drop=True)
         if month <= "202206":
             samples.append(f.sample(min(len(f), args.sample_per_month), random_state=args.seed + int(month)))
         source.append(dict(month=month, path=str(path.resolve()), size=stat.st_size,
-                           mtime_ns=stat.st_mtime_ns, active_wallets=len(f)))
-        print(f"{month}: {len(f):,} active EOA wallets", flush=True)
+                           mtime_ns=stat.st_mtime_ns, sha256=source_hash, active_wallets=len(f),
+                           validation='wallet_format, month, finite_nonnegative_integer_counts, unique_wallet_day'))
+        print(f"{month}: {len(f):,} active cohort wallets", flush=True)
     train = pd.concat(samples, ignore_index=True)
     scaler = RobustScaler().fit(transform(train))
     x = scaler.transform(transform(train))
@@ -191,16 +238,23 @@ def main():
         fig.colorbar(im,ax=ax); fig.tight_layout()
         fig.savefig(args.out_dir / f"k{k}_heldout_transition_matrix.pdf"); plt.close(fig)
     t = pd.DataFrame(triples)
-    t["p_holm_all_12_tests"] = holm(t.p)
+    t["p_holm_all_tests"] = holm(t.p)
     t.to_csv(args.out_dir / "heldout_two_step_returns.csv", index=False)
     pd.DataFrame(pairs).to_csv(args.out_dir / "heldout_persistence.csv", index=False)
     pd.DataFrame(entropy).to_csv(args.out_dir / "heldout_entropy.csv", index=False)
     manifest = dict(training_months=MONTHS[:6], evaluation_months=MONTHS[6:],
         cohort_size=len(cohort), cohort_sha256=hashlib.sha256(args.cohort.read_bytes()).hexdigest(),
         k_values=k_values,
+        holm_test_count=len(t), training_sample_per_month=args.sample_per_month,
+        training_sampling_order='lexicographically sorted normalized wallet IDs within each month',
+        training_sample_sha256=hashlib.sha256(train[['wallet']].to_csv(index=False).encode()).hexdigest(),
+        python=__import__('platform').python_version(),
+        numpy=np.__version__,pandas=pd.__version__,duckdb=duckdb.__version__,
+        scikit_learn=__import__('sklearn').__version__,
+        cohort_membership_sha256=cohort_digest,
         features=FEATURES, seed=args.seed, permutations=args.permutations,
         source=source, feature_units="counts only; no token amounts", absence="missing, not a state",
-        interpretation="Monthly state IDs are separate from annual IDs. Training samples are balanced by month, not by wallet. Daily inputs must be unique wallet-day rows. Held-out evaluation fixes models but is conditional on the retrospectively defined annual EOA cohort.")
+        interpretation="Monthly state IDs are separate from annual IDs. Training samples are balanced by month, not by wallet. Daily inputs must be unique wallet-day rows. Held-out evaluation fixes models but is conditional on the retrospectively defined year-end code-free cohort.")
     (args.out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print("Completed frozen monthly validation", flush=True)
 

@@ -35,7 +35,7 @@ def main() -> None:
     parser.add_argument("--fit-dir", type=Path, required=True)
     parser.add_argument("--raw-features", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
-    parser.add_argument("--k-values", default="4,5,6")
+    parser.add_argument("--k-values", default="2,3,4,5,6")
     parser.add_argument("--seeds", default="492,493,494")
     parser.add_argument("--chunksize", type=int, default=200_000)
     parser.add_argument("--skip-profiles", action="store_true")

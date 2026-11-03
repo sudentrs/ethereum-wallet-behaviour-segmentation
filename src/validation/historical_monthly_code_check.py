@@ -5,6 +5,7 @@ import calendar
 import csv
 import hashlib
 import json
+from http.client import HTTPException
 import os
 import random
 import time
@@ -63,7 +64,7 @@ class RPC:
                     values.append(item["result"])
                 time.sleep(self.pause)
                 return values
-            except (urllib.error.URLError, OSError, ValueError) as exc:
+            except (urllib.error.URLError, OSError, ValueError, HTTPException) as exc:
                 if attempt == 5:
                     raise RuntimeError(f"RPC failed after 6 attempts ({type(exc).__name__}); cached progress is preserved.") from None
                 delay = min(60, 2 ** (attempt + 1))

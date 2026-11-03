@@ -17,11 +17,13 @@ This is a year-end code-free cohort, not a claim that every retained address was
 
 The annual representation contains 16 count/activity/direction features and no pooled token-value features.
 Across $k=2$--$6$, K3 is the selected working resolution because it is the most stable non-coarse alternative across three full-population seeds.
-The conclusion is qualified by feature-family holdouts: K3 depends especially on persistence/concentration features.
+Matched-MiniBatchKMeans feature-family holdouts qualify the result: K3 depends especially on activity level and persistence/concentration features.
 
-A corrected twelve-month K3 transaction-network null test finds same-state transfer concentration above the shuffled-label null in every snapshot.
-A separate frozen monthly K3 model, trained on January--June and evaluated on July--December, shows above-chance state persistence and two-step return.
+Shared monthly network samples compare annual K2--K6 at seed 492 and K3 at two additional seeds, with 9,999 common permutations and one 84-test Holm family. K3, K4 and K5 have corrected support in all twelve months; K2 has three supported months and K6 has none under the upper-tail test. K3 is not selected by maximizing network alignment.
+Separately trained frozen monthly K2--K6 models use deterministically ordered January--June training samples and July--December evaluation. Twenty return tests form one temporal Holm family: K3--K6 each have four supported triples; the binary K2 conditional return null is structurally constant and uninformative.
 Monthly state identifiers are deliberately distinct from annual K3 labels.
+
+See `docs/VALIDATION_COMPLETION.md` and `docs/REPRODUCE_CURRENT_VALIDATION.md` for current results and reproduction commands. The previous unsorted monthly run and unmatched-estimator holdouts are retained as historical artifacts, not current evidence.
 
 ## Reproducible Outputs
 
@@ -47,6 +49,9 @@ scripts/run_year_end_k3_feature_holdouts.py     Test K3 sensitivity to prespecif
 scripts/run_monthly_count_validation.py         Fit frozen count-only monthly states and held-out temporal tests
 scripts/generate_year_end_count_figures.py      Generate manuscript figures from compact annual outputs
 scripts/run_monthly_network_null_validation.py  Network null validator that accepts aligned NPY labels
+scripts/run_year_end_network_comparison.py     Shared-sample annual K2--K6 and K3-seed network comparisons
+scripts/finalize_year_end_validation.py         Validate completed families and publish compact artifacts
+scripts/synchronize_manuscript_validation.py    Synchronize manuscript numbers with verified results
 ```
 
 ## Dataset

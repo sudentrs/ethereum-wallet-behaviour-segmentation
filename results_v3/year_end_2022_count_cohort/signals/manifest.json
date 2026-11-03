@@ -1,0 +1,114 @@
+{
+  "complete": true,
+  "cohort_size": 2508997,
+  "positive_power_wallets": 2508997,
+  "zero_power_excluded": 0,
+  "seed": 492,
+  "seeds": [
+    492,
+    493,
+    494
+  ],
+  "k_values": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "features": [
+    "active_fraction",
+    "longest_active_fraction",
+    "longest_inactive_fraction",
+    "switch_fraction",
+    "peak_count_share",
+    "daily_count_cv",
+    "low_frequency_share",
+    "medium_frequency_share",
+    "high_frequency_share",
+    "weekly_band_share",
+    "monthly_band_share",
+    "peak_power_share",
+    "spectral_entropy"
+  ],
+  "time_columns": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "frequency_columns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "fit_sample": 100000,
+  "evaluation_sample": 3000,
+  "null_sample_requested": 2000,
+  "null_positive_power": 2000,
+  "null_zero_power_excluded": 0,
+  "permutations": 999,
+  "holm_test_count": 3,
+  "signal": "365 calendar-day counts; absent days zero; no pooled amounts",
+  "spectral_transform": "log1p counts, subtract wallet mean, rFFT, exclude DC, normalize non-DC power",
+  "scaling": "log1p daily_count_cv only; full eligible population RobustScaler per representation",
+  "clustering": "sample-trained MiniBatchKMeans; full positive-power population assignment",
+  "null": "within-wallet daily permutation including zeros; preserves full daily-count histogram",
+  "inference": "annual descriptive signal organization, not held-out prediction, causality or proven recurring cycles",
+  "annual_total_reconciliation": "exact for every cohort address",
+  "sources": {
+    "cohort_sha256": "01c9cebe456e3a2cabc9e50aa74be99e094477d746012d2163d553fd2c7c6472",
+    "wallet_source_sha256": "7651023a9493f1dae1004f19a330182412c4a0eccbc643084cdb0daba4f1b6f5",
+    "script_sha256": "5d4b36d450b8dbf21cb98970746effc28ca970e6ad739b387355ee253394aa07",
+    "settings": {
+      "seed": 492,
+      "fit_sample": 100000,
+      "eval_sample": 3000,
+      "null_wallets": 2000,
+      "permutations": 999
+    },
+    "annual_labels": {
+      "2": "4849a225849ab45df30093cae2c87da2336c4a9ca5c6805530ed45cc69cbbdcb",
+      "3": "efb7359b926ceaa3497a2aa16c318b95919c22d7592a4e5649493dc472e633e4",
+      "4": "c69b97a27106b49b625457184e07e1d5eb251e962d4df24c171d57fa1273e56f",
+      "5": "32a22fe3aeae72cf186150fc95c504dd3a32103601521208b55c486bf7fcd398",
+      "6": "81305b96a9ea474bcbc5bc85d2bae3c83b7c315adf4056fd708d36f7fc7c1dbb"
+    },
+    "daily": {
+      "1": "fcb423c0ec828ff8fc3723c722540f85e10b156c0b86ecfac33cfd7187ec9359",
+      "2": "3019dfbc1fa623f046f012a1908dd9c9f7ab652e25403bf79db8f37ad94dd8c4",
+      "3": "63fc1526a932baa7384955fc74cd9fa78e5a192c9259f15bb45580941d5515bd",
+      "4": "c11a505034b4c82624919fae0bd57596c385207e7c6585c39d45e9aa6c028411",
+      "5": "b5038d8caf9fb7aa5c32f304d31b7bc29fe752483a4e172277d48562c5238993",
+      "6": "cb218c44a41d88602e57f7b59d0965d827ed1d5a42dade1f4d25990832eadf34",
+      "7": "55ce49f36749d21e8d30b394b6155fde231d355b6ae0d0403a6f0d4f50b7c1cc",
+      "8": "6e28c468af3c4c00b58a9789940798ca227e60530958fe62f7eb90ae6ac7953f",
+      "9": "f546af2a7923d0de0bde2c96990cd91775d5948ecf6925a85d7f07915345a0e5",
+      "10": "891e30d2f85162c2c79b244d896e10b65245435a6e42489281ce566e42fc9539",
+      "11": "a784804f2219f7c19cf150d1711b909dc779bfd8d94ed3e3025e47c05213b2fd",
+      "12": "17f0c15451b2733005ce8d2eb38200716d3acac6866cc8c6f65db1cf11e456c7"
+    }
+  },
+  "python": "3.12.3",
+  "numpy": "1.26.4",
+  "sklearn": "1.8.0",
+  "duckdb": "2.0.0",
+  "outputs": {
+    "annual_signal_overlap.csv": "32c0963ad2ecd083781217bc77a883810cd2a11d86b3664dd618c98f7f481583",
+    "cross_representation_agreement.csv": "6e3b0d7dc398b9ab88d8e2dd1371bcc8a9ca63fc6391519fb783e5b9c6fcbeb7",
+    "full_cohort_feature_summary.csv": "804027ebb69b8d8b53da98e34b6d7a342e9e9a057a157de26fe668538b6d7c70",
+    "signal_cluster_profiles.csv": "d34e10d546d5f3cec8ad34a46da46335d176a096af6b64cbfd1a130bc227ee3b",
+    "signal_cross_representation.pdf": "01ebd5278052ade8475692371f9b3e293956ab87cec181dc6e3fbd7e64b31f00",
+    "signal_model_resolution.csv": "ac1f82f266ce8a2e018ed42e58370d74e7f950b60ac694fc12c770927d2a599d",
+    "signal_resolution_validation.pdf": "01b04e6fbbb72ed86bda4ed1a2ca4f13f0194178663288af3277d3779d0cd107",
+    "signal_seed_stability.csv": "aedc48056bb037bd4e2c8b466ef20ae93b6f0afc4f977e77964548a6b10c6005",
+    "timing_null_replicates.csv": "2af29c917d490a1dc2310acf7e9b013384710b4f51bdf886cd80d8f4501b9d7d",
+    "timing_surrogate_tests.csv": "5541a00cb8a7d6991204ba860e8d00a54a146f576c3eef25f4c62b74b2cc06e5"
+  }
+}

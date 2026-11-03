@@ -93,6 +93,9 @@ A single-year-end cohort is a different population definition, not an
 optimization that proves twelve-month status. Its benchmark is implemented
 in scripts/benchmark_year_end_rpc.py. Results and caveats are in
 results_v3/year_end_2022_rpc_benchmark/README.md. A full year-end scan/export
-has not been run. The most reliable tested setting was batch 20 with one
+has not been run. A resumable full-year-end runner is now available as
+`python scripts/run_year_end_scan.py --execute`; see
+`docs/YEAR_END_FULL_SCAN.md` for status, resume and export details.
+The most reliable tested setting was batch 20 with one
 worker; concurrent settings had unresolved failures. Provider quota still
 needs checking before a full run.

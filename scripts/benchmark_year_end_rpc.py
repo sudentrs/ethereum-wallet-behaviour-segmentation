@@ -3,6 +3,7 @@
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
+from http.client import HTTPException
 from pathlib import Path
 import random
 import sys
@@ -56,7 +57,7 @@ class BatchClient:
                 with urllib.request.urlopen(request, timeout=30) as response:
                     sizes = decode_response(json.load(response), len(batch))
                 return sizes, errors, attempted_checks
-            except (urllib.error.URLError, OSError, ValueError):
+            except (urllib.error.URLError, OSError, ValueError, HTTPException):
                 errors += 1
                 if attempt < 2:
                     time.sleep(2 ** (attempt+1))

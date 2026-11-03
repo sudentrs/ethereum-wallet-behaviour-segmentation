@@ -1,0 +1,36 @@
+{
+  "pipeline": "controlled year-end cohort, annual/monthly/network and rebuilt count-signal branches",
+  "cohort_wallets": 2508997,
+  "target_pages_including_references": 10,
+  "input_sha256": {
+    "results_v3/year_end_2022_count_cohort/validation_completion.json": "2bdb44aff37c6b5636409771562b2a10b6b2bfba6ef967d0c9526ec800c048cc",
+    "results_v3/year_end_2022_count_cohort/annual/annual_fit_runs.csv": "24c59a74e2dcf422e87205f0ef2dcf886d15f6ee623fbc936d40940a287387ed",
+    "results_v3/year_end_2022_count_cohort/annual/annual_seed_stability.csv": "a13c4d65f76a841dbd4c697d7927c2a07b22924522c7ea759f41c9e52291b5ec",
+    "results_v3/year_end_2022_count_cohort/annual/k3_feature_holdout_sensitivity.csv": "b70c8e0f2baccf022ff2f374fd4c55fee2106f4685f929e0a882f8d673a80482",
+    "results_v3/year_end_2022_count_cohort/annual/profiles_k3/annual_exact_raw_profiles_seed492_k3.csv": "a1e7e4723dd2568d5f85a56d8f95a729abc24deef611722a527e04e8d50eede5",
+    "results_v3/year_end_2022_count_cohort/network_comparison/comparison_summary.csv": "aa6c32aec75f741aedfaceb30a6636c281f206af2a990a95fe5afe77b382084e",
+    "results_v3/year_end_2022_count_cohort/monthly_k2_k6/comparison_summary.csv": "fd11fc91db09a20c7bdb0f0ac0f4bee7e32c6a1b648ed5d00a389323b04ea2a3",
+    "results_v3/year_end_2022_count_cohort/monthly_k2_k6/heldout_two_step_returns.csv": "df5b57e39def3246a879f850aa98e02fd8728e6e96eee0eb9f86294bfc34ba77",
+    "results_v3/year_end_2022_count_cohort/signals/annual_signal_overlap.csv": "32c0963ad2ecd083781217bc77a883810cd2a11d86b3664dd618c98f7f481583",
+    "results_v3/year_end_2022_count_cohort/signals/cross_representation_agreement.csv": "6e3b0d7dc398b9ab88d8e2dd1371bcc8a9ca63fc6391519fb783e5b9c6fcbeb7",
+    "results_v3/year_end_2022_count_cohort/signals/full_cohort_feature_summary.csv": "804027ebb69b8d8b53da98e34b6d7a342e9e9a057a157de26fe668538b6d7c70",
+    "results_v3/year_end_2022_count_cohort/signals/manifest.json": "6f932f5cfcbf9046cc2c034187a4b889cd15aefc55adb5c9da6bf1df30ed0e2f",
+    "results_v3/year_end_2022_count_cohort/signals/signal_cluster_profiles.csv": "d34e10d546d5f3cec8ad34a46da46335d176a096af6b64cbfd1a130bc227ee3b",
+    "results_v3/year_end_2022_count_cohort/signals/signal_cross_representation.pdf": "01ebd5278052ade8475692371f9b3e293956ab87cec181dc6e3fbd7e64b31f00",
+    "results_v3/year_end_2022_count_cohort/signals/signal_model_resolution.csv": "ac1f82f266ce8a2e018ed42e58370d74e7f950b60ac694fc12c770927d2a599d",
+    "results_v3/year_end_2022_count_cohort/signals/signal_resolution_validation.pdf": "01b04e6fbbb72ed86bda4ed1a2ca4f13f0194178663288af3277d3779d0cd107",
+    "results_v3/year_end_2022_count_cohort/signals/signal_seed_stability.csv": "aedc48056bb037bd4e2c8b466ef20ae93b6f0afc4f977e77964548a6b10c6005",
+    "results_v3/year_end_2022_count_cohort/signals/timing_null_replicates.csv": "2af29c917d490a1dc2310acf7e9b013384710b4f51bdf886cd80d8f4501b9d7d",
+    "results_v3/year_end_2022_count_cohort/signals/timing_surrogate_tests.csv": "5541a00cb8a7d6991204ba860e8d00a54a146f576c3eef25f4c62b74b2cc06e5"
+  },
+  "excluded_legacy_evidence": "No previous-cohort frequency-domain results are used",
+  "signal_branch": {
+    "cohort": 2508997,
+    "positive_power": 2508997,
+    "zero_power_excluded": 0,
+    "model_fits": 30,
+    "cross_representation_comparisons": 75,
+    "timing_holm_family": 3
+  },
+  "source_of_truth": "overleaf/main.tex; legacy extended_body.tex is historical and must not overwrite this source"
+}

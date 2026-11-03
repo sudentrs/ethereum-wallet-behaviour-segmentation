@@ -1,25 +1,46 @@
 # Overleaf Paper Package
 
 This folder contains the current paper source that can be uploaded to Overleaf.
+The current source uses `IEEEtran` journal format for TCSS on US Letter, not the
+older conference format. Select **XeLaTeX** in Overleaf. The bibliography is
+embedded; no BibTeX run or external `.bib` file is required.
+
+The current editable source is `main.tex` with assets under `figures_current/`.
+Existing ZIP/PDF files under `output/pdf/` predate the signal integration and
+should not be treated as current exports. The selected methodology PNG is included
+in the source, with its original K5 label distinguished from the current K3 summary.
+See `docs/TCSS_REFEREE_AUDIT.md` for the scientific audit and remaining limits.
 
 ## Files
 
 - `main.tex` - current IEEEtran paper source.
-- `review_results.tex` - generated tables and methods/results for the completed review experiments; required by main.tex.
-- `figures/` - paper figures referenced by `main.tex`.
+- `extended_body.tex` - historical narrative template; do not use it to overwrite the signal-integrated `main.tex`.
+- `manuscript_inputs.json` - frozen result-table hashes used by the extended manuscript builder.
+- `review_results.tex` - historical review material; not included by the current main.tex.
+- `figures_current/` - current manuscript assets, including the methodology image and rebuilt signal figures.
+- `figures/` - older assets retained for provenance.
 - `references.bib` - older BibTeX reference file kept for convenience. The current `main.tex` uses an embedded `thebibliography` section.
 
 ## Compile Notes
 
-Upload the entire `overleaf/` folder contents to Overleaf while preserving the `figures/` subfolder.
+Upload the entire `overleaf/` folder contents to Overleaf while preserving the `figures_current/` subfolder.
 
-Regenerate the review tables and figures with
-`python scripts/package_review_revision.py` from the repository root.
-The paper no longer selects a preferred annual K5 taxonomy. See
-`docs/REVIEW_REVISION_STATUS.md` for the remaining methodological requirements.
-The built-in single-document compiler cannot resolve this package's external
-figures; full compilation and page-level layout verification must be done
-in Overleaf or a compiler that supports the complete project.
+Current tables and figures come from the controlled year-end cohort pipeline,
+not the old review pack. See `docs/REPRODUCE_CURRENT_VALIDATION.md` and
+`docs/VALIDATION_COMPLETION.md`. Annual and monthly K2--K6 comparisons are
+included, with K3 as the main descriptive illustration.
+The paper uses IEEEtran journal/Letter format. The ten-page target has not been
+reverified for the signal-integrated revision because compilation was explicitly
+not requested. `main.tex` is the source of truth; the old extended-body builder
+is blocked after signal publication to avoid losing the new analysis.
+See `docs/YEAR_END_SIGNAL_VALIDATION.md` for reproducible signal commands and
+`overleaf/manuscript_inputs.json` for frozen compact result hashes.
+Compile the complete project with figures available. The built-in Codex project
+compiler supports this directory; a standalone Tectonic compiler can also run:
+
+```powershell
+tectonic --keep-logs --outdir ../output/pdf main.tex
+```
 
 Before submission, check:
 

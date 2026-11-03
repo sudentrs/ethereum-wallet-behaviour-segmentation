@@ -42,6 +42,8 @@ def main() -> None:
         runs.append({"k": k, "seed": seed, "labels_file": path.name, "labels_sha256": sha256(path)})
     if not runs:
         raise ValueError("No annual label artifacts found")
+    fit_path = args.fit_dir / 'fit_manifest.json'
+    fit_settings = json.loads(fit_path.read_text()) if fit_path.exists() else None
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps({
         "purpose": "audited provenance for the annual K2--K6 count/activity models",
@@ -49,7 +51,9 @@ def main() -> None:
         "wallet_source": str(args.wallet_source), "wallet_source_sha256": sha256(args.wallet_source),
         "wallet_count": wallet_count, "feature_columns": feature_columns,
         "runs": runs, "scikit_learn": sklearn.__version__, "python": platform.python_version(),
-        "note": "Model settings are reported in each run summary. This manifest was regenerated from existing label artifacts after a partial rerun overwrote the original fit manifest."
+        "fit_settings": fit_settings,
+        "fit_manifest_sha256": sha256(fit_path) if fit_path.exists() else None,
+        "note": "Audited label files, feature order and input hashes. Full estimator settings are embedded when a fit manifest is available."
     }, indent=2), encoding="utf-8")
 
 

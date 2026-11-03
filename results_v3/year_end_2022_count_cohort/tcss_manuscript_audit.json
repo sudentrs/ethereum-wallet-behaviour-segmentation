@@ -1,0 +1,25 @@
+{
+  "checks_passed": true,
+  "abstract_words": 231,
+  "network_tests": 84,
+  "monthly_return_tests": 20,
+  "monthly_persistence_pairs": 25,
+  "annual_fits": 15,
+  "signal_fits": 30,
+  "cross_representation_comparisons": 75,
+  "signal_timing_tests": 3,
+  "cohort": 2508997,
+  "figure_sha256": {
+    "figures_current/ethereum_methodology.png": "21b02b411ba1566003eb38bc7b45cf5ea9b4f6c698639363ae1d3a7ed5ace554",
+    "figures_current/annual_model_resolution.pdf": "f14178ef5ff3d47f39fb958c5834e4b2de35229b47288317a4a9cbd97e1a4d8c",
+    "figures_current/annual_seed_stability.pdf": "199dd014c8ce4af157cd92f38872e929b397072dc95673cd8c315ea5694ad87f",
+    "figures_current/k3_count_activity_profiles.pdf": "5a5a729d571837546573cf5987e77de98c44735ba86291b16ac7825eac13ed88",
+    "figures_current/network_comparison_overview.pdf": "53e839fe24c6fc366300ee7f401ca036e888dc80155f89e5e927dd4120caf984",
+    "figures_current/k3_heldout_transition_matrix.pdf": "91637198d21275a8232816d0c600977331e2dbf30e2dfdb0adf727bd07c9ef24",
+    "figures_current/monthly_resolution_comparison.pdf": "3605a6ba6f319e05b052af005b856d121192aefc67135f9bfa9240da501f2b4e",
+    "figures_current/conditional_return_comparison.pdf": "f9aac4b322be24124b0d839bc39a3da7c0b47c7f07bca8e643455caa5fe59ed4",
+    "figures_current/signal_cross_representation.pdf": "01ebd5278052ade8475692371f9b3e293956ab87cec181dc6e3fbd7e64b31f00"
+  },
+  "manuscript_sha256": "12b06637ad712174c5bd04e4236a3dca568f1bc7c386547d3fbcad24dc480cd5",
+  "limitations": "Summary and provenance reconciliation; not independent re-extraction of all raw measurements or external semantic validation."
+}

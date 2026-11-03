@@ -1,0 +1,38 @@
+{
+  "transitions": [
+    {
+      "baseline_retained": 0,
+      "year_end_included": 0,
+      "addresses": 229230,
+      "total_tx": 232238897.0,
+      "mean_tx": 1013.1261047855866,
+      "max_tx": 14220427.0
+    },
+    {
+      "baseline_retained": 0,
+      "year_end_included": 1,
+      "addresses": 65145,
+      "total_tx": 7070208.0,
+      "mean_tx": 108.53032466037301,
+      "max_tx": 252119.0
+    },
+    {
+      "baseline_retained": 1,
+      "year_end_included": 0,
+      "addresses": 16,
+      "total_tx": 371500.0,
+      "mean_tx": 23218.75,
+      "max_tx": 350141.0
+    },
+    {
+      "baseline_retained": 1,
+      "year_end_included": 1,
+      "addresses": 2443852,
+      "total_tx": 182456587.0,
+      "mean_tx": 74.65942577537429,
+      "max_tx": 5805796.0
+    }
+  ],
+  "manifest_hash_verified": true,
+  "unresolved": 0
+}

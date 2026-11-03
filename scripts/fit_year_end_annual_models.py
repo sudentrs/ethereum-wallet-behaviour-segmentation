@@ -1,4 +1,4 @@
-"""Fit reproducible K4/K5/K6 count/activity models for the year-end cohort."""
+"""Fit reproducible K2--K6 count/activity models for the year-end cohort."""
 
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ def main() -> None:
     parser.add_argument("--matrix", type=Path, required=True)
     parser.add_argument("--wallet-source", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
-    parser.add_argument("--k-values", default="4,5,6")
+    parser.add_argument("--k-values", default="2,3,4,5,6")
     parser.add_argument("--seeds", default="492,493,494")
     parser.add_argument("--batch-size", type=int, default=8192)
     parser.add_argument("--n-init", type=int, default=10)

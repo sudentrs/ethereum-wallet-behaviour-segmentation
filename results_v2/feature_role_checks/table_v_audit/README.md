@@ -1,0 +1,3 @@
+All five K5 feature removals were refit in one invocation, with an additional full-feature baseline. MiniBatchKMeans: random_state=492, batch_size=8192, n_init=10, max_iter=200; four numeric threads. Same wallet order, feature source and reference labels for all scenarios.
+
+The activity row in the previous v2 export (ARI 0.3702468, agreement 0.6113743) was not reproduced. This rerun yields ARI 0.4484436 and agreement 0.6865554. The other four rows reproduce the previous values. The cause of the previous activity mismatch is not established. Use rerun_summary.csv for Table V. K4/K6 holdouts were not rerun in this audit.

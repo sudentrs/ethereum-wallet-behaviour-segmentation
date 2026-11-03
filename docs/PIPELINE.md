@@ -1,11 +1,16 @@
-# Analysis Pipeline
+# Historical Analysis Pipeline
+
+This document describes earlier experiments, not the current manuscript pipeline.
+For the corrected year-end cohort and the completed K2--K6 validation, use
+[REPRODUCE_CURRENT_VALIDATION.md](REPRODUCE_CURRENT_VALIDATION.md) and
+[VALIDATION_COMPLETION.md](VALIDATION_COMPLETION.md).
 
 The methodological review revision is documented in
 `docs/REVIEW_REVISION_STATUS.md`. New `results_v3/` experiments compare
 resolutions without a preferred K5 and correct the monthly-window mismatch.
 The older temporal and token-value results described below are provisional.
 
-This guide explains how the current EOA-only Ethereum wallet segmentation paper is reproduced from raw ERC-20 transfer data to paper figures.
+The steps below are retained as historical documentation and must not be used to reproduce the current manuscript's numerical claims.
 
 The repository contains the scripts and selected compact outputs. It does not contain raw monthly transfer files, large intermediate parquet files, large wallet-label CSVs, or API keys.
 

@@ -1,0 +1,24 @@
+{
+  "python": "3.12.3 | packaged by conda-forge | (main, Apr 15 2024, 18:20:11) [MSC v.1938 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "numpy": "1.26.4",
+    "pandas": "2.3.1",
+    "scipy": "1.13.1",
+    "scikit-learn": "1.8.0",
+    "joblib": "1.4.2",
+    "threadpoolctl": "3.5.0"
+  },
+  "reference_v3_environment": {
+    "python": "3.11.5 | packaged by Anaconda, Inc. | (main, Sep 11 2023, 13:26:23) [MSC v.1916 64 bit (AMD64)]",
+    "packages": {
+      "numpy": "1.26.4",
+      "pandas": "1.5.3",
+      "scipy": "1.11.1",
+      "scikit-learn": "1.6.0",
+      "matplotlib": "3.7.2",
+      "joblib": "1.2.0",
+      "threadpoolctl": "3.5.0"
+    }
+  }
+}

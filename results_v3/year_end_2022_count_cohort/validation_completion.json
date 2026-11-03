@@ -1,0 +1,31 @@
+{
+  "complete": true,
+  "cohort_wallets": 2508997,
+  "annual_exact_matches": 13,
+  "legacy_k3_exact_counts_match": true,
+  "annual_runs": 15,
+  "network_tests": 84,
+  "network_permutations": 9999,
+  "network_holm_family": 84,
+  "monthly_return_holm_family": 20,
+  "monthly_k_values": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "monthly_sampling_order": "lexicographically sorted normalized wallet IDs within each month",
+  "network_summary_sha256": "1cefde09eafda1569cf369cbe90d087e855b9ed3c338ed68531b8ad7ef9f5d56",
+  "monthly_manifest_sha256": "e277a1e073798ca0efdf771ac23219d7ee2b198199896811b4e888496cc71cac",
+  "holdouts_sha256": "b70c8e0f2baccf022ff2f374fd4c55fee2106f4685f929e0a882f8d673a80482",
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "1.26.4",
+    "pandas": "2.3.1",
+    "scikit_learn": "1.8.0",
+    "duckdb": "2.0.0",
+    "numba": "0.60.0"
+  },
+  "network_producer_script_matches": true
+}

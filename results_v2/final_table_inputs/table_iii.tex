@@ -1,0 +1,9 @@
+\begin{tabular}{rrrrrrrlrlrlll}
+\toprule
+k & min\_cluster\_share & max\_cluster\_share & seed\_stability\_ari & silhouette\_mean & silhouette\_std & davies\_bouldin\_full & network\_holm\_sig\_months & network\_mean\_observed\_minus\_null & self\_transition\_observed\_vs\_expected & temporal\_kappa & two\_step\_holm\_sig\_triples & paper\_interpretation & status \\
+\midrule
+4 & 0.081270 & 0.395621 & 0.589360 & 0.163223 & 0.002695 & 1.663523 & 12/12 & 0.109621 & 0.514 vs 0.347 & 0.255524 & 10/10 & Conservative alternative. Strongest network evidence and strongest feature-holdout robustness, with good temporal persistence, but fewer behavioural roles. & complete \\
+5 & 0.063368 & 0.377797 & 0.712603 & 0.161094 & 0.001686 & 1.678981 & 1/12 & 0.004704 & 0.500 vs 0.323 & 0.261310 & 10/10 & Main descriptive taxonomy. Best seed stability and richer role vocabulary, but weaker network same-role evidence than K4/K6 and weaker feature-holdout recovery than K4. & complete \\
+6 & 0.061406 & 0.304972 & 0.484808 & 0.167836 & 0.001979 & 1.662691 & 11/12 & 0.040289 & 0.469 vs 0.286 & 0.256559 & 10/10 & Fine-grained alternative. Network evidence is strong and activity holdout recovery is good, but seed stability is weakest and one role is fragile under a volatility/concentration holdout. & complete \\
+\bottomrule
+\end{tabular}

@@ -3,11 +3,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import hashlib
+import platform
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from sklearn.cluster import KMeans
+import sklearn
+from sklearn.cluster import MiniBatchKMeans
 from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
 from scipy.optimize import linear_sum_assignment
 from threadpoolctl import threadpool_limits
@@ -35,8 +38,13 @@ def main() -> None:
     parser.add_argument("--reference-labels", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=492)
+    parser.add_argument('--batch-size', type=int, default=8192)
+    parser.add_argument('--n-init', type=int, default=10)
+    parser.add_argument('--max-iter', type=int, default=200)
     args = parser.parse_args()
     args.out_dir.mkdir(parents=True, exist_ok=True)
+    if min(args.batch_size, args.n_init, args.max_iter) < 1:
+        parser.error('Fit settings must be positive')
 
     feature_columns = [col for col in pd.read_csv(args.features, nrows=0).columns
                        if col not in {"wallet", "cluster"}]
@@ -52,7 +60,8 @@ def main() -> None:
         # The supplied matrix is already robust-scaled feature-wise; retaining columns preserves
         # the exact scaling used by the complete annual model.
         z = np.asarray(x[:, keep], dtype=np.float32)
-        labels = KMeans(n_clusters=3, n_init=10, random_state=args.seed).fit_predict(z).astype(np.int16)
+        labels = MiniBatchKMeans(n_clusters=3, n_init=args.n_init, random_state=args.seed,
+                                batch_size=args.batch_size, max_iter=args.max_iter).fit_predict(z).astype(np.int16)
         results.append({
             "removed_family": name,
             "features_removed": len(indices),
@@ -63,8 +72,18 @@ def main() -> None:
         })
     result = pd.DataFrame(results)
     result.to_csv(args.out_dir / "k3_feature_holdout_sensitivity.csv", index=False)
+    def sha256(path):
+        digest = hashlib.sha256()
+        with path.open('rb') as stream:
+            for chunk in iter(lambda: stream.read(8*1024*1024), b''):
+                digest.update(chunk)
+        return digest.hexdigest()
     (args.out_dir / "k3_feature_holdout_manifest.json").write_text(json.dumps({
         "reference": str(args.reference_labels), "matrix": str(args.matrix),
+        "reference_sha256": sha256(args.reference_labels), "matrix_sha256": sha256(args.matrix),
+        "estimator": "MiniBatchKMeans", "batch_size": args.batch_size,
+        "n_init": args.n_init, "max_iter": args.max_iter,
+        "scikit_learn": sklearn.__version__, "python": platform.python_version(),
         "features": feature_columns, "families": FAMILIES, "seed": args.seed,
         "interpretation": "Feature-family holdouts measure representation sensitivity. They do not provide independent external validation."
     }, indent=2), encoding="utf-8")

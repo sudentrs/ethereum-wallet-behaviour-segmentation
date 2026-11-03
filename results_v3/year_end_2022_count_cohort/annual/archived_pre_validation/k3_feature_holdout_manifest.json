@@ -1,0 +1,48 @@
+{
+  "reference": "data\\interim\\year_end_2022_count_cohort\\annual_fits_final2\\k3_seed492_labels.npy",
+  "matrix": "data\\interim\\year_end_2022_count_cohort\\wallet_count_activity_scaled.npy",
+  "features": [
+    "active_days_observed",
+    "activity_span_days",
+    "activity_density",
+    "total_tx",
+    "avg_daily_tx_count",
+    "max_daily_tx_count",
+    "std_daily_tx_count",
+    "in_active_days",
+    "out_active_days",
+    "both_active_days",
+    "in_active_day_ratio",
+    "out_active_day_ratio",
+    "both_active_day_ratio",
+    "in_out_day_balance",
+    "tx_count_cv",
+    "tx_concentration_ratio"
+  ],
+  "families": {
+    "activity_level": [
+      "active_days_observed",
+      "total_tx",
+      "avg_daily_tx_count",
+      "max_daily_tx_count",
+      "std_daily_tx_count"
+    ],
+    "persistence_concentration": [
+      "activity_span_days",
+      "activity_density",
+      "tx_count_cv",
+      "tx_concentration_ratio"
+    ],
+    "directionality": [
+      "in_active_days",
+      "out_active_days",
+      "both_active_days",
+      "in_active_day_ratio",
+      "out_active_day_ratio",
+      "both_active_day_ratio",
+      "in_out_day_balance"
+    ]
+  },
+  "seed": 492,
+  "interpretation": "Feature-family holdouts measure representation sensitivity. They do not provide independent external validation."
+}

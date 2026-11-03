@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 .venv/
+.runtime-packages/
+.runtime-tools/
+/tsv and wallet daily/
 venv/
 env/
 
@@ -22,6 +25,7 @@ data/raw/
 data/interim/
 data/processed/
 outputs/
+/output/
 wallet_eoa_only_kmeans6_features_robust_scaled/
 results/**/wallet_eoa_only_kmeans_clusters.csv
 results/**/wallet_eoa_only_kmeans*_features_robust_scaled.csv
@@ -31,6 +35,7 @@ tmp_*/
 # Local/editor files
 .DS_Store
 Thumbs.db
+desktop.ini
 .idea/
 .vscode/
 .env
@@ -47,6 +52,12 @@ results/**/wallet_eoa_only_kmeans_clusters.csv
 results/**/sampled_edges_for_null_test.csv
 results/**/wallet_monthly_behavior_states.csv
 results/**/wallet_trajectory_types.csv
+results/eoa_contract_contamination_full/sampled_address_classifications.csv
+results/full_eoa_temporal_signal_streaming_k5/daily_wallet_partitions/
+results/full_eoa_temporal_signal_streaming_k5/*_features_raw.csv
+results/full_eoa_temporal_signal_streaming_k5/*_assignments.csv
+results_v3/eoa_restoration_pilot/baseline_wallet_order.csv
+results_v3/eoa_restoration_pilot/*_labels_*.npy
 results/academic_paper_pack/feature_space_proofs/k*/k*_feature_proof_sample.csv
 
 # LaTeX / Overleaf build artifacts

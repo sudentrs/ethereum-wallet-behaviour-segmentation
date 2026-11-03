@@ -1,0 +1,26 @@
+{
+  "baseline_wallets": 2443868,
+  "added_wallets": 33,
+  "feature_count": 33,
+  "seeds": [
+    492,
+    493,
+    494
+  ],
+  "sklearn_version": "1.8.0",
+  "revision_context": {
+    "manifest": "results_v3\\resolution_review\\manifest.json",
+    "manifest_sha256": "a517349bff2df5e83d22a9aa3383748810d86bf4d1215fbcb8663a8e63d8ba77",
+    "scope": "Annual restoration sensitivity; separate from revised monthly count-state models",
+    "verification": "Annual feature order and population size matched. Remote full feature-file hash unavailable in revision manifest."
+  },
+  "batch_size": 8192,
+  "max_iter": 200,
+  "reference_n_init": 10,
+  "paired_n_init": 1,
+  "scaler_max_check_error": 4.8465970574337945e-16,
+  "scaler_sha256": "f3ca9bf6b5fe772aee183f25940ded0662b9182067e6a718decb9f6dcf7db3d9",
+  "representation": "Existing legacy features, including unresolved token denomination; no economic volume inference.",
+  "design": "Same initial reference centers per pair and same seed. n changes mini-batch draws; pairs include schedule sensitivity. Frozen scaler.",
+  "frozen_model_caveat": "Original estimators absent; reconstructed estimator agreement with archived labels reported explicitly."
+}

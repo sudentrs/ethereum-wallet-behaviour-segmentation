@@ -4,6 +4,7 @@ Freeze the original scaler and feature representation. Reconstruct absent
 estimators, measure archival agreement, then compare paired MiniBatchKMeans
 fits with identical initial centers. Mini-batch schedules still depend on n.
 """
+import argparse
 import gc
 import hashlib
 import json
@@ -67,7 +68,17 @@ def model(k, seed, init="k-means++", n_init=10):
 
 
 def main():
+    global OUT
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out-dir", type=Path, default=OUT)
+    parser.add_argument("--revision-context", type=Path,
+                        help="Revision folder whose annual resolution manifest must match the pilot inputs")
+    args = parser.parse_args()
+    OUT = ROOT / args.out_dir
     OUT.mkdir(parents=True, exist_ok=True)
+    completion_marker = OUT / "ANNUAL_COMPLETE"
+    if completion_marker.exists():
+        raise SystemExit("Output already completed. Choose another --out-dir to preserve it.")
     evidence = pd.read_csv(ROOT / "data/interim/excluded_code_type_audit/historical_origination_audit.csv")
     evidence = evidence.loc[evidence.status.eq("verified_top_level_sender_in_2022")].copy()
     if len(evidence) != 33 or evidence.address.duplicated().any():
@@ -83,6 +94,17 @@ def main():
                         dtype={"wallet": str, **{c: np.float32 for c in features}})
     wallets = pd.Index(frame.pop("wallet"))
     X = np.ascontiguousarray(frame[features].to_numpy(), dtype=np.float32)
+    revision_context = None
+    if args.revision_context is not None:
+        context_path = ROOT / args.revision_context / "resolution_review/manifest.json"
+        context = json.loads(context_path.read_text(encoding="utf-8"))
+        if context["feature_columns"] != features or context["population_rows"] != len(X):
+            raise ValueError("Revision annual feature order or population size differs from pilot inputs")
+        revision_context = {"manifest": str(context_path.relative_to(ROOT)),
+                            "manifest_sha256": hashlib.sha256(context_path.read_bytes()).hexdigest(),
+                            "scope": "Annual restoration sensitivity; separate from revised monthly count-state models",
+                            "verification": "Annual feature order and population size matched. Remote full feature-file hash unavailable in revision manifest."}
+        print("Revision annual feature order and population size verified.", flush=True)
     del frame
     gc.collect()
     if wallets.has_duplicates or set(evidence.wallet) & set(wallets):
@@ -113,6 +135,7 @@ def main():
     seeds = [492, 493, 494]
     metadata = {"baseline_wallets": len(X), "added_wallets": len(added),
                 "feature_count": len(features), "seeds": seeds, "sklearn_version": sklearn.__version__,
+                "revision_context": revision_context,
                 "batch_size": 8192, "max_iter": 200, "reference_n_init": 10,
                 "paired_n_init": 1, "scaler_max_check_error": error,
                 "scaler_sha256": hashlib.sha256(stats_path.read_bytes()).hexdigest(),

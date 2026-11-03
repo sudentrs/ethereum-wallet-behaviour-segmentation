@@ -1,0 +1,21 @@
+{
+  "random_state": 492,
+  "batch_size": 8192,
+  "n_init": 10,
+  "max_iter": 200,
+  "k": 5,
+  "features": "C:\\Users\\senak\\Desktop\\ethereum-wallet-behaviour-segmentation\\results\\eoa_only_kmeans6\\wallet_eoa_only_kmeans6_features_robust_scaled.csv",
+  "scenarios": [
+    "all_features_resample_baseline",
+    "activity_holdout",
+    "value_flow_holdout",
+    "directionality_holdout",
+    "volatility_concentration_holdout",
+    "temporal_persistence_holdout"
+  ],
+  "python": "3.12.3",
+  "sklearn": "1.8.0",
+  "numpy": "1.26.4",
+  "features_sha256": "b53e90c79a1e88812296591f419a14f4fbef4ce3cf0169de103021609191105b",
+  "labels_sha256": "25023fe57f6484ecbdfef62cd75a8d39aba0c3aaa2f06d2891fdf3eb79ad2070"
+}

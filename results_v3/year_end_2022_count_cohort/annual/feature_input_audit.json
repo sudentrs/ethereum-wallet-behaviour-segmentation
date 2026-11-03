@@ -1,0 +1,21 @@
+{
+  "nonfinite_counts": {
+    "active_days_observed": 0,
+    "activity_span_days": 0,
+    "activity_density": 0,
+    "total_tx": 0,
+    "avg_daily_tx_count": 0,
+    "max_daily_tx_count": 0,
+    "std_daily_tx_count": 0,
+    "in_active_days": 0,
+    "out_active_days": 0,
+    "both_active_days": 0,
+    "in_active_day_ratio": 0,
+    "out_active_day_ratio": 0,
+    "both_active_day_ratio": 0,
+    "in_out_day_balance": 0,
+    "tx_count_cv": 0,
+    "tx_concentration_ratio": 0
+  },
+  "all_finite": true
+}
