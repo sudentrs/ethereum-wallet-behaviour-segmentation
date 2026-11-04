@@ -1,0 +1,56 @@
+{
+  "complete": true,
+  "exact_threshold_10_set_match": true,
+  "candidate_addresses": 2738243,
+  "daily_unique_addresses": 25417590,
+  "daily_rows": 83519492,
+  "invalid_count_rows": 0,
+  "candidate_min_count": 10.0,
+  "candidate_max_count": 14220427.0,
+  "candidate_total_incidence": 422137192.0,
+  "candidate_daily_rows": 46214371,
+  "comparisons": [
+    {
+      "threshold": 1,
+      "threshold_addresses": 25417590,
+      "candidate_only": 0,
+      "threshold_only": 22679347,
+      "overlap": 2738243
+    },
+    {
+      "threshold": 2,
+      "threshold_addresses": 15892876,
+      "candidate_only": 0,
+      "threshold_only": 13154633,
+      "overlap": 2738243
+    },
+    {
+      "threshold": 5,
+      "threshold_addresses": 5187799,
+      "candidate_only": 0,
+      "threshold_only": 2449556,
+      "overlap": 2738243
+    },
+    {
+      "threshold": 10,
+      "threshold_addresses": 2738243,
+      "candidate_only": 0,
+      "threshold_only": 0,
+      "overlap": 2738243
+    },
+    {
+      "threshold": 20,
+      "threshold_addresses": 1394617,
+      "candidate_only": 1343626,
+      "threshold_only": 0,
+      "overlap": 1394617
+    }
+  ],
+  "source_sha256": "55e8f5f5f59eafe621613485182377b6c94ff70d546ac75db50e916715d8cd5e",
+  "candidate_source_sha256": "95aaec8bbb196a288406b79b538585f14a194e7ad0db3cd664d7e93efae5b96e",
+  "script_sha256": "e6e3844ec0f6d9d41fb12c776149f8e353acb506e0531e3e65b6bd3af55d6e85",
+  "interpretation": "Empirical set equivalence against the supplied merged daily source; does not reconstruct raw-transfer cleaning or prove historical producer intent.",
+  "outputs": {
+    "candidate_threshold_comparison.csv": "ae4f76ebddb78dac07b8c23b29f43b44c3511bb55b8d2231ac5d80b3beed77ee"
+  }
+}

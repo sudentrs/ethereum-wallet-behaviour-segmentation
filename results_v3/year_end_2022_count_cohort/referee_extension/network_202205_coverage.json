@@ -1,0 +1,17 @@
+{
+  "month": "202205",
+  "eligible_events": 3083225,
+  "nonself_events": 3076319,
+  "self_events": 6906,
+  "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+  "top_token_events": 1090648,
+  "active_endpoint_wallets": 710993,
+  "excluded_hubs": 7110,
+  "variants": {
+    "nonself_events": 3076319,
+    "all_events": 3083225,
+    "unique_pairs": 1298678,
+    "without_top_token": 1985671,
+    "without_top_1pct_hubs": 508983
+  }
+}

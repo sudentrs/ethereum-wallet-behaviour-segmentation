@@ -1,0 +1,30 @@
+{
+  "complete": true,
+  "stage": "participation",
+  "settings": {
+    "cohort_order": "cohort_members.csv.gz",
+    "state_fit_months": "Jan-Mar",
+    "supervised_fit_pairs": "Jan-Feb through May-Jun",
+    "evaluation_pairs": "Jul-Aug through Nov-Dec",
+    "training_rows": 250000,
+    "uncertainty": "200 paired wallet-level Poisson bootstrap replicates; conditional on fitted models",
+    "limitation": "Retrospective year-end cohort, same year, observed ERC20 activity only; unseen subgroup excludes supervised sample, not necessarily state-fit sample"
+  },
+  "inputs": {
+    "data\\interim\\year_end_2022_monthly_k3_validated_ordered\\monthly_states.npz": "873a11c3d907f6125c8155bc3add042038e598dd59050f85d2d0822211e36024",
+    "results_v3\\year_end_2022_full_cohort\\cohort_members.csv.gz": "01c9cebe456e3a2cabc9e50aa74be99e094477d746012d2163d553fd2c7c6472"
+  },
+  "outputs": {
+    "participation_early_models.joblib": "f607141bc07de791cad5b8674cb450d3bbf1429148cd608c3bb1112858d24940",
+    "participation_inactivity.csv": "75d3d313585db5e71cda97d7fcd897e984f41e146275642533aaad421843138a",
+    "participation_prediction_intervals.csv": "ad1a1e4cd1b65b54bef0e85f459a24b25f6ae3b4f48347788f8ad206dc223ab2",
+    "participation_prediction_scores.csv": "e532e965f8b0892aa4c85b90277d9ff6bca8e0cc0a2dff5212a68f2f1c21bc88",
+    "participation_state_exit.csv": "04b02be2d729578d0e4b7de6f23abaf73d23520e66cb8ba243723cba682637c0",
+    "participation_transition_counts.csv": "3b6050583fc195beeacd5a3fee4eacba6626f55f20bd9882f5a200eb02f214e5",
+    "participation_transition_probabilities.csv": "b0b94f33403e303b9cef27478d0b7809d221456e6287abeaf4120a4f1969b304"
+  },
+  "script_sha256": "041ef8363e78b73bd73751fe91c6819492dbb5670a709330ac480abc74549b7c",
+  "python": "3.12.3",
+  "numpy": "1.26.4",
+  "sklearn": "1.8.0"
+}

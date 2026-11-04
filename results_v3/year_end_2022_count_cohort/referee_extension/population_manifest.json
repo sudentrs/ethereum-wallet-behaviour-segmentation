@@ -1,0 +1,24 @@
+{
+  "complete": true,
+  "stage": "population",
+  "settings": {
+    "replicates": 20,
+    "training_fraction_of_nonevaluation": 0.8,
+    "optimizer_seed": 492,
+    "scaling": "retained full-cohort scaler",
+    "evaluation": "fixed 50000 excluded from all refits; annual reference saw these features",
+    "limitation": "descriptive partition robustness conditional on preprocessing, not prediction or independent validation"
+  },
+  "inputs": {
+    "data\\interim\\year_end_2022_count_cohort\\wallet_count_activity_scaled.npy": "f8bb1e112957759c50bcd7266ba77531c4222c90d068f8f2bf7cd73a4bc8c8b7",
+    "results_v3\\year_end_2022_count_cohort\\referee_extension\\annual_samples.npz": "ce9178c8ba46a35f05d591b384cc7572ca455f72fbf7ac302f73c33fdac86576"
+  },
+  "outputs": {
+    "population_jaccard.csv": "3f21030efb0b4b6fb3b7ae2e2f334e187316538899f2b5f96b0dfc3b77084313",
+    "population_resampling.csv": "c9203a073fabca7bb9d48636822aaf1daa38a71711f3a4ecfe2e059eb01ce5e3"
+  },
+  "script_sha256": "041ef8363e78b73bd73751fe91c6819492dbb5670a709330ac480abc74549b7c",
+  "python": "3.12.3",
+  "numpy": "1.26.4",
+  "sklearn": "1.8.0"
+}

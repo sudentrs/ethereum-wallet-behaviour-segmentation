@@ -1,0 +1,290 @@
+{
+  "complete": true,
+  "tests": 216,
+  "permutations": 9999,
+  "sample": 50000,
+  "script_sha256": "a8aa9d053a20b91b4f7ff92a5c338abc6116c974523238efcad8169719ab98ee",
+  "source_manifest_sha256": "2754b0e64a9c8ef7a4873d911ffc36431b6bb7c47ae86df5b199b425bdc12aed",
+  "wallet_source_sha256": "7651023a9493f1dae1004f19a330182412c4a0eccbc643084cdb0daba4f1b6f5",
+  "null": "Labels shuffled among sampled endpoint wallets, unrestricted or within full eligible nonself monthly log2(in+1),log2(out+1) event-count bins; fixed graph",
+  "baselines": {
+    "transfer_tercile_cutpoints": [
+      14.0,
+      29.0
+    ],
+    "rule": "span<=30 days =>0; otherwise active_days>=24 =>2; otherwise1"
+  },
+  "limitation": "Bins approximate activity control, not exact degree or causal adjustment. Unique pairs are sampled from complete eligible monthly pair set. Hub/token sensitivity changes populations. Baseline group shares are not matched.",
+  "coverage": [
+    {
+      "month": "202201",
+      "eligible_events": 2757891,
+      "nonself_events": 2749625,
+      "self_events": 8266,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 844629,
+      "active_endpoint_wallets": 599343,
+      "excluded_hubs": 5994,
+      "variants": {
+        "nonself_events": 2749625,
+        "all_events": 2757891,
+        "unique_pairs": 1122471,
+        "without_top_token": 1904996,
+        "without_top_1pct_hubs": 404455
+      }
+    },
+    {
+      "month": "202202",
+      "eligible_events": 2452882,
+      "nonself_events": 2444868,
+      "self_events": 8014,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 723811,
+      "active_endpoint_wallets": 591831,
+      "excluded_hubs": 5919,
+      "variants": {
+        "nonself_events": 2444868,
+        "all_events": 2452882,
+        "unique_pairs": 1048271,
+        "without_top_token": 1721057,
+        "without_top_1pct_hubs": 387036
+      }
+    },
+    {
+      "month": "202203",
+      "eligible_events": 2996699,
+      "nonself_events": 2987087,
+      "self_events": 9612,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 948045,
+      "active_endpoint_wallets": 698008,
+      "excluded_hubs": 6981,
+      "variants": {
+        "nonself_events": 2987087,
+        "all_events": 2996699,
+        "unique_pairs": 1267268,
+        "without_top_token": 2039042,
+        "without_top_1pct_hubs": 499079
+      }
+    },
+    {
+      "month": "202204",
+      "eligible_events": 2850701,
+      "nonself_events": 2842964,
+      "self_events": 7737,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 946504,
+      "active_endpoint_wallets": 672734,
+      "excluded_hubs": 6728,
+      "variants": {
+        "nonself_events": 2842964,
+        "all_events": 2850701,
+        "unique_pairs": 1200055,
+        "without_top_token": 1896460,
+        "without_top_1pct_hubs": 483046
+      }
+    },
+    {
+      "month": "202205",
+      "eligible_events": 3083225,
+      "nonself_events": 3076319,
+      "self_events": 6906,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 1090648,
+      "active_endpoint_wallets": 710993,
+      "excluded_hubs": 7110,
+      "variants": {
+        "nonself_events": 3076319,
+        "all_events": 3083225,
+        "unique_pairs": 1298678,
+        "without_top_token": 1985671,
+        "without_top_1pct_hubs": 508983
+      }
+    },
+    {
+      "month": "202206",
+      "eligible_events": 2814210,
+      "nonself_events": 2807601,
+      "self_events": 6609,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 969904,
+      "active_endpoint_wallets": 661678,
+      "excluded_hubs": 6617,
+      "variants": {
+        "nonself_events": 2807601,
+        "all_events": 2814210,
+        "unique_pairs": 1222066,
+        "without_top_token": 1837697,
+        "without_top_1pct_hubs": 477615
+      }
+    },
+    {
+      "month": "202207",
+      "eligible_events": 3324462,
+      "nonself_events": 3316998,
+      "self_events": 7464,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 1049259,
+      "active_endpoint_wallets": 698128,
+      "excluded_hubs": 6982,
+      "variants": {
+        "nonself_events": 3316998,
+        "all_events": 3324462,
+        "unique_pairs": 1369435,
+        "without_top_token": 2267739,
+        "without_top_1pct_hubs": 582101
+      }
+    },
+    {
+      "month": "202208",
+      "eligible_events": 3558981,
+      "nonself_events": 3551825,
+      "self_events": 7156,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 1079861,
+      "active_endpoint_wallets": 791341,
+      "excluded_hubs": 7914,
+      "variants": {
+        "nonself_events": 3551825,
+        "all_events": 3558981,
+        "unique_pairs": 1597251,
+        "without_top_token": 2471964,
+        "without_top_1pct_hubs": 630532
+      }
+    },
+    {
+      "month": "202209",
+      "eligible_events": 3974290,
+      "nonself_events": 3965755,
+      "self_events": 8535,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 1101977,
+      "active_endpoint_wallets": 975969,
+      "excluded_hubs": 9760,
+      "variants": {
+        "nonself_events": 3965755,
+        "all_events": 3974290,
+        "unique_pairs": 2165251,
+        "without_top_token": 2863778,
+        "without_top_1pct_hubs": 591216
+      }
+    },
+    {
+      "month": "202210",
+      "eligible_events": 3398495,
+      "nonself_events": 3390402,
+      "self_events": 8093,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 1183544,
+      "active_endpoint_wallets": 812609,
+      "excluded_hubs": 8127,
+      "variants": {
+        "nonself_events": 3390402,
+        "all_events": 3398495,
+        "unique_pairs": 1607220,
+        "without_top_token": 2206858,
+        "without_top_1pct_hubs": 653312
+      }
+    },
+    {
+      "month": "202211",
+      "eligible_events": 3923930,
+      "nonself_events": 3915554,
+      "self_events": 8376,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 1374050,
+      "active_endpoint_wallets": 833655,
+      "excluded_hubs": 8337,
+      "variants": {
+        "nonself_events": 3915554,
+        "all_events": 3923930,
+        "unique_pairs": 1667036,
+        "without_top_token": 2541504,
+        "without_top_1pct_hubs": 730964
+      }
+    },
+    {
+      "month": "202212",
+      "eligible_events": 3597751,
+      "nonself_events": 3589215,
+      "self_events": 8536,
+      "top_token": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "top_token_events": 1415633,
+      "active_endpoint_wallets": 741117,
+      "excluded_hubs": 7412,
+      "variants": {
+        "nonself_events": 3589215,
+        "all_events": 3597751,
+        "unique_pairs": 1572212,
+        "without_top_token": 2173582,
+        "without_top_1pct_hubs": 822792
+      }
+    }
+  ],
+  "sample_sha256": {
+    "202201_all_events_sample.npz": "ea634126659ee23849c28905f01a76ce200682508c1e403edfc0f4134eca0fa0",
+    "202201_nonself_events_sample.npz": "f4bb57235ff11b53452b0e83e7948eab6be69d028573227c1f485c33603414f9",
+    "202201_unique_pairs_sample.npz": "dffbf9541aa7c9d10e3516beaef6b4a3dba8ca0029ce0ab7dc5085461c8fa256",
+    "202201_without_top_1pct_hubs_sample.npz": "5cb06de92db83f38941f74b83c9756a0def1d7f8d4f1fdc13f5eebb299e754b3",
+    "202201_without_top_token_sample.npz": "45dd39502198761555b232667d62b8118d6f63b6c47161ae912f25abcc5ecef5",
+    "202202_all_events_sample.npz": "631022fddedc1d6363acadbada4946e86acc7fd4b2ad2c74bf9558f186896727",
+    "202202_nonself_events_sample.npz": "457afeae7ffca7e05a66a221587d16c777555790346fc2cbb6550395b1609331",
+    "202202_unique_pairs_sample.npz": "956c38b6a10c0ef74153f8fdc1e80101eee83dced410aefd6f1efe2f8156e2bb",
+    "202202_without_top_1pct_hubs_sample.npz": "19ab47d83fab31199676b87070e6e3e2b5952c43f39912f4b113254014e4d42e",
+    "202202_without_top_token_sample.npz": "881e001a8afab8b13145e7f061b22b3fee8e52eb786bc0bedc6fc9588829a8dc",
+    "202203_all_events_sample.npz": "2e0a94007449872d82bc50b17c359aa8a0478c397f9beece490287a09f714fdb",
+    "202203_nonself_events_sample.npz": "2fbdc7d88fdfeb166477faab1ba37828d5df73a6c8a518c964a8296f18995c20",
+    "202203_unique_pairs_sample.npz": "de87c6469c37c8eae75cb7044fa3057407187b7301e75eec6cb379c1144f33a9",
+    "202203_without_top_1pct_hubs_sample.npz": "1842658d24150f39bd163deb6d1da27717a59e66240919491de498df83480e71",
+    "202203_without_top_token_sample.npz": "dc49d2e48b538238520b89ec00de68b1769e5d409b2befd05760c0689c5a3c4d",
+    "202204_all_events_sample.npz": "5d2d3e2cee4ecb72fed5845794c7561a5cab6bc3ffbcdb3fc03ffe15d4135d93",
+    "202204_nonself_events_sample.npz": "ebffb7e5351a88fef7e1d20cd2e2d747183de1df3319a118ac4d61ee1a0fdc32",
+    "202204_unique_pairs_sample.npz": "2fcdf4e8e9b65121cf4961b65736ddfa0ce731485ef8800ce2fc95aff03578d4",
+    "202204_without_top_1pct_hubs_sample.npz": "f08a4f1d1d189f32b0fc34d87dabc387bdac24f74d174e85529ac54031485d00",
+    "202204_without_top_token_sample.npz": "54ce6bcc77cdf7c51c829f5991ce3e4d2f915addcba250d51d97af289347e11e",
+    "202205_all_events_sample.npz": "57470329c468de5f03327f04ebc85e5edae1f5747d198cc2300c5214371ebb4e",
+    "202205_nonself_events_sample.npz": "149d8277a33d1656b4adf048aac8160c3a3d311bf9382a28acc72582163bcf51",
+    "202205_unique_pairs_sample.npz": "2bb16500338a1b6782c3626dd2eb59590a7786b5eaa2a7c05882d68130a86695",
+    "202205_without_top_1pct_hubs_sample.npz": "a2b24d79c31b9fc60688940698bc93dde136aca6d65a0715a4c4bf6d7cab31b7",
+    "202205_without_top_token_sample.npz": "97f3d4907596c4e65f40c6ba92bad7dcf854a4a72fc13638eddfdd11021055fd",
+    "202206_all_events_sample.npz": "923bb0e793c3517c2e7c8e0fc19e08544d48a5291643b508eaa8d4206859521f",
+    "202206_nonself_events_sample.npz": "41b3fe6d35ab74fd23655e997ad3ff50a8986e5e1667c5b07f281fb47ece58fe",
+    "202206_unique_pairs_sample.npz": "5ccc2cd33138f0c58895a3af9bba684c06f60de62b48b82d8ca49f0e534d384d",
+    "202206_without_top_1pct_hubs_sample.npz": "67abe3651740bc39ee10667fc1dea29d86309c6633bb36aed9cedd5848dc358d",
+    "202206_without_top_token_sample.npz": "48f11319da3ae87136c2beff84f31652c5d4b46376b870bac0fedcc3674053c0",
+    "202207_all_events_sample.npz": "b508057fa9fcc6d6d09b212a92cd1265d0e17fe8bef5e4dc5c5ae847f8eb7dd8",
+    "202207_nonself_events_sample.npz": "27264c55868e4de0e588833b4e15f4136d21824558bf205c6715d2b7660180a1",
+    "202207_unique_pairs_sample.npz": "1272e475e0c56d0bd6b2a6aecb590e7750f188ea9e0b79df19d5f6e46fbe60da",
+    "202207_without_top_1pct_hubs_sample.npz": "315b8f1754f048a86f6b0f20540d51dcc43740db31cb4b23bcd578aa67f8684c",
+    "202207_without_top_token_sample.npz": "ded5952f509713ba1045c3b317a16eba9861e10849f66f532b9e4a6d50026780",
+    "202208_all_events_sample.npz": "75f9721a9b55bd17f5951ea0a203808b63348b9fc6394a7f635efb0a8634e557",
+    "202208_nonself_events_sample.npz": "f22e0b77bdc60c1210333205fc8623586c4e8c56b78ad80f485b80c4d0f41092",
+    "202208_unique_pairs_sample.npz": "a8fb3b3a38304dca11e594a90805bd0c4f4add6ae68f0924738b9c9cb8a047cf",
+    "202208_without_top_1pct_hubs_sample.npz": "006bf75be4bec00aebed54d2ef98359a64f0db033252dfd7a434c12584c061da",
+    "202208_without_top_token_sample.npz": "b8480245ec7b67cfee63097a13dbeabd334bb3dcaee67baebbbc3583c7b425fd",
+    "202209_all_events_sample.npz": "a115a02222453c11774eaae4982fdf2089d50dbe6b7cde600f5ebcea9801f0f3",
+    "202209_nonself_events_sample.npz": "076b19fad99808bffa19fc743ae4018193e05de860c5bc02384bdc662305f83b",
+    "202209_unique_pairs_sample.npz": "ad6c34b05d219e3e6def60bf3e9dddf75336733746062f8e7a89f875f4d60835",
+    "202209_without_top_1pct_hubs_sample.npz": "0413d26ace326df37900f22aa7bde7962c625805974d440d497124fb7e9c6aca",
+    "202209_without_top_token_sample.npz": "9240ec6d25aa820092efa226c8a33c2ea48989496f0c14404307a01067c01fb3",
+    "202210_all_events_sample.npz": "148134e4792ef29faf092747e817db01ad6878e40ebd11a430b3a2d1e1c916b0",
+    "202210_nonself_events_sample.npz": "34761c65eaf01a715a1ea0f977342a629d747ebdb58072975736718dbb9e93cb",
+    "202210_unique_pairs_sample.npz": "b2daafa5406798b013f2f3bbe0030033609d4ab296af6af58a98aef484817708",
+    "202210_without_top_1pct_hubs_sample.npz": "80e8a64d42c2e78d61ec299391378c05de3d30396bba377c1a7db3e92c1c42ba",
+    "202210_without_top_token_sample.npz": "c087db402c005cc71c7e689915ec055b3e07505ada1c2830334d9e16b8fe6b40",
+    "202211_all_events_sample.npz": "3c05dee3e7a3b3068b63879faddac93d960537a429fbf0f58f805bb8a54d6386",
+    "202211_nonself_events_sample.npz": "b9d28ac1e7c1e0ea716b6754cf6d70201c095950f6d46327946cf8b561fe1c07",
+    "202211_unique_pairs_sample.npz": "9b53c35bb43525281c439b7add4891771124df178bcd21dde051fa540bdd2ee9",
+    "202211_without_top_1pct_hubs_sample.npz": "6396e9d79256bced1a1f4105118e6975d6492034fb84968ad361a49785dc93e6",
+    "202211_without_top_token_sample.npz": "988e2ebe43be6d75311301e63f109e0921d1d6c4d40651f766dd8c519cf8856f",
+    "202212_all_events_sample.npz": "818850d732754c03c2070ed31c80bd16946d30dfeeacf625a66cf8e85cde9e60",
+    "202212_nonself_events_sample.npz": "8c13b38734fba385d3b8b26bb7c07613dc953e94e137f4a441ea78b0321da80c",
+    "202212_unique_pairs_sample.npz": "26f40eba7d1f46f1152df4dcb078f36a2487bdf50b5dc5e0259553b7247f0f30",
+    "202212_without_top_1pct_hubs_sample.npz": "97120b329cf9aa6cb97125dedc4f20fe513774add408931b7d44932a5230c3a9",
+    "202212_without_top_token_sample.npz": "e7138150a8e75ab0f6890e5e80a2e88458fc72ec94a2fa902843a461dadb2080"
+  },
+  "outputs": {
+    "network_all_tests.csv": "26467f8ec4866dc7cc961b3fc2799327d7129492bcf6ecee959c9f252d83a28f",
+    "network_summary.csv": "cf935b53dc14cc1c6161123db96a47479cf797f89594be88f54c6346ec43ea10"
+  }
+}

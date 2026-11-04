@@ -1,4 +1,4 @@
-> Version note: The compiled ten-page checks below describe the earlier pre-signal revision. The current signal-integrated main.tex has not been compiled or page-count verified. See YEAR_END_SIGNAL_VALIDATION.md and framework_validation_completion.json for the latest analysis and audit.
+> Current revision: 4 November 2026. `docs/REFEREE_REVISION.md` and `results_v3/year_end_2022_count_cohort/referee_extension/revision_audit.json` describe the completed new controls and current manuscript. The historical ten-page/PDF checks below do not apply to it. The new source and supplement have not been compiled or page-count verified, as requested.
 
 # TCSS manuscript audit — 2026-11-03
 

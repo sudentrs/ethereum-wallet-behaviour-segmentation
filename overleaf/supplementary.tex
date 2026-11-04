@@ -1,0 +1,301 @@
+\documentclass[journal,letterpaper]{IEEEtran}
+\usepackage{amsmath,amssymb,booktabs}
+\usepackage[hidelinks]{hyperref}
+\title{Supplementary Material: Ethereum Wallet Segmentation Through Layered Behavioural Validation}
+\author{Selim Balcisoy, Sena Kahya, and Sude Tiras}
+\begin{document}\maketitle
+This supplement records the detailed retrospective controls and full comparison tables accompanying the main manuscript. The main text defines the data source, original validation branches and inferential scope. No additional raw population or year is introduced here.
+\section{Extended Methods}
+\subsection{Resampling, Estimator and Weighting Controls}
+The additional controls are retrospective robustness analyses, not a preregistered selection exercise. A fixed uniform evaluation set of 50,000 addresses is excluded from every new training subset. For each K2--K6 resolution, we refit on thirty independent 100,000-address subsets and twenty independent subsets containing 80\% of the remaining population. MiniBatchKMeans settings and optimizer seed 492 remain fixed to isolate training-subset perturbation. ARI compares assignments on the fixed evaluation set with the original full-cohort seed-492 partition; Hungarian-matched cluster Jaccard scores expose instability hidden by aggregate agreement. The original reference saw the evaluation features, and the full-cohort scaler is retained. These are conditional robustness diagnostics, not held-out predictive validation or confidence intervals for a true taxonomy.
+
+On one shared 100,000-address training subset, MiniBatchKMeans, batch k-means and a diagonal-covariance Gaussian mixture are compared for K3--K5 at seeds 492--494, using the same 50,000 evaluation addresses. Batch k-means uses ten initializations and 300 maximum iterations; the mixture uses three initializations and 300 maximum iterations. An equal-family-weight variant divides each robust-scaled coordinate by the square root of its family's column count, giving each of the three families equal total weight under equal per-coordinate variation. Agreement with the annual reference measures dependence on estimator and weighting; it does not rank estimator quality against ground truth.
+
+\subsection{Simple Segmentation and Controlled Network Sensitivities}
+Two transparent three-group baselines use the same annual cohort. Transfer-count terciles use empirical one-third and two-thirds cutpoints, assigning tied counts together to the upper interval. A span/activity rule assigns span at most thirty days to one group; among remaining addresses, at least twenty-four observed active days defines another group. These illustrative thresholds are fixed in the extension script without optimizing a network outcome. Group shares are reported because they are not matched to annual K3.
+
+For each month, full eligible transfer records supply non-self incoming and outgoing event counts for every participating address. The main extension compares annual K3, K4 and K5 and both baselines on one common uniform sample of up to 50,000 non-self transfer rows. Labels are randomized among sampled endpoint wallets either unrestrictedly or within joint $\lfloor\log_2(1+d_{\rm in})\rfloor$, $\lfloor\log_2(1+d_{\rm out})\rfloor$ strata. Counts defining strata use the complete eligible non-self monthly graph, not only the sample. Within-stratum label composition is preserved among sampled endpoint wallets. These strata control transfer activity approximately; they do not fix exact degree, unique-neighbour degree or token exposure.
+
+Annual K3 additionally uses four graph variants: all eligible events including self-transfers; unique directed non-self pairs; non-self events after removing the month's most frequent token; and non-self events after removing the top 1\% of participating endpoints ranked by total incoming plus outgoing eligible non-self event count. Token and hub ranks use the full eligible graph. Each variant is uniformly sampled from its own full eligible set; repeated-pair deduplication precedes sampling. Both nulls use 9,999 permutations. The five main partitions and four additional K3 variants give 216 tests across twelve months and two nulls. We retain their 216-test correction and additionally apply Holm jointly to these tests and the original 84 network tests, giving a conservative 300-test family for the extension results. Changed graph populations and baseline group sizes prevent a universal quality ranking from excess alone.
+
+\subsection{Inactivity and Later-Period Participation Baselines}
+An explicit inactive observation category is added after assignment to the original frozen monthly K3 model; it is not fitted as a centroid. July--December transitions then include every cohort address. Currently inactive addresses are divided into those observed active earlier in 2022 and those not yet observed active in the supplied year. The latter category does not establish address creation or first-ever Ethereum use.
+
+A separate participation task relearns monthly K2--K6 vocabularies using up to 20,000 active observations per month from January--March only. The scaler and centroids are frozen. Supervised training uses up to 50,000 active addresses per current month in January--May pairs, with next-month activity as the target. Evaluation uses all currently active addresses in July--November and their August--December outcomes. Thus neither test-period features nor outcomes fit the state vocabulary or prediction models.
+
+We compare a constant training prevalence, Laplace-smoothed state-specific activity rates, logistic regression on two activity features, logistic regression on all six monthly features, the latter plus K3 one-hot indicators, and histogram gradient boosting on the six features. Logistic inputs are standardized on supervised training data. Boosting uses 150 maximum iterations, fifteen maximum leaves and L2 regularization of one. State indicators are deterministic functions of count features; any gain would reflect a different functional approximation, not newly measured information.
+
+Brier score and log loss are pooled by evaluation observations; AUC is averaged over evaluation months. Scores are also reported for addresses absent from the supervised training sample, which need not be absent from state-model training. Two hundred paired wallet-level Poisson bootstrap replicates provide descriptive 95\% intervals for loss differences, using the same wallet weight across evaluation months and conditioning on fitted models. This preserves repeated-wallet contributions but does not model network dependence or between-year uncertainty. The task remains conditional on current activity and retrospective year-end membership.
+
+\subsection{Timing Controls Preserving Local Ordering}
+The original uniform 2,000-address timing sample is reused for additional 999-replicate nulls. Alongside complete daily permutation, seven-day and thirty-day block permutations preserve ordering within each block. Each wallet receives a random circular origin before blocks are formed; the shorter final block is retained. All variants preserve the complete daily-count histogram, including zeros. The same three sample-mean statistics are tested under each variant, giving one nine-test Holm family. Block shuffles partially preserve local episodes; they are sensitivity controls rather than proofs that a significant residual identifies recurring cycles.
+
+\section{Full Extension Results}\subsection{Training-Subset and Estimator Robustness}
+The twenty 80\% refits give annual K3 mean ARI 0.861, with a 0.257--0.986 range against the original reference. The range is substantially wider than the original three-seed comparison. Strong initialization agreement therefore does not establish invariance to training-address selection. The smaller 100,000-address refits provide a second, explicitly sample-size-dependent diagnostic (Table~\ref{tab:resampling}). All comparisons retain the annual scaling; they do not measure uncertainty from rebuilding the source representation.
+
+\begin{table}[t]
+\centering\footnotesize
+\caption{ARI against annual seed 492 on 50,000 fixed evaluation addresses. Twenty 80\% refits and thirty 100,000-address refits use a fixed optimizer seed.}
+\label{tab:resampling}
+\begin{tabular}{rcccc}
+\toprule
+$k$ & 80\% mean & Range & 100k mean & Range \\
+\midrule
+2 & 0.483 & 0.276--0.970 & 0.486 & 0.044--0.947 \\
+3 & 0.861 & 0.257--0.986 & 0.810 & 0.175--0.959 \\
+4 & 0.729 & 0.303--0.929 & 0.665 & 0.296--0.884 \\
+5 & 0.435 & 0.344--0.692 & 0.451 & 0.293--0.772 \\
+6 & 0.444 & 0.312--0.603 & 0.414 & 0.243--0.586 \\
+\bottomrule
+\end{tabular}
+\end{table}
+For K3, matched Jaccard ranges across the twenty larger refits are 0.399--0.988 for reference cluster 0, 0.459--0.995 for reference cluster 1, 0.023--0.994 for reference cluster 2. These cluster-level results make membership changes visible even when a population-level ARI remains relatively high.
+
+On the common sample, batch k-means has K3 agreement 0.938--0.939, compared with 0.528--0.528 for the diagonal mixture and 0.785--0.946 after equal-family weighting. Table~\ref{tab:algorithms} includes K4 and K5. The result supports a k-means-based descriptive choice while showing that an alternative probabilistic geometry can produce a substantially different partition.
+
+\begin{table}[t]
+\centering\footnotesize
+\caption{Sample-trained estimator and weighting sensitivity: ARI ranges against the annual reference across three seeds.}
+\label{tab:algorithms}
+\begin{tabular}{rccc}
+\toprule
+$k$ & Batch k-means & Diagonal GMM & Equal families \\
+\midrule
+3 & 0.938--0.939 & 0.528--0.528 & 0.785--0.946 \\
+4 & 0.926--0.928 & 0.396--0.396 & 0.810--0.894 \\
+5 & 0.361--0.362 & 0.336--0.336 & 0.361--0.499 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\subsection{Network Evidence After Activity Controls}
+For K3 on non-self events, activity-stratified mean excess is -0.88 percentage points, with 1/12 supported months under the combined 300-test Holm correction. Table~\ref{tab:conditionednetwork} compares all five descriptions on common monthly non-self event samples. The unrestricted and conditioned effects answer different questions; any attenuation identifies the part of the original alignment accounted for by the declared activity strata. Remaining effects can still reflect variation within bins and shared token exposure.
+
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Common non-self event samples: mean excess in percentage points. Support and maximum adjusted p-value refer to the activity-stratified null and combined 300-test family.}
+\label{tab:conditionednetwork}
+\begin{tabular}{lrrrr}
+\toprule
+Partition & Unrestr. & Stratified & Support & Max. $p$ \\
+\midrule
+Annual K3 & 8.90 & -0.88 & 1/12 & 1.0000 \\
+Annual K4 & 12.96 & -0.47 & 1/12 & 1.0000 \\
+Annual K5 & 9.48 & -0.11 & 1/12 & 1.0000 \\
+Count terciles & 17.74 & -0.55 & 0/12 & 1.0000 \\
+Span/activity rule & 8.48 & -0.89 & 1/12 & 1.0000 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+The baseline group shares are transfer-count terciles (28.7\%, 37.8\%, 33.5\%); span/activity rule (12.2\%, 70.7\%, 17.1\%). Their full-cohort ARIs with annual K3 are 0.264 and 0.541, respectively. These comparisons test whether simple descriptions also align with the graph; neither excess nor statistical support alone establishes that clustering is superior.
+
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Annual K3 network sensitivity under activity-stratified label randomization. Excess is in percentage points; support uses the combined 300-test correction.}
+\label{tab:graphsensitivity}
+\begin{tabular}{lrrr}
+\toprule
+Graph variant & Mean & Monthly range & Support \\
+\midrule
+All transfer events & -0.97 & -1.45--0.82 & 1/12 \\
+Non-self events & -0.88 & -1.55--1.01 & 1/12 \\
+Unique directed pairs & -2.35 & -2.93---0.87 & 0/12 \\
+Without top token & -0.72 & -1.63--0.97 & 0/12 \\
+Without top 1\% endpoints & 3.04 & 1.79--4.36 & 12/12 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+Each filtered variant has its own eligible edge population and endpoint composition. These results measure robustness to graph construction and exposure concentration, rather than isolating a causal token or hub effect. Exact monthly retained counts and excluded token identifiers accompany the replication tables.
+
+\subsection{Inactivity and Participation Prediction}
+Across the five evaluation pairs, next-month activity among currently active addresses is 0.631--0.735. Among currently inactive but previously observed addresses it is 0.161--0.331, compared with 0.243--1.000 for addresses not yet observed active in 2022. These are cohort-conditional observed-activity rates, not estimates of Ethereum-wide entry or permanent departure. The complete four-category transition matrix is retained separately from the active-only state matrix.
+
+\begin{table}[t]
+\centering\footnotesize
+\caption{Later-period next-month participation: pooled Brier/log loss (lower is better), and mean monthly AUC (higher is better). All models use identical evaluation observations.}
+\label{tab:participationprediction}
+\begin{tabular}{lrrr}
+\toprule
+Model & Brier & Log loss & AUC \\
+\midrule
+Constant prevalence & 0.2228 & 0.6377 & 0.5000 \\
+Two-feature logistic & 0.2081 & 0.6016 & 0.6616 \\
+Six-feature logistic & 0.2054 & 0.5940 & 0.6681 \\
+Six-feature boosting & 0.2048 & 0.5916 & 0.6730 \\
+K3 state only & 0.2122 & 0.6123 & 0.6122 \\
+Six features + K3 & 0.2053 & 0.5940 & 0.6686 \\
+\bottomrule
+\end{tabular}
+\end{table}
+K3 state-only predictions have Brier score 0.2122, compared with 0.2228 for constant prevalence, 0.2081 for two-feature logistic regression and 0.2048 for six-feature boosting. This task assesses a separately fitted early-period monthly vocabulary, not the predictive validity of full-year annual roles. A state-only gain over constant prevalence is insufficient evidence of added value over activity baselines.
+
+For adding K3 indicators to six-feature logistic regression, paired wallet-bootstrap loss differences (augmented minus unaugmented) are -0.000039 for Brier score (95\% interval -0.000047 to -0.000031) and 0.000078 for log loss (95\% interval 0.000057 to 0.000099). Their magnitude and direction must be interpreted alongside Table~\ref{tab:participationprediction}; narrow intervals do not establish a practically important gain. Full K2--K6 scores and the subgroup absent from supervised training are supplied in the replication tables.
+
+\subsection{Timing Evidence Under Block Nulls}
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Timing sensitivity on the same 2,000-address sample, 999 permutations per null and a nine-test Holm family. Block length one denotes complete daily permutation.}
+\label{tab:blocktiming}
+\begin{tabular}{rlrrrr}
+\toprule
+Block days & Statistic & Observed & Null & Excess & Adj. $p$ \\
+\midrule
+1 & Low-frequency share & 0.1048 & 0.0330 & 0.0718 & 0.009 \\
+1 & Peak-power share & 0.0420 & 0.0261 & 0.0159 & 0.009 \\
+1 & Negative entropy & -6.8173 & -6.9718 & 0.1545 & 0.009 \\
+7 & Low-frequency share & 0.1048 & 0.0562 & 0.0486 & 0.009 \\
+7 & Peak-power share & 0.0420 & 0.0302 & 0.0119 & 0.009 \\
+7 & Negative entropy & -6.8173 & -6.9062 & 0.0889 & 0.009 \\
+30 & Low-frequency share & 0.1048 & 0.0887 & 0.0161 & 0.009 \\
+30 & Peak-power share & 0.0420 & 0.0349 & 0.0071 & 0.009 \\
+30 & Negative entropy & -6.8173 & -6.8584 & 0.0411 & 0.009 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+The number of supported sample-mean timing statistics is 3/3 for the 1-day null, 3/3 for the 7-day null, 3/3 for the 30-day null. The stronger nulls retain within-block ordering, so their effects distinguish some long-range arrangement from short local episodes. They do not establish a common period, wallet-specific significance or a recurring behavioural cycle.
+
+\section{Additional Diagnostics}
+\subsection{Candidate-Universe Selection Audit}
+The supplied merged daily source contains 83,519,492 rows and 25,417,590 distinct normalized addresses. The candidate table contains 2,738,243 distinct addresses. Threshold comparisons use annual wallet-record count sums over the complete merged source, not only retained cohort addresses. Exact set equivalence establishes an empirical operational rule within that source, not the provenance of raw-transfer cleaning or proof of the upstream producer's intent.
+
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Candidate-universe audit against annual count thresholds in the full supplied merged daily source. Candidate-only and threshold-only columns identify set differences.}
+\label{tab:suppcandidate}
+\begin{tabular}{rrrrr}
+\toprule
+Threshold & Threshold addresses & Candidate only & Threshold only & Overlap \\
+\midrule
+1 & 25,417,590 & 0 & 22,679,347 & 2,738,243 \\
+2 & 15,892,876 & 0 & 13,154,633 & 2,738,243 \\
+5 & 5,187,799 & 0 & 2,449,556 & 2,738,243 \\
+10 & 2,738,243 & 0 & 0 & 2,738,243 \\
+20 & 1,394,617 & 1,343,626 & 0 & 1,394,617 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+\subsection{Signal Definitions and Monthly Graph Coverage}
+Time features divide active days and longest active/inactive runs by 365, and active/inactive switches by 364. Peak share is maximum daily count divided by annual count; coefficient of variation uses population standard deviation across all 365 days divided by the calendar-day mean. Frequency bands use cycles/day: $0<f<1/60$, $1/60\le f<1/14$, $1/14\le f\le 1/2$, $1/8\le f<1/6$, and $1/35\le f<1/25$. Peak power is the largest normalized non-DC bin; entropy is $-\sum_j q_j\log_2 q_j$, with zero terms omitted. These definitions do not equate a broad spectral band with a verified calendar cycle.
+
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Complete eligible monthly graph sizes before sampling. Each null uses up to 50,000 rows from its declared variant. Exact excluded token identifiers and endpoint counts are recorded in the companion manifest.}
+\label{tab:suppgraphcoverage}
+\begin{tabular}{rrrrrr}
+\toprule
+Month & All events & Non-self & Unique pairs & Token excluded & Hubs excluded \\
+\midrule
+202201 & 2,757,891 & 2,749,625 & 1,122,471 & 1,904,996 & 404,455 \\
+202202 & 2,452,882 & 2,444,868 & 1,048,271 & 1,721,057 & 387,036 \\
+202203 & 2,996,699 & 2,987,087 & 1,267,268 & 2,039,042 & 499,079 \\
+202204 & 2,850,701 & 2,842,964 & 1,200,055 & 1,896,460 & 483,046 \\
+202205 & 3,083,225 & 3,076,319 & 1,298,678 & 1,985,671 & 508,983 \\
+202206 & 2,814,210 & 2,807,601 & 1,222,066 & 1,837,697 & 477,615 \\
+202207 & 3,324,462 & 3,316,998 & 1,369,435 & 2,267,739 & 582,101 \\
+202208 & 3,558,981 & 3,551,825 & 1,597,251 & 2,471,964 & 630,532 \\
+202209 & 3,974,290 & 3,965,755 & 2,165,251 & 2,863,778 & 591,216 \\
+202210 & 3,398,495 & 3,390,402 & 1,607,220 & 2,206,858 & 653,312 \\
+202211 & 3,923,930 & 3,915,554 & 1,667,036 & 2,541,504 & 730,964 \\
+202212 & 3,597,751 & 3,589,215 & 1,572,212 & 2,173,582 & 822,792 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Full-cohort signal resolution comparison. Silhouette uses seed 492; ARI ranges use all three seed pairs.}
+\label{tab:suppsignalresolution}
+\begin{tabular}{lrrc}
+\toprule
+Representation & $k$ & Silhouette & Seed ARI \\
+\midrule
+Time & 2 & 0.455 & 0.737--0.989 \\
+Time & 3 & 0.370 & 0.197--0.639 \\
+Time & 4 & 0.289 & 0.616--0.792 \\
+Time & 5 & 0.188 & 0.216--0.432 \\
+Time & 6 & 0.273 & 0.236--0.429 \\
+Frequency & 2 & 0.691 & 0.814--0.952 \\
+Frequency & 3 & 0.474 & 0.882--0.934 \\
+Frequency & 4 & 0.379 & 0.507--0.780 \\
+Frequency & 5 & 0.196 & 0.468--0.723 \\
+Frequency & 6 & 0.248 & 0.293--0.628 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+\begin{table*}[t]
+\centering\footnotesize
+\caption{All participation models and the subgroup absent from supervised training. Losses are observation-weighted; AUC is the monthly mean. The subgroup can overlap state-vocabulary training.}
+\label{tab:suppallprediction}
+\begin{tabular}{llrrrr}
+\toprule
+Group & Model & Brier & Log loss & AUC & Observations \\
+\midrule
+all & activity & 0.2081 & 0.6016 & 0.6616 & 5,658,506 \\
+all & all\_count & 0.2054 & 0.5940 & 0.6681 & 5,658,506 \\
+all & all\_count\_plus\_k3 & 0.2053 & 0.5940 & 0.6686 & 5,658,506 \\
+all & constant & 0.2228 & 0.6377 & 0.5000 & 5,658,506 \\
+all & k2\_state\_only & 0.2189 & 0.6273 & 0.5364 & 5,658,506 \\
+all & k3\_state\_only & 0.2122 & 0.6123 & 0.6122 & 5,658,506 \\
+all & k4\_state\_only & 0.2108 & 0.6091 & 0.6301 & 5,658,506 \\
+all & k5\_state\_only & 0.2105 & 0.6086 & 0.6346 & 5,658,506 \\
+all & k6\_state\_only & 0.2102 & 0.6071 & 0.6387 & 5,658,506 \\
+all & nonlinear\_count & 0.2048 & 0.5916 & 0.6730 & 5,658,506 \\
+not\_in\_supervised\_training & activity & 0.2088 & 0.6038 & 0.6575 & 5,105,420 \\
+not\_in\_supervised\_training & all\_count & 0.2061 & 0.5958 & 0.6645 & 5,105,420 \\
+not\_in\_supervised\_training & all\_count\_plus\_k3 & 0.2060 & 0.5959 & 0.6652 & 5,105,420 \\
+not\_in\_supervised\_training & constant & 0.2229 & 0.6380 & 0.5000 & 5,105,420 \\
+not\_in\_supervised\_training & k2\_state\_only & 0.2193 & 0.6285 & 0.5350 & 5,105,420 \\
+not\_in\_supervised\_training & k3\_state\_only & 0.2130 & 0.6143 & 0.6080 & 5,105,420 \\
+not\_in\_supervised\_training & k4\_state\_only & 0.2116 & 0.6113 & 0.6256 & 5,105,420 \\
+not\_in\_supervised\_training & k5\_state\_only & 0.2114 & 0.6108 & 0.6298 & 5,105,420 \\
+not\_in\_supervised\_training & k6\_state\_only & 0.2110 & 0.6093 & 0.6337 & 5,105,420 \\
+not\_in\_supervised\_training & nonlinear\_count & 0.2053 & 0.5933 & 0.6701 & 5,105,420 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+\begin{table}[t]
+\centering\footnotesize
+\caption{Pooled July--December K3 transitions including inactive observations. Row probabilities sum to one. Inactivity is not a fitted centroid.}
+\label{tab:suppinactivematrix}
+\begin{tabular}{lrrrr}
+\toprule
+From / To & State 0 & State 1 & State 2 & Inactive \\
+\midrule
+0 & 0.4676 & 0.1314 & 0.0043 & 0.3967 \\
+1 & 0.3746 & 0.3892 & 0.0367 & 0.1995 \\
+2 & 0.0969 & 0.3329 & 0.4773 & 0.0928 \\
+inactive & 0.2039 & 0.0594 & 0.0044 & 0.7323 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table*}[t]
+\centering\footnotesize
+\caption{All conditional-return tests. Month is the triple start, denominators include only active first-step switchers, and p-values use the original twenty-test family. Binary K2 is structurally degenerate.}
+\label{tab:suppreturntests}
+\begin{tabular}{rrrrrr}
+\toprule
+$k$ & Start month & Switchers & Observed & Null & Adj. $p$ \\
+\midrule
+2 & 202207 & 93,304 & 0.4242 & 0.4242 & 1.000 \\
+2 & 202208 & 105,304 & 0.4930 & 0.4930 & 1.000 \\
+2 & 202209 & 110,656 & 0.3892 & 0.3892 & 1.000 \\
+2 & 202210 & 107,324 & 0.4763 & 0.4763 & 1.000 \\
+3 & 202207 & 159,677 & 0.4191 & 0.4003 & 0.020 \\
+3 & 202208 & 178,375 & 0.4709 & 0.4482 & 0.020 \\
+3 & 202209 & 193,027 & 0.4086 & 0.3828 & 0.020 \\
+3 & 202210 & 191,976 & 0.4589 & 0.4366 & 0.020 \\
+4 & 202207 & 232,110 & 0.3982 & 0.3585 & 0.020 \\
+4 & 202208 & 246,864 & 0.4245 & 0.3858 & 0.020 \\
+4 & 202209 & 270,330 & 0.4083 & 0.3576 & 0.020 \\
+4 & 202210 & 252,527 & 0.3947 & 0.3585 & 0.020 \\
+5 & 202207 & 269,315 & 0.3585 & 0.3113 & 0.020 \\
+5 & 202208 & 272,868 & 0.3864 & 0.3381 & 0.020 \\
+5 & 202209 & 302,260 & 0.3701 & 0.3120 & 0.020 \\
+5 & 202210 & 273,849 & 0.3475 & 0.3059 & 0.020 \\
+6 & 202207 & 294,424 & 0.3031 & 0.2510 & 0.020 \\
+6 & 202208 & 294,768 & 0.3275 & 0.2664 & 0.020 \\
+6 & 202209 & 325,283 & 0.3281 & 0.2666 & 0.020 \\
+6 & 202210 & 296,901 & 0.2886 & 0.2388 & 0.020 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\end{document}

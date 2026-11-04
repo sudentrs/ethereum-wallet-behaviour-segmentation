@@ -57,7 +57,8 @@ def main():
     assert profiles.groupby('cluster').n.first().sum()==2508997
     assets = re.findall(r'\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}',tex)
     assert len(assets)==len(set(assets))
-    assert 'figures_current/ethereum_methodology.png' in assets
+    assert 'figures_current/ethereum_wallet_behaviour_methodology.png' in assets
+    assert all((ROOT/'overleaf'/asset).is_file() for asset in assets)
     signal_manifest = json.loads((BASE/'signals/manifest.json').read_text())
     assert signal_manifest['complete'] and signal_manifest['cohort_size'] == 2508997
     assert signal_manifest['positive_power_wallets'] + signal_manifest['zero_power_excluded'] == 2508997

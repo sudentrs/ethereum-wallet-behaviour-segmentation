@@ -25,6 +25,8 @@ def subsection(s, title, content):
 
 
 def main():
+    if (BASE/'referee_extension/revision_completion.json').exists():
+        raise RuntimeError('The referee revision supersedes this publisher. Use scripts.publish_referee_revision; do not overwrite main.tex with the earlier signal-only narrative.')
     manifest=json.loads((SIGNALS/'manifest.json').read_text())
     assert manifest['complete'] and manifest['cohort_size']==2508997
     for name,digest in manifest['outputs'].items():

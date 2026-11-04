@@ -1,4 +1,48 @@
+# Current delivery — 5 November 2026
+
+The current paper is `overleaf/main.tex`, identical to the open editor source in
+`output/guncel_makale_2026-11-05/main.tex`. It uses the supplied methodology PNG,
+includes the completed additional analyses, and was compiled successfully at
+10 pages. `referee_extension/current_manuscript_delivery.json` records its hashes.
+The earlier revision receipt remains historical analytical provenance; its old
+manuscript hash and uncompiled status do not describe this delivery. Old paper
+exports and K5 draft sources were removed; analytical evidence is preserved.
+
+---
+
 # Current Manuscript Status
+
+## Referee revision — 4 November 2026
+
+The current source is `overleaf/main.tex`, with separate
+`overleaf/supplementary.tex`. See `REFEREE_REVISION.md` and
+`results_v3/year_end_2022_count_cohort/referee_extension/revision_completion.json`.
+That receipt supersedes the manuscript hash in the prior framework receipt;
+original analytical results below remain valid within their stated nulls.
+
+New controls add 250 training-subset fits, 36 algorithm/weight comparisons,
+216 network tests and their combined correction with the original 84 tests,
+inactivity transitions, leakage-controlled later-period participation baselines,
+wallet-bootstrap loss contrasts, and daily/7/30-day block timing nulls.
+
+The source-universe audit independently establishes exact set equivalence with
+annual count >=10 in the supplied merged daily source: 83,519,492 rows,
+25,417,590 distinct addresses, 2,738,243 candidates, zero set differences.
+This documents empirical selection within that source, not raw-data cleaning.
+
+Activity-stratified K3 non-self alignment has mean excess about -0.88 percentage
+points and one supported month; excluding the most active 1% endpoints yields
+about +3.04 points and twelve supported months. Unique directed pairs have no
+supported months. These supersede any stronger interpretation of the original
+unrestricted network association. K3 states underperform activity-feature
+participation baselines; block timing tests remain supported.
+
+The narrative now follows the supplied earlier paper's stronger motivation,
+while using only corrected-cohort results. The old K5 diagram has been replaced
+by an accurate code-native parallel-branch diagram. No LaTeX compilation or
+page-count verification has been performed, as requested.
+
+## Original controlled-cohort and signal branches
 
 `overleaf/main.tex` is the current manuscript.
 It is based only on the year-end code-free cohort and the count/activity/direction representation documented in `results_v3/year_end_2022_count_cohort/`.

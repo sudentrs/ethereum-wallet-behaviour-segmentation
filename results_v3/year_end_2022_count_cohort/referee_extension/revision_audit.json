@@ -1,0 +1,29 @@
+{
+  "checks_passed": true,
+  "source_checks": {
+    "main.tex": {
+      "words": 6994,
+      "tables": 8,
+      "figures": 2,
+      "labels": 10,
+      "sha256": "ed82f0cd3b01c23d5ddc855f435ecb584fe7442b58035cb5729fb33d98b2565d"
+    },
+    "supplementary.tex": {
+      "words": 3338,
+      "tables": 12,
+      "figures": 0,
+      "labels": 12,
+      "sha256": "85a910f057f131774579c98edbe374476e2905aedda9c7444b4e4749dbf03d4f"
+    }
+  },
+  "annual_subsample_fits": 150,
+  "annual_population_refits": 100,
+  "algorithm_comparisons": 36,
+  "new_network_tests": 216,
+  "combined_network_family": 300,
+  "timing_null_tests": 9,
+  "predictive_models": 10,
+  "latex_compiled": false,
+  "page_count_verified": false,
+  "limitation": "Arithmetic, provenance and static LaTeX checks only; no external peer review, raw-population reconstruction or visual page-layout certification."
+}

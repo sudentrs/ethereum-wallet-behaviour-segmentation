@@ -1,0 +1,45 @@
+% Parallel descriptions share the cohort; annual features do not train monthly states.
+\begin{tikzpicture}[
+ box/.style={draw=black!55,rounded corners=2pt,align=center,font=\scriptsize,
+             text width=3.1cm,minimum height=1.05cm,inner sep=5pt},
+ annual/.style={box,fill=teal!7},temporal/.style={box,fill=orange!8},
+ signal/.style={box,fill=blue!5},validation/.style={box,fill=violet!7},
+ link/.style={-{Latex[length=1.5mm]},draw=black!65}]
+\node[box,fill=blue!5,text width=10.5cm] (data) at (4,0)
+ {2022 ERC-20 records and validated wallet-day sources\\
+  Fixed candidate universe and historical year-end code-free cohort\\
+  Shared membership: 2,508,997 addresses; source identities and row order audited};
+\node[annual] (annualdata) at (0,-2)
+ {ANNUAL DESCRIPTION\\16 count/activity/direction features\\Feature transforms and robust scaling};
+\node[temporal] (monthlydata) at (4,-2)
+ {MONTHLY DESCRIPTION\\Six within-month count features\\Calendar-day and active-day summaries};
+\node[signal] (signaldata) at (8,-2)
+ {DAILY SIGNAL DESCRIPTION\\365 calendar-day counts\\Six time and seven frequency features};
+\draw[link] (data.south)--++(0,-.3)-|(annualdata.north);
+\draw[link] (data.south)--(monthlydata.north);
+\draw[link] (data.south)--++(0,-.3)-|(signaldata.north);
+\node[annual] (annualfit) at (0,-4)
+ {Annual K2--K6 comparison\\Main behavioural segmentation: K3\\Seeds, training subsets and estimators};
+\node[temporal] (monthlyfit) at (4,-4)
+ {Frozen monthly K2--K6 models\\Jan--Jun: state evaluation vocabulary\\Jan--Mar: participation-task vocabulary};
+\node[signal] (signalfit) at (8,-4)
+ {Separate time/frequency K2--K6 fits\\Same cohort; full-year descriptions\\Cross-representation agreement};
+\draw[link] (annualdata)--(annualfit);
+\draw[link] (monthlydata)--(monthlyfit);
+\draw[link] (signaldata)--(signalfit);
+\node[validation] (annualtests) at (0,-6)
+ {Feature and simple-rule controls\\Network label nulls and activity strata\\Pair, token and endpoint sensitivities};
+\node[validation] (monthlytests) at (4,-6)
+ {Held-out persistence and return\\Inactivity and reactivation\\State versus activity prediction baselines};
+\node[validation] (signaltests) at (8,-6)
+ {Histogram-preserving timing nulls\\Daily and 7/30-day block permutations\\Ordering distinguished from cycles};
+\draw[link] (annualfit)--(annualtests);
+\draw[link] (monthlyfit)--(monthlytests);
+\draw[link] (signalfit)--(signaltests);
+\node[validation,text width=10.5cm] (joint) at (4,-8)
+ {INTEGRATED INTERPRETATION\\Agreement, counterevidence and sensitivity across complementary views\\
+  Bounded address-level participation summary; shared data are not independent replications};
+\draw[link] (annualtests.south)--++(0,-.35)-|(joint.north);
+\draw[link] (monthlytests.south)--(joint.north);
+\draw[link] (signaltests.south)--++(0,-.35)-|(joint.north);
+\end{tikzpicture}

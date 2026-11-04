@@ -1,4 +1,43 @@
+# Current delivery — 5 November 2026
+
+The current paper is `overleaf/main.tex`, identical to the open editor source in
+`output/guncel_makale_2026-11-05/main.tex`. It uses the supplied methodology PNG,
+includes the completed additional analyses, and was compiled successfully at
+10 pages. `referee_extension/current_manuscript_delivery.json` records its hashes.
+The earlier revision receipt remains historical analytical provenance; its old
+manuscript hash and uncompiled status do not describe this delivery. Old paper
+exports and K5 draft sources were removed; analytical evidence is preserved.
+
+---
+
 # Overleaf Paper Package
+
+## Current referee revision — 4 November 2026
+
+`main.tex` is the revised paper with the earlier narrative's motivation and flow,
+updated entirely to the corrected cohort and completed robustness controls.
+`supplementary.tex` is a separate, standalone source with detailed methods and
+twelve extended tables. Neither source has been compiled in this revision.
+
+The main diagram is now `figures_current/framework_pipeline.tex` (TikZ), with
+separate annual, monthly and signal branches. It replaces the inherited K5 PNG
+in the manuscript. The only other main-text figure is
+`figures_current/signal_cross_representation.pdf`.
+
+The current Overleaf upload package is `output/overleaf_referee_revision.zip`.
+It contains these four source/assets files and a short README, without a
+compiled paper PDF. Use `main.tex` as the main document; select
+`supplementary.tex` separately when preparing the supplement. XeLaTeX is
+recommended. Both bibliographic records and main-text tables are embedded.
+
+The exact source receipt is
+`results_v3/year_end_2022_count_cohort/referee_extension/revision_completion.json`;
+the static/numerical audit is `revision_audit.json` in that directory.
+See `docs/REFEREE_REVISION.md` for reproduction and interpretation. The earlier
+notes below describe the prior signal integration and are historical where they
+refer to the selected PNG or the previous source hash.
+
+---
 
 This folder contains the current paper source that can be uploaded to Overleaf.
 The current source uses `IEEEtran` journal format for TCSS on US Letter, not the

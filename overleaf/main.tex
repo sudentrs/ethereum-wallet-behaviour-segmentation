@@ -14,16 +14,22 @@
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
 \usepackage[hidelinks]{hyperref}
+% Check the requested length after all deferred figures and tables are placed.
+\AtEndDocument{\clearpage\ifnum\value{page}=11\relax\else
+  \PackageError{ManuscriptLength}{Expected 10 pages; next page counter is \thepage}{Adjust substantive content to reach ten pages.}
+\fi}
 
-\title{Ethereum Wallet Segmentation Through Cohort-Controlled Layered Validation}
+\title{Ethereum Wallet Segmentation Through Layered Behavioural Validation}
 \author{Selim Balcisoy, Sena Kahya, and Sude Tiras\thanks{The authors are with the Faculty of Engineering and Natural Sciences, Sabanci University, Istanbul, Turkiye.}}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Transparent transaction histories do not directly explain how a large wallet population behaves, and an unsupervised partition is not evidence of a natural taxonomy. This study develops a layered validation framework for Ethereum wallet segmentation under explicit historical cohort and feature-representation controls. Starting from an annual feature-table universe of 2,738,243 addresses, a complete historical code scan retains 2,508,997 addresses with empty code at the final Ethereum block of 2022. We construct a 16-feature count/activity/direction representation, excluding pooled ERC-20 amount magnitudes, and compare annual K2--K6 models across three initializations. Annual K3 provides a stable working resolution, with adjusted Rand indices of 0.908--0.971, while matched-estimator feature holdouts reveal substantial representation dependence. Shared transfer samples support 84 monthly network comparisons with 9,999 common label permutations and a global Holm correction. K3, K4 and K5 have above-null concentration in all twelve months, although K4 has larger network excess and lower initialization stability. Rebuilt daily-count spectra and time-domain partitions provide same-cohort cross-representation checks and histogram-preserving timing tests. Frozen monthly K2--K6 models show above-chance held-out persistence. K3--K6 also exhibit above-null conditional two-step return after correction across twenty tests; the binary K2 return null is structurally uninformative. The results support a qualified behavioural description rather than permanent EOA identities or a uniquely optimal cluster count. We provide a reproducible account of cohort construction, sensitivity, network alignment and temporal structure, including explicit limits on economic, causal and population-wide interpretation.
+Public blockchains expose detailed histories, but a partition of addresses does not by itself explain population behaviour. We evaluate Ethereum wallet segmentation through historical cohort controls, simple baselines and complementary network and temporal views. A complete year-end code scan retains 2,508,997 addresses from a supplied 2,738,243-address universe. Sixteen count/activity/direction features exclude pooled token amount magnitudes. Annual K2--K6 comparisons identify K3 as an interpretable working description, with three-seed ARI 0.908--0.971. However, twenty training-subset refits yield K3 ARI 0.257--0.986, while feature and estimator changes reveal substantial sensitivity. Non-self K3 network alignment survives monthly activity stratification in 1 of twelve months, but in 12 months after excluding the most active 1\% of endpoints, under a combined 300-test Holm correction. Graph composition therefore materially affects the interpretation. Frozen monthly models reveal active-only persistence and conditional return, while inactivity-aware transitions expose omitted participation paths. Separately fitted early-period K3 states improve later-month participation prediction over constant prevalence but underperform activity-feature baselines. Daily representations show partial cross-representation agreement, while histogram-preserving daily and block nulls detect sample-mean temporal ordering without establishing repeated cycles. The contribution is an auditable account of the evidence and counterevidence for a bounded behavioural summary, rather than permanent identities or a uniquely validated taxonomy.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -31,229 +37,141 @@ Ethereum, wallet segmentation, behavioural states, historical cohort, clustering
 \end{IEEEkeywords}
 
 \section{Introduction}
-Public blockchains expose detailed interactions, but accessible records do not provide a population-level account of behaviour. Addresses with similar transfer totals can differ in duration, concentration, direction and timing. Wallet segmentation summarizes these patterns without requiring a catalogue of individual histories.
+Public blockchains such as Ethereum expose transaction histories at a scale that makes detailed behavioural analysis possible. However, transparency does not automatically make an ecosystem understandable. A block explorer can reveal the activity of an individual address, while millions of transfer records still leave a population-level question unanswered: what patterns of participation recur, and how do those patterns change over time? Addresses with similar transfer totals can differ substantially in the duration, concentration, direction and timing of their activity. Summarizing these differences requires more than counting transactions or inspecting individual histories.
 
-Unlike ownership clustering or supervised entity classification, our target is observable address-level activity. Linkage, profiling and behavioural classification studies establish the informational value of transaction histories \cite{victor2020address,beres2021blockchain,bonifazi2022userspectra}; they do not establish that an unsupervised partition is a natural taxonomy. Initialization stability, feature sensitivity and external alignment address different claims, and favourable internal scores are insufficient validation \cite{halkidi2001validation,liu2022stability}.
+Wallet segmentation offers a compact vocabulary for describing a large address population. Prior studies demonstrate the informational value of Ethereum transaction histories for ownership linkage, profiling and behavioural classification \cite{victor2020address,beres2021blockchain,bonifazi2022userspectra}. Our target is observable address-level participation. We ask whether groups discovered without semantic labels provide a defensible description of behaviour, rather than attempting to infer who controls an address. Throughout this paper, ``wallet'' denotes an address-level analytical unit; an address is not assumed to represent one person or one organization.
 
-We ask whether Ethereum addresses admit interpretable behavioural summaries under historical-cohort, representation, network and temporal checks. Two controls are essential: present-day code does not establish historical EOA status, and pooled ERC-20 amounts lack a common economic unit. We therefore define a year-end code-free cohort and exclude pooled amount magnitudes.
+The difficulty is that a clustering algorithm returns a partition even when its groups are unstable, depend heavily on the representation, or add little beyond simple activity thresholds. An interpretable name and a favourable internal score therefore do not establish a useful taxonomy. General clustering-validation research distinguishes internal separation, stability and substantive interpretation \cite{halkidi2001validation,liu2022stability}. For Ethereum segmentation, these distinctions lead to a concrete research problem: what evidence is needed before a set of unsupervised groups can be used to describe participation in the system?
 
-The study links six components: complete historical cohort accounting; a controlled sixteen-feature annual representation; K2--K6 seed and feature-family comparisons; shared-sample network randomization; frozen monthly state models; and rebuilt time/frequency signal representations. Annual K3 is a working resolution because its seed stability and profiles provide an interpretable compromise. K4's stronger network excess, K3's feature dependence and partial cross-representation overlap qualify this choice. Annual roles, signal clusters and monthly states remain distinct descriptions rather than verified identities.
+Behaviour also depends on the observation window. A year-long history can summarize sustained participation or short-span concentration, while monthly observations reveal persistence, inactivity and movement between states. Temporal blockchain analysis motivates examining this evolution explicitly \cite{agarwal2021temporal}. We distinguish annual behavioural roles, independently learned monthly states, and daily time/frequency representations. Their numerical labels need not correspond, and agreement between representations must be measured rather than assumed.
+
+We investigate this problem using the ERC-20 Trading 2022 release and its dataset description \cite{somin2025erc2022,somin2025dataset}. A complete historical code scan retains 2,508,997 addresses from a supplied 2,738,243-address feature universe. Membership requires empty code at the final Ethereum block of 2022. On this fixed year-end code-free cohort, we construct a sixteen-feature count/activity/direction representation and compare annual K2--K6 models. Pooled token amount magnitudes are excluded because they do not share a common economic unit. Annual K3 serves as the main descriptive segmentation, while competing resolutions remain part of the evidence.
+
+The central research question is:
+\begin{quote}
+To what extent can unsupervised Ethereum address segments provide an interpretable and reproducible account of participation across aggregate features, transaction-network structure and temporal activity?
+\end{quote}
+
+The contribution is an auditable validation design that keeps these questions distinct. First, historical membership and feature controls establish what population and measurements the segmentation describes. Second, initialization, resampling, feature-family and algorithm comparisons identify which aspects of the annual partition are reproducible and which depend on modelling choices. Third, network randomization, inactivity-aware monthly evaluation and rebuilt daily signals examine how the descriptions relate to interaction and temporal structure. Simple segmentation and participation baselines assess whether clustering adds information beyond readily available activity measurements.
+
+This design is useful because the evidence can disagree. Greater network alignment need not accompany stronger initialization stability; stable optimization need not imply stability to training subsets; and a significant timing statistic need not establish repeated cycles. The contribution is therefore a measured account of which behavioural descriptions survive which checks, rather than a claim that Ethereum contains a unique number of permanent wallet types.
 
 \section{Motivation}
-Transaction counts alone do not distinguish persistent participation from brief bursts. Duration, concentration, direction and the ordering of daily activity provide complementary descriptions. A useful population summary should expose these differences without equating addresses with people, ownership or intent.
+The practical motivation is to make large-scale participation understandable without requiring verified labels for every address. Individual histories answer questions about a particular wallet, but they do not summarize how a population is composed or how its activity changes. A compact behavioural description could support ecosystem monitoring and the formulation of more specific hypotheses about participation. Applications such as anomaly detection or agent-based simulation are potential downstream uses; they require their own validation.
 
-Validation layers address different failure modes. Seed agreement tests optimization sensitivity; feature removal tests representation dependence; network permutations test label--endpoint alignment; frozen monthly models test held-out state structure. Signal comparisons ask whether a separate full-year representation recovers the same groups. These checks share data and are not independent confirmations. In particular, stronger network excess need not accompany greater initialization stability, and spectral concentration need not imply recurring cycles. We report these tensions rather than collapsing them into a universal ranking.
+Consider two addresses with the same annual number of transfers. One may spread its activity over several months, while the other concentrates almost all activity into a short episode. A third may transact more often but only on a few isolated days. Transfer totals alone combine these patterns. Duration, density, concentration and daily ordering can separate them, but adding features also changes the geometry used to form clusters. The resulting segments must therefore be evaluated as measurement-dependent summaries.
+
+A second motivation is the dynamic nature of participation. A low-activity address can become active, stop transacting, or return after an inactive interval. Annual roles describe the accumulated history; monthly states describe behaviour within shorter windows. Restricting evaluation to addresses active in consecutive months answers a persistence question, but omits disengagement and reactivation. Both views are needed to explain what a temporal result represents.
+
+These needs create a validation problem in the absence of ground-truth behavioural classes. Internal metrics describe separation in the chosen feature space, while seed comparisons assess optimization sensitivity. Neither determines whether the same groups appear under different training samples, whether simple rules capture comparable structure, or whether the labels align with interactions after accounting for activity. A useful evaluation must expose these alternatives rather than selecting whichever metric favours one cluster count.
+
+The layered framework assigns a specific question to each analysis. Annual profiles describe the groups; feature holdouts and equal-family weighting examine representation dependence; resampling and alternative estimators examine fitting sensitivity. Network nulls assess label--endpoint alignment, including the extent to which monthly transfer activity accounts for that alignment. Frozen monthly models examine persistence and conditional return, while inactivity-aware transitions and later-period participation baselines make the conditioning and practical limits visible. Daily time/frequency representations ask which aspects of temporal organization overlap with the aggregate roles.
+
+These layers share addresses and source records, so they are complementary views rather than independent replications. Their purpose is to make the segmentation assessable: which findings survive stronger controls, which are captured by simpler descriptions, and which remain specific to a representation or observation window? This turns the study from a catalogue of clusters into a reproducible examination of the evidence needed to interpret them.
 
 \section{Related Work}
 \subsection{Address Linkage and Behavioural Classification}
-Victor studies Ethereum ownership-linkage heuristics \cite{victor2020address}, while B\'{e}res et al. investigate profiling and deanonymization from graph and behavioural information \cite{beres2021blockchain}. Our target differs: behavioural similarity does not imply common ownership. Bonifazi et al. use multivariate behavioural time series to define user spectra relative to predefined categories \cite{bonifazi2022userspectra}. Here categories are learned without semantic labels, so measured profiles and sensitivity checks must support interpretation.
+Ethereum address analysis includes ownership-linkage heuristics and profiling from transaction histories. Victor investigates address-clustering heuristics \cite{victor2020address}, while B\'{e}res et al. study profiling and deanonymization using graph and behavioural information \cite{beres2021blockchain}. These studies establish that observable histories carry information about addresses and their relationships. Our objective concerns behavioural similarity within a specified population. Similar feature profiles do not establish common ownership, and the resulting segments are not entity-resolution outputs.
+
+Bonifazi et al. represent Ethereum users through multivariate behavioural time series and define user spectra relative to predefined categories \cite{bonifazi2022userspectra}. This perspective motivates treating temporal activity as part of the representation rather than reducing every history to a single total. Our study learns partitions without semantic labels and then compares annual, monthly and signal representations. Consequently, raw-unit profiles, cross-representation agreement and sensitivity analyses must carry the interpretation that externally supplied categories would otherwise provide.
 
 \subsection{Temporal and Network Perspectives}
-Temporal graph properties support malicious-account detection \cite{agarwal2021temporal}, temporal multidigraph embeddings represent Ethereum interactions \cite{tedge2020}, and transaction-network studies examine structural evolution \cite{liang2018evolutionary}. These perspectives motivate complementing aggregate features with temporal and interaction evidence. Our network diagnostic compares same-label endpoint concentration against fixed-edge wallet-label permutations. It tests a specific label--network association, not community equivalence, a transfer-generation mechanism or degree-controlled causality.
+Temporal graph properties have been used for malicious-account detection \cite{agarwal2021temporal}. T-EDGE represents Ethereum interactions through temporal weighted multidigraph embeddings \cite{tedge2020}, while Liang et al. examine the evolution of cryptocurrency transaction networks \cite{liang2018evolutionary}. These approaches motivate preserving interaction and temporal information when studying blockchain behaviour. Here the network is primarily an evaluation view of activity-derived segments, rather than the input to a graph representation-learning objective.
+
+This distinction creates an important control requirement. Count-based features can correlate with transfer-network activity, so unrestricted label randomization alone does not establish structure beyond activity differences. We therefore compare unrestricted and activity-stratified network nulls and examine sensitivity to repeated pairs, self-transfers, dominant tokens and highly active endpoints. Likewise, temporal organization is evaluated with independently trained monthly models and full-year signal descriptions, whose inferential roles remain separate.
 
 \subsection{Validation of Unsupervised Partitions}
-Clustering validation distinguishes compactness, agreement and substantive usefulness \cite{halkidi2001validation}; the chosen perturbation determines what stability means \cite{liu2022stability}. We separate seed changes, feature removal and temporal evaluation. ARI and NMI compare partitions without relying on label numbers \cite{hubert1985partitions,vinh2010information}; Hungarian matching supplies address-level agreement \cite{kuhn1955hungarian}. Silhouette measures internal separation, not a unique true number of wallet types \cite{rousseeuw1987silhouettes}.
+Clustering validation distinguishes geometric compactness, agreement under perturbation and substantive usefulness \cite{halkidi2001validation}. Liu et al. review stability estimation and emphasize the significance of the perturbation being studied \cite{liu2022stability}. We distinguish changes in initialization, training addresses, feature families and estimator geometry. These checks answer different questions and need not support the same resolution.
+
+ARI and NMI compare partitions without relying on arbitrary label numbers \cite{hubert1985partitions,vinh2010information}; Hungarian matching supports address-level agreement and matched cluster comparisons \cite{kuhn1955hungarian}. Silhouette describes internal separation \cite{rousseeuw1987silhouettes}. None supplies ground truth. Our evaluation combines these diagnostics with simple segmentation baselines, declared network randomization families and temporally separated participation comparisons. The intended advance is the controlled assessment of a behavioural segmentation across these views, including explicit reporting when a stronger control weakens its interpretation.
 
 \section{Methodology}
-\subsection{Study Design and Validation Layers}
-The pipeline begins with the fixed annual address universe and historical code observations. The retained membership is then shared across annual feature analysis, transfer-network filtering and monthly state analysis. The annual branch uses sixteen aggregate features, while the monthly branch uses six within-month count features. Transfer records provide a separate interaction view. Figure~\ref{fig:pipeline} summarizes this separation, and Table~\ref{tab:layers} identifies the claim supported by each layer.
+\subsection{Study Design and Historical Cohort}
+The study uses the ERC-20 Trading 2022 release \cite{somin2025erc2022,somin2025dataset}. Its supplied annual feature universe contains 2,738,243 addresses. A complete historical scan queries code at block 16,308,189, the final Ethereum block of 2022: 2,508,997 addresses have exactly empty code and 229,246 have nonempty code, with no unresolved queries. Membership and row order are frozen with checksums. This defines a year-end code-free cohort, not continuous EOA status. An independent audit of all 83,519,492 merged wallet-day rows finds that the supplied candidate set exactly matches addresses with at least ten annual count incidences, with no omitted or additional addresses under this rule. This establishes empirical selection equivalence within the supplied daily source, not reconstruction of raw-transfer cleaning or historical producer intent. The analysis therefore describes an activity-selected population; cluster shares do not estimate prevalence across all Ethereum users.
 
-The schematic in Fig.~\ref{fig:pipeline} organizes data preparation, annual representations, signal analysis and validation. All reported branches now use the same year-end cohort. The diagram's K5 label is inherited from the original design; K2--K6 are compared here, with K3 retained as the annual working resolution.
+The same membership supports three descriptions: annual aggregate roles, separately learned monthly states and full-year daily signals (Fig.~\ref{fig:pipeline}). Raw network processing covers 245,911,059 transfer rows across twelve months. Wallet-day sources are checked for normalized valid addresses, dates within the expected month, unique wallet--day rows, and finite nonnegative integer counts. Counts denote wallet-record incidence, not distinct blockchain transactions: a transfer contributes sender and recipient records, including two incidences for a self-transfer. Daily signal totals reconcile exactly with the annual count source for every retained address.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures_current/ethereum_methodology.png}
-\caption{Overview of the layered Ethereum wallet behaviour framework. (A) ERC-20 transfer records are cleaned and standardized. Historical code at block 16,308,189, the final Ethereum block of 2022, retains 2,508,997 code-free addresses from 2,738,243 candidates; a one-block observation does not establish continuous EOA status. (B) Aggregate wallet features are transformed and robust-scaled before candidate k-means resolutions are compared. The displayed K5 taxonomy belongs to the original design; the present study compares K2--K6 and uses annual K3 as a descriptive working resolution. (C) Daily count signals yield time-domain and frequency-domain features, which are clustered separately on the corrected cohort. (D) Feature-space, transaction-network, held-out monthly-state and cross-representation checks support a bounded joint interpretation of annual roles and temporal activity.}
+\includegraphics[width=\textwidth]{figures_current/ethereum_wallet_behaviour_methodology.png}
+\caption{Overview of the layered Ethereum wallet behaviour framework. Stage A organizes ERC-20 records into a wallet-day source and applies the historical code filter. Stage B transforms and robust-scales aggregate features, compares MiniBatchKMeans resolutions K2--K6 and retains K3 as the main descriptive segmentation. Stage C independently extracts time-domain and frequency-domain features from daily activity and clusters these signal representations. Stage D brings feature-space, transaction-network, temporal-state and cross-representation evidence into a joint interpretation. The diagram's ``EOA-only'' label denotes the operational year-end code-free cohort; it does not establish continuous EOA status. Data cleaning denotes the supplied preprocessing and the source checks described here, rather than an independently reproduced raw-data cleaning pipeline.}
 \label{fig:pipeline}
 \end{figure*}
 
-\begin{table}[t]
-\centering\footnotesize
-\caption{Validation layers and inferential boundaries.}
-\label{tab:layers}
-\begin{tabular}{@{}p{.18\columnwidth}p{.32\columnwidth}p{.38\columnwidth}@{}}
-\toprule
-Layer & Question & Boundary \\
-\midrule
-Cohort & Which historical addresses are retained? & One-block code status; not continuous EOA identity \\
-Annual fits & Does initialization recover similar groups? & Three seeds in one representation \\
-Holdouts & Does feature removal change K3? & Measurement sensitivity; not ground truth \\
-Network & Do labels align with transfer endpoints? & Fixed sampled graph; not degree-controlled causality \\
-Signals & Does daily ordering add structure? & Full-year descriptive fits; no proven cycles \\
-Monthly states & Is held-out state movement structured? & Separate model; active observations only \\
-\bottomrule
-\end{tabular}
-\end{table}
+The diagram separates preparation, representation and evaluation because each stage addresses a different part of the research question. Stage A determines whose activity can enter the analysis. Stage B compresses the year into address-level measurements, providing a readable population summary. Stage C retains the ordering of daily observations, so two addresses with comparable annual totals can still receive different signal descriptions. Stage D asks how much of the resulting structure survives alternative measurements and explicit controls. The final synthesis combines these answers without assuming that agreement across every view is necessary or that disagreement can be ignored.
 
-\subsection{Data Preparation and Historical Cohort Definition}
-We use the 2022 ERC-20 transfer release from Harvard Dataverse and its dataset description \cite{somin2025erc2022,somin2025dataset}. The supplied annual feature table contains 2,738,243 addresses. This starting universe is a defined analytical population, not a census of every Ethereum address or every possible form of Ethereum use. All results are conditional on inclusion in that table. The network analysis reads 245,911,059 transfer rows from the twelve supplied monthly files, while the daily inputs supply wallet-level count histories for temporal modelling.
+The downward signal branch is parallel to annual clustering: annual K3 labels are not inputs to the time-domain or frequency-domain fits. Likewise, monthly state models are learned from early-month observations rather than obtained by applying annual cluster numbers to shorter windows. In the validation branch, feature-space checks examine membership sensitivity; network tests examine label alignment with observed interactions; temporal-state tests examine persistence, switching and inactivity; and cross-representation comparisons measure overlap between independently constructed descriptions. The additional participation task asks whether a compact monthly state is useful beyond simple activity measurements. These distinctions give the visual framework an operational meaning and prevent the final synthesis from becoming a count of favourable tests.
 
-For each candidate address, the historical scan queries code at block 16,308,189, the final Ethereum block of 2022. The retained criterion is exactly empty code at this block. Every candidate has a resolved outcome: 2,508,997 are retained and 229,246 have nonempty code. No missing or failed query is converted into a code-free result. Membership is exported with a block identity and a checksum so that downstream steps can use the same population without repeating the RPC scan.
+\subsection{Annual Features and Partition Robustness}
+Sixteen features form three families. Activity level contains observed days, total count, and observed-day count mean, maximum and standard deviation. Persistence/concentration contains inclusive first-to-last span, observed days divided by span, count coefficient of variation, and maximum-day count divided by total count. Directionality contains incoming-, outgoing- and both-active days, their three observed-day ratios, and incoming-minus-outgoing day balance divided by observed days. Directional flags use positive pooled daily incoming/outgoing amounts; zero-value transfers can contribute counts without activating a flag. Amount magnitudes are excluded, but direction flags retain this preprocessing dependence.
 
-This rule is more temporally aligned with the study period than a present-day code query, but it remains a single-snapshot rule. Empty code at year-end does not establish continuous EOA identity throughout 2022, ownership, or code status at every transfer. We therefore use the term \emph{year-end code-free cohort}. The paper does not replace this operational definition with the stronger claim that all retained addresses were externally owned accounts throughout the observation period.
+Counts and durations receive $\log(1+x)$; ratios, balance, coefficient of variation and concentration remain untransformed. Each column is centred by its cohort median and divided by its interquartile range, using one for a zero range. The annual matrix contains no token-price, gas, identity or legacy-cluster input. Correlated features and seven direction coordinates can implicitly weight related measurements more than once.
 
-The historical list also changes the earlier retained population. The prior filter retained 2,443,868 addresses; the new list shares 2,443,852 of them, adds 65,145 previously excluded addresses and removes 16 previously retained addresses. The net increase is 65,129 addresses, or approximately 2.66\% of the old retained count. These differences should not be interpreted as the isolated effect of a cohort correction on the final clusters, because the main representation was also redesigned to exclude pooled token amounts.
+MiniBatchKMeans fits K2--K6 using seeds 492--494, ten initializations, batch size 8,192 and 200 maximum iterations. Silhouette uses the same 5,000-address sample at seed 492; seed ARI/NMI and matched agreement use all addresses \cite{hubert1985partitions,vinh2010information,kuhn1955hungarian,rousseeuw1987silhouettes}. K3 feature-family removals retain estimator settings and the original scaling of surviving columns.
 
-\begin{table}[t]
-\centering\footnotesize
-\caption{Historical cohort accounting within the supplied feature universe.}
-\label{tab:cohort}
-\begin{tabular}{lr}
-\toprule
-Quantity & Addresses \\
-\midrule
-Starting annual feature universe & 2,738,243 \\
-Previously retained by earlier filter & 2,443,868 \\
-Retained at year-end 2022 & 2,508,997 \\
-Nonempty code at year-end & 229,246 \\
-Shared by earlier and year-end lists & 2,443,852 \\
-Added relative to earlier list & 65,145 \\
-Removed relative to earlier list & 16 \\
-Unresolved historical outcomes & 0 \\
-\bottomrule
-\end{tabular}
-\end{table}
+Additional retrospective controls fix 50,000 evaluation addresses and exclude them from every new fit. At each K2--K6, thirty fits use independent 100,000-address subsets and twenty use 80\% of the remaining cohort, keeping optimizer seed 492 and the original scaler fixed. Assignments are compared with the original full-cohort reference, which did see those features; this is partition robustness conditional on scaling, not predictive validation. Matched cluster Jaccard scores complement ARI. On one shared 100,000-address subset, K3--K5 also compare batch k-means, diagonal-covariance Gaussian mixtures and equal-family weighting at three seeds. Weighting divides coordinates by the square root of their family's column count. Full settings and all cluster-level results are in the supplementary material.
 
-\subsection{Source Validation and Reproducible Alignment}
-All twelve wallet-day files are checked for valid normalized address identifiers, dates inside the expected month, finite nonnegative integer transaction counts, and unique wallet--day records. Duplicate normalized wallet--day rows are rejected even when the total row count is below the number of days in the month. A zero-count row does not add an active day. Address normalization removes an optional hexadecimal prefix and uses a consistent lowercase, forty-character representation before cohort joins.
-
-Cohort membership and row order are checked separately. Annual manifests record feature-source and matrix hashes, column order, model settings and label hashes. Monthly cache signatures incorporate source contents, cohort and preprocessing code. Training wallet IDs are sorted before sampling so a fixed seed identifies a reproducible sample.
-
-\subsection{Wallet-Level Feature Engineering}
-The annual representation contains sixteen features in three declared families. Activity level includes observed wallet-day count, total transfer-record incidence, average daily count, maximum daily count and daily-count standard deviation. Persistence/concentration includes activity span, activity density, count coefficient of variation and transaction concentration. Directionality includes incoming-, outgoing- and both-active day counts, their three observed-day ratios, and directional day balance. Family removal uses this grouping; the analysis is not preregistered.
-
-The annual source builder counts observed wallet-day rows. Annual mean and standard deviation use those observed days, whereas monthly calendar-day summaries also include absent days as zeros. Span is the inclusive first-to-last observed interval; density is observed days divided by span; concentration is maximum daily count divided by total count. Directional flags are defined by positive daily incoming or outgoing pooled amounts, not directional transfer counts. Thus zero-value events can contribute to count features without activating a directional flag. Amount magnitudes are excluded from the model, but directionality is not wholly independent of their preprocessing. Transfer counts denote wallet-record incidence, not distinct Ethereum transactions; the source conversion creates both sender and recipient records, including two incidences for a self-transfer.
-
-Counts and durations are transformed with $\log(1+x)$ to reduce the geometric dominance of large raw magnitudes. Ratios, directional balance, count coefficient of variation and concentration remain in their original units before scaling. Each transformed column is centred by its full-cohort median and divided by its interquartile range. The resulting robust-scaled matrix has 2,508,997 rows and sixteen columns. Profiles are subsequently reported in raw units so that a transformed coordinate is not mistaken for a directly observed quantity.
-
-For transformed feature $z_{ij}$ of address $i$ and column $j$, the representation used by the annual estimator is
+\subsection{Network Nulls, Baselines and Graph Sensitivity}
+For eligible sampled transfer rows $E_m$, with both endpoints in the cohort, annual labels $g$ define
 \begin{equation}
- x_{ij}=\frac{z_{ij}-\operatorname{median}(z_{\cdot j})}{Q_{0.75}(z_{\cdot j})-Q_{0.25}(z_{\cdot j})}.
+H_m=|E_m|^{-1}\sum_{(u,v)\in E_m}\mathbf{1}\{g(u)=g(v)\}.
 \end{equation}
-The implementation uses a denominator of one if an interquartile range is zero. The input audit finds no nonfinite values in the sixteen retained annual columns. No amount magnitude, token-price feature, gas variable or identity label enters this matrix. A legacy cluster field retained in the source CSV for traceability is explicitly excluded from fitting. Seven direction variables and correlated count summaries implicitly weight related behaviours more than once; robust scaling does not remove that redundancy.
+The original comparison uses 200,000 shared rows per month and common permutations across seven label solutions: K2--K6 seed 492 and two additional K3 seeds. Labels are shuffled among sampled endpoint wallets while edges remain fixed, including repeated rows and self-transfers. Upper-tail Monte Carlo p-values use $(1+\#\{H_m^{(b)}\ge H_m\})/(B+1)$ with $B=9,999$. Effect size is observed minus null-mean concentration. Holm correction initially covers 84 tests \cite{holm1979sequential}.
 
-\begin{table}[t]
-\centering\footnotesize
-\caption{Annual feature families. Amount magnitudes are excluded; directional flags use positive daily amounts.}
-\label{tab:features}
-\begin{tabular}{@{}p{.27\columnwidth}p{.65\columnwidth}@{}}
-\toprule
-Family & Measurements \\
-\midrule
-Activity level (5) & Active days; total transfer count; average, maximum and standard deviation of daily count \\
-Persistence/ concentration (4) & Activity span; activity density; count coefficient of variation; transaction concentration \\
-Directionality (7) & Incoming-, outgoing-, both-active days; their three active-day ratios; directional day balance \\
-\bottomrule
-\end{tabular}
-\end{table}
+The extension compares annual K3--K5 and two simple three-group baselines on common uniform samples of up to 50,000 non-self rows per month. One baseline uses empirical transfer-count terciles, assigning ties together to the upper interval. The other assigns span at most thirty days to one group, and splits remaining addresses at twenty-four observed active days. These illustrative thresholds are fixed without optimizing a network outcome; group sizes are not matched to K3.
 
-\subsection{Annual Role Clustering and Resolution Comparison}
-We fit MiniBatchKMeans for $k=2,3,4,5,6$ with seeds 492--494, ten initializations, batch size 8,192 and a maximum of 200 iterations. Each fit assigns the full retained population. The objective minimizes within-cluster squared distance in the scaled representation,
-\begin{equation}
- \min_{\mu_1,\ldots,\mu_k}\sum_{i=1}^{N}\min_{c\in\{1,\ldots,k\}}\|x_i-\mu_c\|_2^2.
-\end{equation}
-The objective defines a geometric summary, not wallet ownership or a transfer-generation mechanism.
+Both unrestricted and activity-stratified label permutations are used. Strata combine $\lfloor\log_2(1+d_{\rm in})\rfloor$ and $\lfloor\log_2(1+d_{\rm out})\rfloor$, where counts use all eligible non-self monthly events. Shuffling preserves label composition within sampled-endpoint strata. K3 additionally tests all events, unique directed non-self pairs, exclusion of the month's most frequent eligible token, and exclusion of the top 1\% endpoints ranked by eligible non-self event activity. Deduplication and exclusions precede sampling. The 216 extension tests use 9,999 permutations each; we also correct them jointly with the original 84 tests as a 300-test family. Approximate activity strata do not control exact degree or all token exposure; changed graph populations prevent causal interpretations of sensitivity differences.
 
-We report silhouette on a fixed 5,000-address sample for seed 492 at each resolution. Initialization stability is evaluated on all retained addresses using pairwise ARI, NMI and Hungarian-matched agreement. With three seeds there are three seed pairs per resolution. Hungarian matching relabels groups before address-level comparison. Silhouette and full-population agreement have different denominators and purposes.
+\subsection{Monthly States, Inactivity and Participation}
+Monthly models use transactions per calendar day, active-day fraction, transactions per active day, calendar-day count coefficient of variation, peak-count share and inclusive span fraction. The first, third and fourth features receive $\log(1+x)$ before robust scaling. Up to 20,000 lexicographically sorted and uniformly sampled active observations per January--June month fit a shared scaler and separate K2--K6 models; centroids are frozen for July--December. Models use seed 492, ten initializations, batch size 4,096 and 100 maximum iterations. Wallets can recur in training months.
 
-\subsection{Matched-Estimator Feature Holdout Validation}
-For K3, each feature family is removed in turn and the remaining columns are reclustered. The holdouts use MiniBatchKMeans with the same seed, initialization count, batch size and iteration limit as the full-feature reference. The retained columns keep the original feature-wise transformations and scaling. This prevents an algorithm change or a newly fitted scaler from being silently combined with the removal of a feature family. The reference seed-492 label vector is reproduced exactly before the comparison.
+For five held-out adjacent pairs, active-only persistence $A_o$ is compared with marginal chance $A_e=\sum_c p_t(c)p_{t+1}(c)$ and $\kappa=(A_o-A_e)/(1-A_e)$ \cite{cohen1960agreement}. For four triples, return conditions on activity in all three months and a first-step switch. Future labels are shuffled within middle-state groups, preserving middle-to-future margins among switchers. There are 999 permutations and twenty K2--K6 return tests in one Holm family. Binary K2 is structurally degenerate because switchers' starting states are determined by the middle state, leaving return counts unchanged under this null.
 
-ARI, NMI and matched agreement describe recovery of the full-feature reference. These are representation sensitivity measures, not independent ground truth or causal estimates of feature importance. Removing related measurements also changes the weighting of behaviour in Euclidean distance.
+Inactivity is additionally encoded as an observation category after K3 assignment, allowing all-cohort transitions without fitting an inactive centroid. Previously observed inactive addresses are distinguished from those not yet observed active in 2022; this is not an address-creation classification.
 
-\subsection{Transaction-Network Validation}
-For each month, the network branch retains transfer rows whose sender and recipient both belong to the year-end cohort. A uniform priority sample of up to 200,000 eligible rows is drawn once and shared across all seven annual label solutions, using seed 492 with separate month-specific random streams. All twelve months contain enough eligible rows to use the full sample size. Repeated transfer rows and self-transfers are retained, so the statistic is transfer-weighted rather than an unweighted count of unique counterparty pairs. Exact eligible-row totals and same-label fractions are also computed before sampling.
+A separate next-month participation task learns K2--K6 vocabularies on January--March only, fits prediction models on January--May pairs (up to 50,000 active observations per month), and evaluates July--November pairs. Constant prevalence and smoothed state rates are compared with two-feature activity logistic regression, six-feature logistic regression, its K3-indicator augmentation, and six-feature histogram gradient boosting. No evaluation features or outcomes fit these models. Brier/log loss are pooled by observations, while AUC is averaged over months. Two hundred paired wallet-level Poisson bootstraps preserve repeated-wallet contributions across months for descriptive loss-difference intervals conditional on fitted models. They do not account for network dependence. This remains temporal evaluation within a retrospectively selected cohort, not prospective population-wide prediction.
 
-For sampled edge multiset $E_m$ and annual labels $g$, the observed statistic is
-\begin{equation}
- H_m(g)=\frac{1}{|E_m|}\sum_{(u,v)\in E_m}\mathbf{1}\{g(u)=g(v)\}.
-\end{equation}
-The null fixes these edges and permutes labels across the unique wallets appearing at their endpoints. Common wallet permutations are applied across the seven solutions, preserving each solution's label composition among sampled endpoint wallets. The randomization breaks the association between a wallet and its behavioural label; it does not rewire edges or preserve a degree--label relationship.
+\subsection{Daily Signals and Reproduction Controls}
+All 365 daily counts, including zeros on absent days, are reconstructed for every cohort address. Six time-domain features summarize active fraction, longest active/inactive runs, active/inactive switches, peak share and calendar-day coefficient of variation. Frequency features apply rFFT to within-wallet centred $\log(1+x_t)$, exclude DC and normalize non-DC power. Seven summaries capture power above sixty days, fourteen--sixty days and below fourteen days, weekly/monthly bands, peak-power share and spectral entropy. Weekly and monthly bands use $1/8\le f<1/6$ and $1/35\le f<1/25$ cycles per day. Discrete bins approximate calendar periods. Zero-power signals would be excluded from both partitions; none occur here.
 
-We use 9,999 permutations and an upper-tail Monte Carlo p-value,
-\begin{equation}
- p_m=\frac{1+\sum_{b=1}^{B}\mathbf{1}\{H_m^{(b)}\ge H_m^{\rm obs}\}}{B+1}.
-\end{equation}
-The excess $\Delta_m=H_m^{\rm obs}-\overline{H_m^{(b)}}$ expresses direction and magnitude. Standardized effects are also retained where null variance is positive. A low upper-tail p-value supports above-null same-label concentration. A nonsignificant upper-tail result does not prove equivalence, and an observed negative excess is not automatically a confirmed lower-tail effect.
+Each representation is robust-scaled separately, logging only count coefficient of variation beforehand. K2--K6 fits at three seeds use a shared uniform 100,000-address training sample, ten initializations, batch size 8,192 and 200 maximum iterations; assignments cover the full eligible cohort and silhouette uses 3,000 fixed addresses. Seventy-five comparisons measure annual--signal and time--frequency overlap. These are full-year descriptive fits.
 
-Five seed-492 resolutions and two additional K3 seeds over twelve months produce 84 tests. Holm correction is applied to this full network family \cite{holm1979sequential}. The choice of 9,999 permutations addresses resolution before interpreting results: with only 999 permutations, the smallest possible first Holm-adjusted value for 84 tests is 0.084. The compiled counting implementation is checked against the reference statistic using identical permutations. Acceleration changes runtime, not the sampled graph, randomization or statistic.
+A uniform 2,000-address sample tests sample-mean low-frequency share, peak-power share and negative entropy against histogram-preserving nulls. Complete daily permutation uses 999 replicates and a three-test Holm family. Additional seven- and thirty-day block permutations retain within-block order after a random circular origin, preserving the shorter final block. The three null types form a nine-test extension family. They test temporal ordering, not recurring cycles or individual-wallet significance.
 
-\subsection{Frozen Monthly State Models}
-Monthly states are trained separately from annual roles. For each active wallet-month we calculate transactions per calendar day, active-day fraction, transactions per active day, daily-count coefficient of variation, peak-count share and span fraction. Calendar-day summaries include inactive days in their denominator; active-day summaries use only positive-count days. Transactions per calendar day, transactions per active day and daily-count coefficient of variation receive log transformations, while fractions remain untransformed before robust scaling.
+Feature and matrix hashes reproduce exactly. Thirteen of fifteen annual label arrays match archived hashes; K3 seed 494 and K6 seed 493 are identified as reproduced fits under the rerun runtime. Current tables use the complete rerun. Manifests record source identity, row order, settings, samples and result hashes. All analyses are retrospective; the complementary views share source data and are not independent replications.
 
-The training sample contains up to 20,000 active wallet-months from each January--June month, selected after deterministic wallet sorting. One scaler is fitted to this training sample and shared across separate monthly K2--K6 models with seed 492. The scaler and centroids are then frozen before July--December assignment. Each monthly estimator uses ten initializations, batch size 4,096 and a maximum of 100 iterations. Sampling uses seed 492 with month-specific streams. The sampling is balanced by training month rather than by unique wallet, so a wallet active in several training months can contribute several observations. This is a state-learning design, not an independent-person sample.
+\subsection{Evaluation Questions and Interpretation}
+The evaluation follows four connected questions. First, can a small annual vocabulary describe differences that a transfer total conceals? Raw-unit profiles address readability, while silhouette and initialization comparisons describe the fitted geometry. Second, does membership survive perturbations that matter for interpretation? Training-subset refits, family removals and estimator comparisons deliberately perturb different parts of the construction. Third, do the descriptions align with interaction and temporal patterns under appropriate conditioning? Network randomization, frozen monthly models and timing surrogates each specify what remains fixed when an observed result is compared with chance. Fourth, does the vocabulary improve a concrete task beyond transparent alternatives? The participation comparison supplies a limited, measurable answer to this practical question.
 
-An absent wallet-month is encoded as missing and excluded from any test requiring that month. Adjacent-pair statistics therefore condition on activity in both months; two-step returns condition on activity in all three relevant months. The cohort itself remains retrospectively selected by year-end code status. The held-out procedure avoids fitting the monthly transformation on evaluation-month features, but it should not be described as a prospective classifier deployed without future cohort information.
-
-\subsection{Temporal Persistence and Conditional Return}
-For each of the five July--December adjacent pairs, observed persistence is the diagonal mass of the transition matrix. The marginal-frequency chance baseline and Cohen's kappa are
-\begin{equation}
- A_e=\sum_c p_t(c)p_{t+1}(c),\qquad
- \kappa=\frac{A_o-A_e}{1-A_e}.
-\end{equation}
-These measures distinguish raw persistence from agreement expected under unequal state frequencies \cite{cohen1960agreement}. A coarser or more dominant state partition can have higher raw persistence without representing a better behavioural model. We therefore report the chance baseline and compare all monthly resolutions on shared inputs.
-
-For a triple $(S_t,S_{t+1},S_{t+2})$, the return analysis first restricts to switchers with $S_t\ne S_{t+1}$. The observed return fraction is the proportion satisfying $S_{t+2}=S_t$. Future-state labels are shuffled only within groups sharing the middle state, preserving the middle-to-future transition margins among the selected switchers. With 999 permutations, the upper-tail test asks whether knowledge of the starting state contributes to return beyond this conditional randomization, not whether return exists at all.
-
-There are four held-out triples for each of five monthly resolutions, giving twenty return tests in one temporal Holm family. For binary K2 the test is structurally degenerate: among switchers, the starting state is determined by the middle state. Within-middle-state permutation then leaves the return count unchanged. Its p-value of one is a property of this null and must not be interpreted as evidence that binary states lack temporal structure. It remains in the declared family rather than being removed after observing the results.
-
-\subsection{Reproduction Controls and Scope of Signal Evidence}
-The rebuilt annual features and scaled matrix reproduce their archived hashes. Thirteen of fifteen annual label arrays also match; K3 seed 494 and K6 seed 493 differ under the rerun runtime. All seed-492 references and K3 seed 493 match. Current tables use the complete rerun. Daily signals are reconstructed anew from all twelve validated sources using the exact same cohort; older-cohort Fourier or flow-magnitude results are not reused.
-
-\subsection{Full-Cohort Count Signals and Cross-Representation Checks}
-For every retained address, the twelve daily files are revalidated for address format, month, unique wallet--day rows and finite nonnegative integer counts. Cohort joins reconstruct 365 calendar-day counts with absent days set to zero. The annual sum must match the supplied count source exactly for each address. No pooled token amount enters this branch.
-
-Six time-domain features describe active-day fraction, longest active/inactive runs divided by 365, active/inactive switches divided by 364, peak-day count share and calendar-day count coefficient of variation. For frequency features, $\log(1+x_t)$ is centred within wallet, transformed by the real discrete Fourier transform, and normalized by total non-DC power. Seven summaries describe power at periods above 60 days, 14--60 days and below 14 days, weekly and monthly bands, peak-power share and spectral entropy. At 365 days, bands use discrete Fourier bins rather than exact calendar cycles. Zero-power signals remain in population accounting but are excluded from both signal partitions to keep comparison populations identical.
-
-Time and frequency representations are robust-scaled separately on the eligible population; only the unbounded count coefficient of variation is log-transformed beforehand. Each uses MiniBatchKMeans K2--K6, seeds 492--494, ten initializations, batch size 8,192 and 200 maximum iterations. Centroids are fitted on the same uniform 100,000-address sample and assign all eligible addresses; silhouette uses a separate fixed 3,000-address sample. Full-population ARI, NMI and matched agreement assess seed sensitivity and comparison with annual K2--K6 labels. These full-year comparisons are descriptive, not held-out prediction or independent ground truth.
-
-A separate uniform sample of 2,000 cohort addresses tests temporal ordering. Zero-power exclusions are counted. For each of 999 replicates, all 365 daily counts, including zeros, are permuted within each wallet, preserving its full count histogram. Three upper-tail tests concern sample-mean low-frequency share, peak-power share and negative entropy, with one three-test Holm correction. This null tests ordering beyond count magnitudes; it does not establish recurring cycles or wallet-specific periodicity.
+No single score answers all four questions. A high ARI across seeds means that an optimizer repeatedly finds similar assignments under the declared inputs; it does not imply invariance to a different sample or representation. A positive network excess means more same-label concentration than the selected null expects; changing what the null preserves changes the claim. Above-chance monthly persistence concerns the addresses observed in both months, whereas participation prediction asks whether they will be active again. Finally, signal overlap measures correspondence between descriptions, while a timing permutation tests the organization of counts within each signal. Reporting these quantities together makes the reasoning behind the behavioural interpretation explicit.
 
 \section{Results}
-\subsection{Overview of the Controlled Pipeline}
-The results support a qualified segmentation rather than a single universally preferred taxonomy. Cohort construction is complete, K3 is the most stable tested annual resolution, and the network comparison provides strong but non-unique support for its interaction alignment. Feature holdouts show that the annual partition depends on the representation. The frozen monthly models capture above-chance persistence, while K3--K6 exhibit conditional return beyond their corresponding nulls. Rebuilt full-year count signals add time/frequency partitions, same-cohort overlap and histogram-preserving timing tests. Findings are interpreted jointly without treating agreement between layers as proof of identity or causality.
-
-\subsection{Annual Resolution and Initialization Stability}
-K2 has the highest sampled silhouette, 0.357, but assigns 72.4--83.2\% of addresses to its largest group across seeds. K3 has a lower silhouette, 0.298, with considerably stronger seed agreement: ARI 0.908--0.971, NMI 0.853--0.944 and matched agreement 0.973--0.992. For the K3 reference, approximately 22.8\%, 69.6\% and 7.6\% of addresses occupy its three groups. Thus K3 is not selected because its internal separation score is maximal or because its cluster sizes are balanced.
-
-The higher-resolution results illustrate the cost of additional granularity. K4 has ARI 0.268--0.503 across seed pairs, K5 has 0.363--0.729 and K6 has 0.374--0.423. Different initializations therefore yield substantially different group memberships. Adding clusters can reduce the fitting objective but does not ensure a stable finer taxonomy. Table~\ref{tab:annual} and Figs.~\ref{fig:resolution}--\ref{fig:stability} make the compactness--stability tradeoff visible rather than selecting a resolution through one metric.
-
-\begin{table}[t]
-\centering\footnotesize
-\caption{Annual separation and full-population initialization agreement. Silhouette uses seed 492 and a fixed sample.}
-\label{tab:annual}
-\begin{tabular}{rrrr}
-\toprule
-$k$ & Silhouette & ARI range & Matched range \\
-\midrule
-2 & 0.357 & 0.573--0.790 & 0.891--0.948 \\
-3 & 0.298 & 0.908--0.971 & 0.973--0.992 \\
-4 & 0.227 & 0.268--0.503 & 0.562--0.794 \\
-5 & 0.204 & 0.363--0.729 & 0.554--0.895 \\
-6 & 0.176 & 0.374--0.423 & 0.593--0.655 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{figures_current/annual_model_resolution.pdf}
-\caption{Annual resolution diagnostics. Silhouette is evaluated on the same 5,000-wallet sample; cluster-size ranges reflect the three seeds.}
-\label{fig:resolution}\end{figure}
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{figures_current/annual_seed_stability.pdf}
-\caption{Full-population seed agreement. Points show means over the three seed pairs and bars their minimum and maximum.}
-\label{fig:stability}\end{figure}
-
-\subsection{Static K3 Behavioural Profiles}
-Table~\ref{tab:profiles} distinguishes sustained activity, distributed lower activity and short-span concentration. The latter two groups share a median of sixteen transfers but differ sharply in median span (173 versus seven days). Short-span activity has greater within-span density and peak concentration, whereas sustained activity extends across more of the year. These are descriptive profiles, not inferred controllers or applications.
+\subsection{Annual Resolution and Behavioural Profiles}
+K2 has the highest sampled silhouette (0.357), but its largest group contains 72.4--83.2\% of addresses across seeds. K3 silhouette is 0.298, with seed ARI 0.908--0.971, NMI 0.853--0.944 and matched agreement 0.973--0.992. K4--K6 seed agreement is weaker (Table~\ref{tab:annualrobustness}). Thus K3 is selected as a compact descriptive vocabulary rather than the maximizer of separation or balanced group sizes.
 
 \begin{table*}[t]
 \centering\footnotesize
-\caption{Annual K3 raw-unit medians for seed 492. Density and peak concentration are ratios; share is a percentage.}
+\caption{Annual initialization and training-subset sensitivity. Resampling uses twenty 80\% refits, fixed optimization seed and 50,000 evaluation addresses; the original full-cohort scaler is retained.}
+\label{tab:annualrobustness}
+\begin{tabular}{rcccc}
+\toprule
+$k$ & Silhouette & Seed ARI & Refit mean ARI & Refit range \\
+\midrule
+2 & 0.357 & 0.573--0.790 & 0.483 & 0.276--0.970 \\
+3 & 0.298 & 0.908--0.971 & 0.861 & 0.257--0.986 \\
+4 & 0.227 & 0.268--0.503 & 0.729 & 0.303--0.929 \\
+5 & 0.204 & 0.363--0.729 & 0.435 & 0.344--0.692 \\
+6 & 0.176 & 0.374--0.423 & 0.444 & 0.312--0.603 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Annual K3 seed-492 raw-unit medians. Share is a percentage; density and concentration are ratios.}
 \label{tab:profiles}
 \begin{tabular}{lrrrrrrr}
 \toprule
-Profile & Addresses & Share & Active days & Transfers & Span (days) & Density & Concentration \\
+Profile & Addresses & Share & Active days & Counts & Span (days) & Density & Concentration \\
 \midrule
 Sustained activity & 572,750 & 22.8 & 29 & 73 & 268 & 0.139 & 0.116 \\
 Distributed lower activity & 1,746,310 & 69.6 & 9 & 16 & 173 & 0.060 & 0.211 \\
@@ -261,215 +179,175 @@ Short-span concentrated & 189,937 & 7.6 & 4 & 16 & 7 & 0.750 & 0.500 \\
 \bottomrule
 \end{tabular}
 \end{table*}
+The two lower-count profiles share a median of sixteen incidences but differ sharply in span (173 versus seven days). Sustained activity extends across more of the year (Table~\ref{tab:profiles}). These names summarize overlapping distributions, not controllers or applications; interquartile ranges remain in the replication tables.
 
-The profile names do not identify an application or controller. Medians describe distributions with overlap, not every address in a group. Interquartile ranges remain in the replication tables. Figure~\ref{fig:profiles} uses a common display scale; Table~\ref{tab:profiles} preserves raw units.
+Matched K3 feature-family removals yield ARI 0.393 for activity level, 0.357 for persistence/concentration and 0.711 for directionality; matched agreement is 0.780, 0.595 and 0.909. Initialization stability therefore coexists with substantial representation dependence.
 
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{figures_current/k3_count_activity_profiles.pdf}
-\caption{Selected annual K3 median profiles. The display uses log(1+median) to put counts and ratios in one plot; the fit uses the documented feature-specific transformations.}
-\label{fig:profiles}\end{figure}
-
-\subsection{Feature Holdout Robustness}
-Matched-estimator holdouts show that seed stability should not be confused with representation invariance. Removing activity-level features produces ARI 0.393 and matched agreement 0.780. Removing directionality produces ARI 0.711 and agreement 0.909. Removing persistence/concentration produces ARI 0.357 and agreement 0.595. NMI provides a complementary comparison in Table~\ref{tab:holdouts}. All comparisons use the same full-feature seed-492 reference and retain scaling for the surviving columns.
-
-The persistence/concentration removal is consequential for an interpretation built around sustained and short-span activity, but activity removal also changes the partition substantially. The closer directionality holdout does not establish causal irrelevance. K3 summarizes the combined representation.
+The larger-subset K3 refits have mean ARI 0.861 and range 0.257--0.986, exposing variation missed by the three-seed check. The thirty smaller 100,000-address refits and cluster-level Jaccard distributions are reported in the supplement. On the shared algorithm-comparison sample, K3 ARI against the annual reference is 0.938--0.939 for batch k-means, 0.528--0.528 for the diagonal mixture and 0.785--0.946 under equal-family weighting. These outcomes qualify the interpretation as dependent on training addresses and estimator geometry.
 
 \begin{table}[t]
 \centering\footnotesize
-\caption{Matched-MiniBatchKMeans feature-family removals relative to full-feature annual K3.}
-\label{tab:holdouts}
-\begin{tabular}{lrrrr}
-\toprule
-Removed family & Columns & ARI & NMI & Matched \\
-\midrule
-Activity level & 5 & 0.393 & 0.425 & 0.780 \\
-Persistence/concentration & 4 & 0.357 & 0.446 & 0.595 \\
-Directionality & 7 & 0.711 & 0.609 & 0.909 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsection{Network Validation Across Annual Resolutions}
-The complete eligible subgraph contains 38,733,517 transfer rows, or 15.75\% of processed rows (monthly coverage 13.7--19.3\%). Each permutation experiment uses 200,000 shared eligible rows. For annual K3 seed 492, sampled same-label fractions range from 0.503 to 0.601 and null means from 0.415 to 0.482. Mean excess is 9.09 percentage points, with a 2.99--13.32-point monthly range. All twelve raw p-values reach the 9,999-permutation floor of 0.0001; Holm-adjusted values are 0.0084 (Table~\ref{tab:network}).
-
-\begin{table}[t]
-\centering\footnotesize
-\caption{Network support under the 84-test Holm family. Excess is averaged across months and expressed in percentage points.}
-\label{tab:network}
-\begin{tabular}{rrrrr}
-\toprule
-$k$ & Seed & Mean excess & Supported & Max. adjusted $p$  \\
-\midrule
-2 & 492 & -0.94 & 3/12 & 1.0000 \\
-3 & 492 & 9.09 & 12/12 & 0.0084 \\
-3 & 493 & 8.40 & 12/12 & 0.0084 \\
-3 & 494 & 9.54 & 12/12 & 0.0084 \\
-4 & 492 & 14.19 & 12/12 & 0.0084 \\
-5 & 492 & 8.35 & 12/12 & 0.0084 \\
-6 & 492 & -3.83 & 0/12 & 1.0000 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-K4 has stronger mean excess but weaker annual seed stability. K5 also has twelve supported months, whereas K2 has three and K6 none under the upper-tail test. Negative excess or nonsignificance does not establish absence of every form of structure. Resolution therefore changes this diagnostic without providing a universal ranking.
-
-\subsection{Network Sensitivity to K3 Initialization}
-All three K3 seeds have twelve supported months under the same 84-test correction. Mean excess is 8.40 points for seed 493 and 9.54 for seed 494, versus 9.09 for seed 492. Figure~\ref{fig:networkcomparison} compares their trajectories on shared interactions, isolating label variation from edge-sample variation.
-
-\begin{figure*}[t]\centering
-\includegraphics[width=0.95\textwidth]{figures_current/network_comparison_overview.pdf}
-\caption{Annual network excess on shared monthly samples. Left: K2--K6 at seed 492. Right: the three K3 initializations. The null fixes transfer rows and shuffles endpoint-wallet labels; negative differences are descriptive under the declared upper-tail test.}
-\label{fig:networkcomparison}\end{figure*}
-
-\subsection{Held-Out Monthly Transitions}
-Held-out adjacent pairs contain 676,741--786,661 addresses active in both months. Monthly K3 persistence is 0.639--0.702 against chance agreement of 0.491--0.539, giving kappa 0.292--0.353 (Table~\ref{tab:persistence}). These are activity-conditioned rates, not full-cohort persistence. Pooled diagonal probabilities are 0.775, 0.486 and 0.526; state 1 transitions to state 0 with probability approximately 0.468. These IDs belong to the frozen monthly model and do not identify annual roles.
-
-\begin{table}[t]
-\centering\footnotesize
-\caption{Held-out monthly persistence, marginal chance and chance-adjusted agreement across five adjacent pairs.}
-\label{tab:persistence}
+\caption{Estimator and weighting sensitivity on common training and evaluation samples. ARI ranges compare each fit with its annual reference over three seeds.}
+\label{tab:estimatorcomparison}
 \begin{tabular}{rccc}
 \toprule
-$k$ & Persistence & Chance & $\kappa$ \\
+$k$ & Batch k-means & Diagonal GMM & Equal families \\
 \midrule
-2 & 0.797--0.831 & 0.653--0.693 & 0.415--0.448 \\
-3 & 0.639--0.702 & 0.491--0.539 & 0.292--0.353 \\
-4 & 0.521--0.560 & 0.379--0.406 & 0.226--0.258 \\
-5 & 0.475--0.487 & 0.328--0.342 & 0.202--0.229 \\
-6 & 0.427--0.439 & 0.264--0.290 & 0.195--0.221 \\
-\bottomrule
-\end{tabular}
-\end{table}
-\begin{figure}[t]\centering
-\includegraphics[width=0.92\columnwidth]{figures_current/k3_heldout_transition_matrix.pdf}
-\caption{Pooled held-out transition probabilities for frozen monthly K3. States are assigned only to active wallet-months; monthly and annual IDs are distinct.}
-\label{fig:monthlymatrix}\end{figure}
-
-\subsection{Monthly Resolution Comparison}
-Monthly K2 has the highest raw persistence, 0.797--0.831, but also the highest chance baseline, 0.653--0.693. Its kappa range, 0.415--0.448, is larger than that of K3. The monthly analysis therefore does not establish K3 as an optimal temporal resolution. K3 is the main illustration because it provides a compact state vocabulary alongside the annual study, while the full K2--K6 comparison is retained to expose the effects of granularity. Choosing a monthly resolution requires its own application-dependent objective.
-
-Across K4--K6, raw persistence decreases with granularity, but every adjacent pair remains above marginal chance. Figure~\ref{fig:monthlyresolutions} shows that the excess-persistence curves are closer than raw fractions suggest. A finer partition can expose changes that a coarser one combines.
-
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{figures_current/monthly_resolution_comparison.pdf}
-\caption{Held-out persistence above marginal chance for independently trained monthly K2--K6 models on shared count-only inputs. The horizontal axis enumerates July--August through November--December.}
-\label{fig:monthlyresolutions}\end{figure}
-
-\subsection{Conditional Two-Step Return Behaviour}
-Among first-step switchers, K3 observed return ranges from 0.409 to 0.471 across the four held-out triples. The conditional null means range from 0.383 to 0.448. The excess is approximately 1.88--2.58 percentage points. All four raw permutation p-values are 0.001 and all four adjusted values are 0.020 after correction across the twenty temporal tests. Table~\ref{tab:returns} gives the K3 triple-specific denominators and effects so that statistical support is not mistaken for a large unconditional return probability.
-
-\begin{table}[t]
-\centering\footnotesize
-\caption{Monthly K3 conditional returns among first-step switchers. Adjusted p-values use the full twenty-test temporal family.}
-\label{tab:returns}
-\begin{tabular}{lrrrrr}
-\toprule
-Triple & Switchers & Observed & Null & Excess (pp) & Adj. $p$ \\
-\midrule
-Jul--Sep & 159,677 & 0.419 & 0.400 & 1.88 & 0.020 \\
-Aug--Oct & 178,375 & 0.471 & 0.448 & 2.27 & 0.020 \\
-Sep--Nov & 193,027 & 0.409 & 0.383 & 2.58 & 0.020 \\
-Oct--Dec & 191,976 & 0.459 & 0.437 & 2.23 & 0.020 \\
+3 & 0.938--0.939 & 0.528--0.528 & 0.785--0.946 \\
+4 & 0.926--0.928 & 0.396--0.396 & 0.810--0.894 \\
+5 & 0.361--0.362 & 0.336--0.336 & 0.361--0.499 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-K4--K6 also have four supported return triples each. Their excess ranges are approximately 3.61--5.07, 4.16--5.81 and 4.98--6.15 percentage points, respectively. These larger effects are conditional on each model's own switcher set and state definitions. They do not form a direct same-population ranking of temporal predictive performance. In particular, finer partitions change both the opportunity to switch and the meaning of returning, even though the underlying wallet-month feature inputs are shared.
+The estimator comparison in Table~\ref{tab:estimatorcomparison} helps separate repeatability within one algorithm from dependence on its assumptions. For K3 and K4, batch k-means closely reproduces the reference on the shared evaluation addresses, while the diagonal mixture yields substantially different assignments. K5 agreement is lower across these alternatives. None of these comparisons identifies which partition is true: the mixture changes cluster geometry, and family weighting changes the distance assigned to related coordinates. The practical implication is that the profile names should accompany a declared representation and estimator rather than circulate as algorithm-independent wallet categories.
+
+\subsection{Network Alignment and Stronger Controls}
+The complete eligible subgraph contains 38,733,517 rows, or 15.75\% of processed transfers (monthly coverage 13.7--19.3\%). In the original 200,000-event samples, K3 seed 492 has mean excess 9.09 percentage points and twelve supported months under the original 84-test family; the other K3 seeds have mean excess 8.40 and 9.54 points and twelve supported months each. K4 has greater mean excess (14.19 points), while K5 has 8.35; K2 and K6 have negative mean excess. This is not a universal resolution ranking.
+
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Common non-self event samples: mean excess in percentage points under unrestricted and activity-stratified nulls. Support and maximum p-value use the stratified null and combined 300-test Holm correction.}
+\label{tab:conditionednetwork}
+\begin{tabular}{lrrrr}
+\toprule
+Partition & Unrestricted & Stratified & Supported & Max. adjusted $p$ \\
+\midrule
+Annual K3 & 8.90 & -0.88 & 1/12 & 1.0000 \\
+Annual K4 & 12.96 & -0.47 & 1/12 & 1.0000 \\
+Annual K5 & 9.48 & -0.11 & 1/12 & 1.0000 \\
+Count terciles & 17.74 & -0.55 & 0/12 & 1.0000 \\
+Span/activity rule & 8.48 & -0.89 & 1/12 & 1.0000 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+After activity stratification, non-self K3 mean excess is -0.88 points with 1/12 supported months (Table~\ref{tab:conditionednetwork}). The count-tercile and span/activity baselines have ARI 0.264 and 0.541 with K3. They test whether readily interpretable rules also capture graph alignment. Baseline group shares differ from K3, so the table cannot establish predictive or semantic superiority from excess alone.
 
 \begin{table}[t]
 \centering\footnotesize
-\caption{Monthly return comparisons. The binary K2 null is structurally constant, so its p-value is uninformative.}
-\label{tab:returnsummary}
-\begin{tabular}{rcrr}
+\caption{K3 graph sensitivity under activity-stratified randomization; excess is in percentage points and support uses the combined 300-test family.}
+\label{tab:graphsensitivity}
+\begin{tabular}{lrr}
 \toprule
-$k$ & Return excess (pp) & Supported & Max. adj. $p$ \\
+Graph variant & Mean excess & Supported \\
 \midrule
-2 & Degenerate & 0/4 & 1.000 \\
-3 & 1.88--2.58 & 4/4 & 0.020 \\
-4 & 3.61--5.07 & 4/4 & 0.020 \\
-5 & 4.16--5.81 & 4/4 & 0.020 \\
-6 & 4.98--6.15 & 4/4 & 0.020 \\
+All events & -0.97 & 1/12 \\
+Non-self events & -0.88 & 1/12 \\
+Unique directed pairs & -2.35 & 0/12 \\
+Without top token & -0.72 & 0/12 \\
+Without top 1\% endpoints & 3.04 & 12/12 \\
 \bottomrule
 \end{tabular}
 \end{table}
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{figures_current/conditional_return_comparison.pdf}
-\caption{Conditional return excess for monthly K3--K6 over four held-out triples. K2 is omitted from the curves because its within-middle-state return null is structurally constant.}
-\label{fig:returncomparison}\end{figure}
+Removing the most active 1\% of endpoints yields mean activity-stratified excess 3.04 points and 12/12 supported months, whereas unique directed pairs have 0/12 supported months. This contrast shows that graph composition and transfer multiplicity materially change the association (Table~\ref{tab:graphsensitivity}). It does not isolate a causal hub effect. Monthly coverage, exact excluded-token identifiers and both nulls are retained in the supplement and replication tables.
 
-For K2, every permutation preserves the return count, yielding p=1. This binary-switcher degeneracy is a limitation of the null, not negative evidence about temporal organization.
+There is also a substantive difference between repeated transfers and distinct relationships. Event sampling gives more influence to address pairs that transact repeatedly, whereas the unique-pair variant gives each retained directed pair one contribution before sampling. Consequently, an event-based positive result could describe recurrent traffic without generalizing to a broader set of counterparties. Dominant-token exclusion asks whether a pooled result depends on one transfer environment, while endpoint exclusion asks how the retained population affects alignment. These are complementary sensitivity questions, each with its own denominator. Their disagreement is informative about what the aggregate graph result summarizes.
 
-\subsection{Rebuilt Signal and Cross-Representation Evidence}
-The daily reconstruction covers all 2,508,997 cohort addresses and reconciles every annual count total exactly. Of these, 2,508,997 have positive non-DC power; 0 constant signals are excluded from the signal partitions. Table~\ref{tab:signalresolution} reports all candidate resolutions rather than selecting a signal taxonomy from one score.
+The simple baselines sharpen this interpretation. Count terciles show greater unrestricted excess than annual K3 on the common samples, even though they use a single activity quantity. Their advantage disappears under the stratified test. This does not make count terciles a superior behavioural taxonomy; it demonstrates why unrestricted graph alignment alone cannot establish the added value of a multivariate segmentation. The span/activity rule is closer to K3 in full-cohort ARI, yet its controlled graph support is also limited. Together, these controls connect the original descriptive objective to the possibility that a simpler representation explains part of the observed structure.
 
+\subsection{Monthly Persistence, Return and Inactivity}
+Held-out K3 adjacent pairs contain 676,741--786,661 addresses active in both months. Persistence is 0.639--0.702 against marginal chance 0.491--0.539, giving kappa 0.292--0.353. Monthly K2 has larger kappa, so the temporal branch does not select K3 as an optimal resolution. Monthly IDs have no shared semantics with annual cluster numbers.
+
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Frozen monthly models: active-only persistence and kappa; conditional return excess in percentage points. Return support uses twenty-test Holm correction. K2 return p=1 is structurally uninformative.}
+\label{tab:monthlycomparison}
+\begin{tabular}{rcccc}
+\toprule
+$k$ & Persistence & $\kappa$ & Return excess & Supported \\
+\midrule
+2 & 0.797--0.831 & 0.415--0.448 & Degenerate & -- \\
+3 & 0.639--0.702 & 0.292--0.353 & 1.88--2.58 & 4/4 \\
+4 & 0.521--0.560 & 0.226--0.258 & 3.61--5.07 & 4/4 \\
+5 & 0.475--0.487 & 0.202--0.229 & 4.16--5.81 & 4/4 \\
+6 & 0.427--0.439 & 0.195--0.221 & 4.98--6.15 & 4/4 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+Among first-step switchers active across each triple, K3 observed return is 0.409--0.471 against null means 0.383--0.448. Excess is only 1.88--2.58 percentage points despite corrected p=0.020 for all four triples. K4--K6 also have four supported triples each (Table~\ref{tab:monthlycomparison}), but each resolution changes the switcher population and the meaning of return.
+
+Including inactivity, next-month activity among currently active addresses ranges from 0.631--0.735. It ranges from 0.161--0.331 among previously observed but currently inactive addresses, and from 0.243--1.000 among those not yet observed active in 2022. Active-only persistence omits these distinct participation paths; the complete inactive-inclusive transition matrix is supplied separately.
+
+Persistence and return describe different trajectories. A wallet that stays in one state contributes to adjacent-month persistence but is excluded from the first-switcher return population. A wallet that changes state and then returns contributes to the latter statistic only if it remains active throughout the triple. Neither statistic records an inactive month as an ordinary behavioural centroid. The inactive-inclusive view therefore provides necessary context: an apparent stable active population can coexist with substantial interruption and later reactivation among the full retained cohort. These distinctions matter when using the vocabulary to monitor changing ecosystem composition.
+
+\subsection{Participation Baselines and Predictive Limits}
 \begin{table}[t]
 \centering\footnotesize
-\caption{Corrected-cohort signal partitions. Silhouette uses seed 492; ARI ranges cover three full-population seed pairs. Centroids use 100,000 sampled addresses.}
-\label{tab:signalresolution}
-\begin{tabular}{llrr}
+\caption{Later-period next-month participation: pooled Brier/log loss (lower is better) and mean monthly AUC (higher is better). These are early-period monthly states, not annual roles.}
+\label{tab:participationprediction}
+\begin{tabular}{lrrr}
 \toprule
-Representation & $k$ & Silhouette & Seed ARI range \\
+Model & Brier & Log loss & AUC \\
 \midrule
-Time & 2 & 0.455 & 0.737--0.989 \\
-Time & 3 & 0.370 & 0.197--0.639 \\
-Time & 4 & 0.289 & 0.616--0.792 \\
-Time & 5 & 0.188 & 0.216--0.432 \\
-Time & 6 & 0.273 & 0.236--0.429 \\
-Frequency & 2 & 0.691 & 0.814--0.952 \\
-Frequency & 3 & 0.474 & 0.882--0.934 \\
-Frequency & 4 & 0.379 & 0.507--0.780 \\
-Frequency & 5 & 0.196 & 0.468--0.723 \\
-Frequency & 6 & 0.248 & 0.293--0.628 \\
-\bottomrule\end{tabular}\end{table}
+Constant prevalence & 0.2228 & 0.6377 & 0.5000 \\
+Two-feature logistic & 0.2081 & 0.6016 & 0.6616 \\
+Six-feature logistic & 0.2054 & 0.5940 & 0.6681 \\
+Six-feature boosting & 0.2048 & 0.5916 & 0.6730 \\
+K3 state only & 0.2122 & 0.6123 & 0.6122 \\
+Six features + K3 & 0.2053 & 0.5940 & 0.6686 \\
+\bottomrule
+\end{tabular}
+\end{table}
+K3 state-only predictions improve on constant prevalence in Brier score (0.2122 versus 0.2228), but the two-feature activity baseline scores 0.2081 and nonlinear count baseline 0.2048. A compact state vocabulary therefore does not demonstrate predictive superiority over the underlying activity measurements (Table~\ref{tab:participationprediction}).
 
-Frequency K3 has seed ARI 0.882--0.934, whereas time-domain K3 has 0.197--0.639. This disagreement limits a common-taxonomy interpretation; the K3 comparisons below illustrate overlap rather than selecting a shared optimum.
+Adding K3 indicators to six-feature logistic regression changes pooled Brier score by -0.000039 (paired wallet-bootstrap 95\% interval -0.000047 to -0.000031) and log loss by 0.000078 (0.000057 to 0.000099). These small, metric-dependent changes concern a deterministic recoding of the same features. Full K2--K6 and supervised-training-excluded subgroup scores are in the supplement; the task remains conditional on present activity and retrospective cohort membership.
 
-For the K3 illustration, annual--time agreement is ARI 0.353 and NMI 0.263; annual--frequency agreement is ARI 0.250 and NMI 0.116. Time--frequency ARI is 0.251. Figure~\ref{fig:signaloverlap} shows row-normalized overlap. The 75 comparison records cover every annual--signal K2--K6 combination and every time--frequency combination. Equal cluster counts do not imply equal semantics or independent validation.
+\subsection{Time/Frequency Agreement and Timing Controls}
+The reconstruction includes all 2,508,997 cohort addresses, 41,552,909 wallet-day rows and 189,526,795 count incidences. Every annual total reconciles, and all addresses have positive non-DC power. Frequency K3 seed ARI is 0.882--0.934, while time-domain K3 is 0.197--0.639. Annual--time K3 agreement is ARI 0.353/NMI 0.263; annual--frequency agreement is ARI 0.250/NMI 0.116. Time--frequency ARI is 0.251. These overlaps support related but distinct descriptions rather than one common taxonomy.
 
 \begin{figure*}[t]\centering
-\includegraphics[width=0.9\textwidth]{figures_current/signal_cross_representation.pdf}
-\caption{Annual K3 versus independently fitted time-domain and frequency-domain K3 clusters on the same positive-power population. Each row sums to one; cluster numbers are arbitrary.}
+\includegraphics[width=0.82\textwidth]{figures_current/signal_cross_representation.pdf}
+\caption{Annual K3 versus independently fitted time-domain and frequency-domain K3 on the same population. Rows sum to one; numerical labels are arbitrary.}
 \label{fig:signaloverlap}\end{figure*}
 
-\begin{table}[t]\centering\footnotesize
-\caption{Within-wallet timing surrogates on the corrected-cohort sample; 999 permutations and one three-test Holm family.}
-\label{tab:signaltiming}
-\begin{tabular}{lrrr}\toprule
-Statistic & Observed & Null mean & Adj. $p$ \\
-\midrule
-Low-frequency share & 0.1048 & 0.0330 & 0.003 \\
-Peak-power share & 0.0420 & 0.0261 & 0.003 \\
-Negative entropy & -6.8173 & -6.9717 & 0.003 \\
-\bottomrule\end{tabular}\end{table}
+Original complete-day timing permutations support all three sample-mean statistics at Holm p=0.003. The extension tests local-order-preserving block nulls (Table~\ref{tab:blocktimingcompact}); all nine individual tests and K2--K6 signal diagnostics are supplied in the supplement.
 
-The timing sample retains 2,000 positive-power addresses after 0 exclusions. All three summaries exceed their respective histogram-preserving nulls after Holm correction (Table~\ref{tab:signaltiming}). Effects concern sample-mean organization of daily activity; they do not establish repeated cycles, individual significance, or a common periodic wallet type.
+\begin{table}[t]
+\centering\footnotesize
+\caption{Timing sensitivity: Holm-adjusted p-values across nine tests, 999 permutations per null on the same 2,000-address sample.}
+\label{tab:blocktimingcompact}
+\begin{tabular}{rrrr}
+\toprule
+Block days & Low frequency & Peak share & Neg. entropy \\
+\midrule
+1 & 0.009 & 0.009 & 0.009 \\
+7 & 0.009 & 0.009 & 0.009 \\
+30 & 0.009 & 0.009 & 0.009 \\
+\bottomrule
+\end{tabular}
+\end{table}
+Observed mean low-frequency share is 0.1048; null means rise from 0.0330 under daily permutation to 0.0562 and 0.0887 under seven- and thirty-day blocks. The corresponding excess falls from 0.0718 to 0.0161, showing that preservation of local episodes explains part of the original effect. The tests concern sample-mean temporal arrangement conditional on daily-count histograms. Single episodes and long bursts can generate concentrated spectra; neither cross-representation overlap nor timing significance establishes repeated cycles, individual periodicity or independently validated social roles.
 
 \section{Discussion}
-\subsection{What Makes the Annual K3 Interpretation Defensible}
-K3 combines strong annual seed agreement, interpretable duration/concentration profiles and above-null network alignment across three seeds. These properties support a practical vocabulary within the chosen representation. K4 has greater network excess but lower seed stability, and feature removal substantially changes K3. Thus K3 is a working summary, not an estimate of three intrinsic wallet types.
+\subsection{From Transaction Histories to a Population Description}
+The motivating problem is not a lack of observable records, but the difficulty of interpreting them collectively. The annual profiles illustrate what a compact vocabulary contributes: two lower-count groups have the same median count yet sharply different participation spans, while sustained activity identifies a more extended pattern. A single total would combine these histories. The temporal views then show why a year-level description is incomplete: current activity can continue, stop or resume, and the daily arrangement contains information that annual accumulation removes. The framework makes these distinctions available within one explicitly defined population.
 
-\subsection{Annual Roles and Monthly States Answer Different Questions}
-Annual roles, full-year signal clusters and frozen monthly states answer different questions. Cross-representation agreement measures overlap after fitting on the same year; it is descriptive and does not establish external validity. Monthly evaluation separates January--June fitting from July--December assignment, but the population remains retrospectively selected at year-end. Numerical cluster IDs have no common meaning across these models.
+This contribution is descriptive before it is operational. An analyst can use the profiles to formulate questions about short episodes, sustained participation or changing state composition. Moving from those questions to anomaly detection, simulation or targeted interventions would require a task-specific evaluation and independently justified outcomes. The participation experiment provides one such bounded check and prevents a readable segmentation from being treated as evidence of broad practical superiority. Its result is useful precisely because it separates compression of behaviour from improvement over the activity variables being compressed.
 
-\subsection{Representation and Population Boundaries}
-Counts represent wallet-record incidence, not comparable economic value or distinct Ethereum transactions. Pooled token amounts are excluded, including from the rebuilt signal branch. Directional day flags retain the preprocessing limitations described in Methodology. The year-end code-free cohort is a subset of a supplied feature universe, not all Ethereum users, and does not establish continuous EOA identity.
+\subsection{What the Annual Segmentation Can Summarize}
+The K3 profiles distinguish sustained activity, distributed lower activity and short-span concentration within this representation. Those contrasts are useful descriptions, but strong agreement across three optimizer seeds is narrower than stability to training-address selection and induced input order. Resampling, feature removal and estimator comparisons show that the partition is not invariant. Simple rules also capture part of its structure. Accordingly, K3 is retained as an interpretable reference vocabulary rather than a uniquely validated behavioural taxonomy.
 
-\subsection{Network Dependence and the Meaning of External Evidence}
-Activity-derived labels can correlate with endpoint degree and application exposure. The fixed-graph wallet-label null breaks those associations, so positive excess establishes alignment under that randomization rather than a causal interaction mechanism. Degree-stratified nulls and token-specific analyses remain complementary checks.
+\subsection{Why Network Controls Change the Interpretation}
+Activity-derived labels can correlate with endpoint activity. Unrestricted permutations break that association, whereas the stratified null retains part of it. The controlled comparison in Table~\ref{tab:conditionednetwork} therefore tests a stronger question than the original positive network result. Loss of support in most months narrows the unrestricted interpretation, while support after hub exclusion shows that the relation depends on the retained interaction population (Table~\ref{tab:graphsensitivity}). Neither result implies that all label--network relationships are absent or isolates a causal hub effect. Negative excess is descriptive under the upper-tail test, not a confirmed lower-tail result. Logarithmic bins, shared token exposure and within-bin heterogeneity still limit adjustment.
 
-\subsection{Temporal Conditioning and Statistical Significance}
-Monthly persistence conditions on activity in both months; returns additionally condition on a first-step switch and activity in all three months. K3 return excess is approximately two percentage points despite corrected significance. The signal null conditions on each sampled wallet's daily-count histogram and tests the ordering of activity. Long bursts and single episodes can generate low-frequency power without repeated cycles. Neither test estimates unconditional future behaviour or permanent roles.
+\subsection{Temporal Structure and Practical Usefulness}
+Annual roles, signal partitions and monthly states have different meanings. Active-only persistence omits inactivity and reactivation, while conditional return further selects first-step switchers. K3 return excess is approximately two percentage points despite corrected significance. In the separate prediction task, state-only rates improve on constant prevalence but do not outperform activity-feature baselines; K3 indicators add only small, metric-dependent changes. The study therefore demonstrates temporal organization without establishing predictive superiority of the segmentation. Block-null timing effects concern arrangement beyond partially preserved local episodes, not recurring cycles or human behavioural mechanisms.
 
-\subsection{Reproducibility and Remaining Research Directions}
-Source hashes, membership, row order, preprocessing, models and output hashes are recorded. Daily signal totals are checked against the annual count source for every cohort address. Seed perturbations still cover only a narrow form of uncertainty; additional years, resampling, competing algorithms and externally labelled outcomes remain necessary for broader validation. The computational-social-systems contribution is an auditable measurement framework for address-level participation, not identification of people or social mechanisms.
+\subsection{How the Validation Layers Fit Together}
+The layers support a qualified answer to the research question. Annual K3 is readable and repeats well across the original initializations, but its sensitivity to training subsets and feature families limits claims of invariant membership. Network alignment is visible under an unrestricted shuffle, but activity conditioning removes most monthly support in the main non-self comparison. Monthly persistence and return reveal structured movement within selected active populations, while inactivity changes the population being described. Signal comparisons reveal partial correspondence and temporal ordering under declared surrogates. Each result contributes an answer with a different scope; combining them does not erase those scopes.
+
+This also explains why the final synthesis in Fig.~\ref{fig:pipeline} is an interpretation rather than a new fitted classifier. There is no learned fusion score that turns the annual, monthly, network and signal outputs into verified identities. Agreement can strengthen a particular descriptive claim, while disagreement identifies the conditions under which that claim fails. For example, stronger support after endpoint exclusion locates a graph-dependent association, but does not repair annual membership sensitivity or establish signal periodicity. Keeping those conclusions separate makes the integrated framework more useful for designing the next empirical test.
+
+\subsection{Population Scope and Reproducibility}
+The cohort is conditional on the observed at-least-ten-count candidate rule and one year-end code observation, not every Ethereum user or continuous EOA identity. Counts are record incidences, and amount-derived directional flags retain preprocessing limitations. Data shared across validation views prevent interpreting them as independent replications. Address-level resampling and bootstrap intervals do not capture all network dependence, cohort-selection uncertainty or between-year variation. The documented controls improve auditability, but additional years, independent raw-transfer reconstruction and independently labelled outcomes remain necessary for broader social-system interpretation. Reproduction checks establish traceability of measurements and summaries, not semantic ground truth.
 
 \section{Conclusion}
-This study examines Ethereum wallet segmentation as a hypothesis requiring layered validation. A complete historical scan defines 2,508,997 year-end code-free addresses, and a controlled count/activity/direction representation supports a reproducible annual K3 working summary. Matched feature holdouts show substantial dependence on activity and persistence/concentration measurements. Shared-sample network comparisons provide corrected support for K3, K4 and K5 across all twelve months, with K4 displaying stronger mean alignment but weaker initialization stability. Separately trained monthly K2--K6 models show above-chance persistence, and K3--K6 exhibit conditional two-step return after the declared temporal correction. The binary K2 return null is explicitly uninformative.
+This study treats Ethereum wallet segmentation as a behavioural description requiring explicit validation. A complete historical scan defines 2,508,997 year-end code-free addresses, and a sixteen-feature count/activity/direction representation yields an interpretable annual K3 working summary. Its strong original seed agreement is qualified by training-subset variability, feature dependence and disagreement with alternative estimator geometry. Unrestricted network alignment does not by itself establish structure beyond activity; the stratified null and simple baselines materially narrow that interpretation.
 
-The rebuilt time/frequency branch reconciles daily counts across the full cohort and measures cross-representation overlap and timing-null effects. The contribution is a transparent description of a bounded population, not an identity-recovery method or universal taxonomy. Annual roles, signal partitions, monthly states and network alignment provide distinct evidence. Retaining their agreement, disagreement and inferential boundaries makes the segmentation auditable.
+Monthly persistence, inactivity, conditional return and later-period participation describe different aspects of changing activity. Prediction baselines prevent an interpretable state vocabulary from being mistaken for demonstrated predictive superiority. Rebuilt daily signals add cross-representation and block-null timing comparisons without identifying permanent rhythms. The resulting framework makes both support and limitations reproducible. Its empirical contribution concerns observable participation within one defined ERC-20 population and year; broader social, economic and cross-year interpretations require additional evidence.
 
 \section*{Code and Data Availability}
-The project repository is \url{https://github.com/sudentrs/ethereum-wallet-behaviour-segmentation}. The accompanying replication record contains cohort membership, compact annual and monthly tables, network summaries, figures, source validation records and provenance manifests. Raw transfer files and large derived matrices are external to Git. The underlying ERC-20 Trading 2022 data are available from Harvard Dataverse \cite{somin2025erc2022,somin2025dataset}. All empirical claims use the controlled year-end pipeline; older experiments serve only as provenance.
+Project code is maintained at \url{https://github.com/sudentrs/ethereum-wallet-behaviour-segmentation}. This revision is accompanied by a replication package containing analysis scripts, compact comparison tables, source-validation records and provenance manifests; the manuscript completion receipt identifies the exact revision. Cohort membership, raw transfer files and large derived matrices are external artifacts documented by the reproduction instructions and checksums. The underlying ERC-20 Trading 2022 data are available from Harvard Dataverse \cite{somin2025erc2022,somin2025dataset}. Older experiments are retained as historical provenance and are not substituted for corrected-cohort results.
 
 \begin{thebibliography}{99}
 \bibitem{victor2020address} F. Victor, ``Address clustering heuristics for Ethereum,'' in \emph{Financial Cryptography and Data Security}, LNCS, vol. 12059, pp. 617--633, 2020.
@@ -478,14 +356,14 @@ The project repository is \url{https://github.com/sudentrs/ethereum-wallet-behav
 \bibitem{halkidi2001validation} M. Halkidi, Y. Batistakis, and M. Vazirgiannis, ``On clustering validation techniques,'' \emph{Journal of Intelligent Information Systems}, vol. 17, no. 2--3, pp. 107--145, 2001.
 \bibitem{liu2022stability} T. Liu, H. Yu, and R. H. Blair, ``Stability estimation for unsupervised clustering: A review,'' \emph{WIREs Computational Statistics}, vol. 14, no. 6, art. e1575, 2022.
 \bibitem{agarwal2021temporal} R. Agarwal, S. Barve, and S. K. Shukla, ``Detecting malicious accounts in permissionless blockchains using temporal graph properties,'' \emph{Applied Network Science}, vol. 6, art. 9, 2021, doi: 10.1007/s41109-020-00338-3.
+\bibitem{somin2025erc2022} S. Somin, ``ERC-20 Trading 2022,'' Harvard Dataverse, 2025, doi: 10.7910/DVN/5P82QC.
+\bibitem{somin2025dataset} S. Somin, Y. Altshuler, and A. Pentland, ``Crypto-asset trading on top of Ethereum Blockchain comprehensive dataset,'' \emph{Scientific Data}, vol. 12, art. 1407, 2025, doi: 10.1038/s41597-025-05662-w.
 \bibitem{tedge2020} D. Lin, J. Wu, Q. Yuan, and Z. Zheng, ``T-EDGE: Temporal weighted multidigraph embedding for Ethereum transaction network analysis,'' \emph{Frontiers in Physics}, vol. 8, art. 204, 2020.
 \bibitem{liang2018evolutionary} J. Liang, L. Li, and D. Zeng, ``Evolutionary dynamics of cryptocurrency transaction networks: An empirical study,'' \emph{PLOS ONE}, vol. 13, no. 8, art. e0202202, 2018.
 \bibitem{hubert1985partitions} L. Hubert and P. Arabie, ``Comparing partitions,'' \emph{Journal of Classification}, vol. 2, pp. 193--218, 1985.
 \bibitem{vinh2010information} N. X. Vinh, J. Epps, and J. Bailey, ``Information theoretic measures for clusterings comparison: Variants, properties, normalization and correction for chance,'' \emph{Journal of Machine Learning Research}, vol. 11, pp. 2837--2854, 2010.
 \bibitem{kuhn1955hungarian} H. W. Kuhn, ``The Hungarian method for the assignment problem,'' \emph{Naval Research Logistics Quarterly}, vol. 2, no. 1--2, pp. 83--97, 1955.
 \bibitem{rousseeuw1987silhouettes} P. J. Rousseeuw, ``Silhouettes: A graphical aid to the interpretation and validation of cluster analysis,'' \emph{Journal of Computational and Applied Mathematics}, vol. 20, pp. 53--65, 1987.
-\bibitem{somin2025erc2022} S. Somin, ``ERC-20 Trading 2022,'' Harvard Dataverse, 2025, doi: 10.7910/DVN/5P82QC.
-\bibitem{somin2025dataset} S. Somin, Y. Altshuler, and A. Pentland, ``Crypto-asset trading on top of Ethereum Blockchain comprehensive dataset,'' \emph{Scientific Data}, vol. 12, art. 1407, 2025, doi: 10.1038/s41597-025-05662-w.
 \bibitem{holm1979sequential} S. Holm, ``A simple sequentially rejective multiple test procedure,'' \emph{Scandinavian Journal of Statistics}, vol. 6, no. 2, pp. 65--70, 1979.
 \bibitem{cohen1960agreement} J. Cohen, ``A coefficient of agreement for nominal scales,'' \emph{Educational and Psychological Measurement}, vol. 20, no. 1, pp. 37--46, 1960.
 \end{thebibliography}

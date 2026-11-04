@@ -1,0 +1,27 @@
+{
+  "complete": true,
+  "stage": "spectral",
+  "settings": {
+    "permutations": 999,
+    "sample": 2000,
+    "block_days": [
+      1,
+      7,
+      30
+    ],
+    "holm_tests": 9,
+    "limitation": "Block shuffles partially retain local ordering; no formal identification of periodic cycles"
+  },
+  "inputs": {
+    "data\\interim\\year_end_2022_signals\\timing_sample_indices.npy": "b82d4578e58305745674feb748b1f866973772c801e837dfcb05426f2e049433",
+    "data\\interim\\year_end_2022_signals\\features_complete.json": "55f160085e6a1d4da92a2ddb2f96fa42e67cf5b3b47de04b79696326624c7e5d"
+  },
+  "outputs": {
+    "spectral_block_tests.csv": "6cd5ad745d364f60f1fd50f28a603a48540f2f7c13cc5b6adedb7813b1ba5755",
+    "spectral_null_replicates.npz": "6d95607a82150c4e3c4a52633c80691a99ade233a7fca9ee06bcaa334c924b96"
+  },
+  "script_sha256": "041ef8363e78b73bd73751fe91c6819492dbb5670a709330ac480abc74549b7c",
+  "python": "3.12.3",
+  "numpy": "1.26.4",
+  "sklearn": "1.8.0"
+}

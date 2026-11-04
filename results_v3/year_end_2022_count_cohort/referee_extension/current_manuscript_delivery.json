@@ -1,0 +1,13 @@
+{
+  "complete": true,
+  "manuscript": "overleaf/main.tex",
+  "manuscript_sha256": "ed82f0cd3b01c23d5ddc855f435ecb584fe7442b58035cb5729fb33d98b2565d",
+  "supplementary_sha256": "85a910f057f131774579c98edbe374476e2905aedda9c7444b4e4749dbf03d4f",
+  "methodology_figure": "overleaf/figures_current/ethereum_wallet_behaviour_methodology.png",
+  "methodology_sha256": "b097ca6b8e411f03de6338712a9906a39b54d50256d13149fe68ae9e63d3d486",
+  "latex_compiled": true,
+  "page_count_verified": true,
+  "pages": 10,
+  "verification": "Desktop built-in compiler succeeded with an end-of-document ten-page assertion on the identical source in output/guncel_makale_2026-11-05/main.tex.",
+  "analysis_receipt": "revision_completion.json"
+}
