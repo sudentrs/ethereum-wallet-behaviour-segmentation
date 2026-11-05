@@ -23,7 +23,7 @@ Shared monthly network samples compare annual K2--K6 at seed 492 and K3 at two a
 Separately trained frozen monthly K2--K6 models use deterministically ordered January--June training samples and July--December evaluation. Twenty return tests form one temporal Holm family: K3--K6 each have four supported triples; the binary K2 conditional return null is structurally constant and uninformative.
 Monthly state identifiers are deliberately distinct from annual K3 labels.
 
-See `docs/VALIDATION_COMPLETION.md` and `docs/REPRODUCE_CURRENT_VALIDATION.md` for current results and reproduction commands. The previous unsorted monthly run and unmatched-estimator holdouts are retained as historical artifacts, not current evidence.
+See `docs/REFEREE_REVISION.md` and `docs/REPRODUCE_CURRENT_VALIDATION.md` for the current results, controls, environment and reproduction commands. The previous unsorted monthly run and unmatched-estimator holdouts are retained as historical artifacts, not current evidence.
 
 ## Reproducible Outputs
 
@@ -36,7 +36,7 @@ overleaf/main.tex                           Compilable manuscript source
 ```
 
 The raw data and large derived matrices are intentionally excluded from Git.
-They are required to rerun the pipeline locally.
+They are required to rerun the pipeline locally; the exact inputs, checksums and preparation commands are documented in `docs/REPRODUCE_CURRENT_VALIDATION.md`.
 
 ## Main Scripts
 

@@ -1,6 +1,6 @@
 # Reproduce the controlled year-end analyses
 
-Use Python with `pip install -r requirements.txt`. Run commands from the repo
+Use Python 3.12.3 with `pip install -r requirements-referee.txt`. Run commands from the repo
 root. All large inputs and intermediate matrices stay local and ignored by Git.
 The raw files used here are in `tsv and wallet daily/tsv/` and
 `tsv and wallet daily/wallet daily clean/`. Use the paths where your copies live.
