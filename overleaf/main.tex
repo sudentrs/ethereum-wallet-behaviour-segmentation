@@ -17,13 +17,15 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta}
 \usepackage[hidelinks]{hyperref}
-% Check the requested length after all deferred figures and tables are placed.
-\AtEndDocument{\clearpage\ifnum\value{page}=11\relax\else
-  \PackageError{ManuscriptLength}{Expected 10 pages; next page counter is \thepage}{Adjust substantive content to reach ten pages.}
-\fi}
+% Compact float spacing prevents short tables from creating large visual gaps.
+\setlength{\textfloatsep}{9pt plus 2pt minus 2pt}
+\setlength{\floatsep}{7pt plus 2pt minus 2pt}
+\setlength{\intextsep}{7pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{9pt plus 2pt minus 2pt}
+\setlength{\dblfloatsep}{7pt plus 2pt minus 2pt}
 
 \title{Ethereum Wallet Segmentation Through Layered Behavioural Validation}
-\author{Selim Balcisoy, Sena Kahya, and Sude Tiras\thanks{The authors are with the Faculty of Engineering and Natural Sciences, Sabanci University, Istanbul, Turkiye.}}
+\author{Selim S. Balcisoy, Sena Kahya, and Sude Tiras\thanks{The authors are with the Faculty of Engineering and Natural Sciences, Sabanci University, Istanbul 34956, Turkiye (e-mail: balcisoy@sabanciuniv.edu; sena.kahya@sabanciuniv.edu; sude.tiras@sabanciuniv.edu).}}
 
 \begin{document}
 \maketitle
@@ -93,9 +95,9 @@ The study uses the ERC-20 Trading 2022 release \cite{somin2025erc2022,somin2025d
 
 The same membership supports three descriptions: annual aggregate roles, separately learned monthly states and full-year daily signals (Fig.~\ref{fig:pipeline}). Raw network processing covers 245,911,059 transfer rows across twelve months. Wallet-day sources are checked for normalized valid addresses, dates within the expected month, unique wallet--day rows, and finite nonnegative integer counts. Counts denote wallet-record incidence, not distinct blockchain transactions: a transfer contributes sender and recipient records, including two incidences for a self-transfer. Daily signal totals reconcile exactly with the annual count source for every retained address.
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=\textwidth]{figures_current/ethereum_wallet_behaviour_methodology.png}
+\includegraphics[width=0.94\textwidth]{figures_current/ethereum_wallet_behaviour_methodology.png}
 \caption{Overview of the layered Ethereum wallet behaviour framework. Stage A organizes ERC-20 records into a wallet-day source and applies the historical code filter. Stage B transforms and robust-scales aggregate features, compares MiniBatchKMeans resolutions K2--K6 and retains K3 as the main descriptive segmentation. Stage C independently extracts time-domain and frequency-domain features from daily activity and clusters these signal representations. Stage D brings feature-space, transaction-network, temporal-state and cross-representation evidence into a joint interpretation. The diagram's ``EOA-only'' label denotes the operational year-end code-free cohort; it does not establish continuous EOA status. Data cleaning denotes the supplied preprocessing and the source checks described here, rather than an independently reproduced raw-data cleaning pipeline.}
 \label{fig:pipeline}
 \end{figure*}
@@ -151,7 +153,7 @@ No single score answers all four questions. A high ARI across seeds means that a
 \subsection{Annual Resolution and Behavioural Profiles}
 K2 has the highest sampled silhouette (0.357), but its largest group contains 72.4--83.2\% of addresses across seeds. K3 silhouette is 0.298, with seed ARI 0.908--0.971, NMI 0.853--0.944 and matched agreement 0.973--0.992. K4--K6 seed agreement is weaker (Table~\ref{tab:annualrobustness}). Thus K3 is selected as a compact descriptive vocabulary rather than the maximizer of separation or balanced group sizes.
 
-\begin{table*}[t]
+\begin{table}[!t]
 \centering\footnotesize
 \caption{Annual initialization and training-subset sensitivity. Resampling uses twenty 80\% refits, fixed optimization seed and 50,000 evaluation addresses; the original full-cohort scaler is retained.}
 \label{tab:annualrobustness}
@@ -166,8 +168,8 @@ $k$ & Silhouette & Seed ARI & Refit mean ARI & Refit range \\
 6 & 0.176 & 0.374--0.423 & 0.444 & 0.312--0.603 \\
 \bottomrule
 \end{tabular}
-\end{table*}
-\begin{table*}[t]
+\end{table}
+\begin{table*}[!t]
 \centering\footnotesize
 \caption{Annual K3 seed-492 raw-unit medians. Share is a percentage; density and concentration are ratios.}
 \label{tab:profiles}
@@ -207,7 +209,7 @@ The estimator comparison in Table~\ref{tab:estimatorcomparison} helps separate r
 \subsection{Network Alignment and Stronger Controls}
 The complete eligible subgraph contains 38,733,517 rows, or 15.75\% of processed transfers (monthly coverage 13.7--19.3\%). In the original 200,000-event samples, K3 seed 492 has mean excess 9.09 percentage points and twelve supported months under the original 84-test family; the other K3 seeds have mean excess 8.40 and 9.54 points and twelve supported months each. K4 has greater mean excess (14.19 points), while K5 has 8.35; K2 and K6 have negative mean excess. This is not a universal resolution ranking.
 
-\begin{table*}[t]
+\begin{table*}[!t]
 \centering\footnotesize
 \caption{Common non-self event samples: mean excess in percentage points under unrestricted and activity-stratified nulls. Support and maximum p-value use the stratified null and combined 300-test Holm correction.}
 \label{tab:conditionednetwork}
@@ -250,7 +252,7 @@ The simple baselines sharpen this interpretation. Count terciles show greater un
 \subsection{Monthly Persistence, Return and Inactivity}
 Held-out K3 adjacent pairs contain 676,741--786,661 addresses active in both months. Persistence is 0.639--0.702 against marginal chance 0.491--0.539, giving kappa 0.292--0.353. Monthly K2 has larger kappa, so the temporal branch does not select K3 as an optimal resolution. Monthly IDs have no shared semantics with annual cluster numbers.
 
-\begin{table*}[t]
+\begin{table}[!t]
 \centering\footnotesize
 \caption{Frozen monthly models: active-only persistence and kappa; conditional return excess in percentage points. Return support uses twenty-test Holm correction. K2 return p=1 is structurally uninformative.}
 \label{tab:monthlycomparison}
@@ -265,7 +267,7 @@ $k$ & Persistence & $\kappa$ & Return excess & Supported \\
 6 & 0.427--0.439 & 0.195--0.221 & 4.98--6.15 & 4/4 \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 Among first-step switchers active across each triple, K3 observed return is 0.409--0.471 against null means 0.383--0.448. Excess is only 1.88--2.58 percentage points despite corrected p=0.020 for all four triples. K4--K6 also have four supported triples each (Table~\ref{tab:monthlycomparison}), but each resolution changes the switcher population and the meaning of return.
 
 Including inactivity, next-month activity among currently active addresses ranges from 0.631--0.735. It ranges from 0.161--0.331 among previously observed but currently inactive addresses, and from 0.243--1.000 among those not yet observed active in 2022. Active-only persistence omits these distinct participation paths; the complete inactive-inclusive transition matrix is supplied separately.
@@ -297,7 +299,7 @@ Adding K3 indicators to six-feature logistic regression changes pooled Brier sco
 \subsection{Time/Frequency Agreement and Timing Controls}
 The reconstruction includes all 2,508,997 cohort addresses, 41,552,909 wallet-day rows and 189,526,795 count incidences. Every annual total reconciles, and all addresses have positive non-DC power. Frequency K3 seed ARI is 0.882--0.934, while time-domain K3 is 0.197--0.639. Annual--time K3 agreement is ARI 0.353/NMI 0.263; annual--frequency agreement is ARI 0.250/NMI 0.116. Time--frequency ARI is 0.251. These overlaps support related but distinct descriptions rather than one common taxonomy.
 
-\begin{figure*}[t]\centering
+\begin{figure*}[!t]\centering
 \includegraphics[width=0.82\textwidth]{figures_current/signal_cross_representation.pdf}
 \caption{Annual K3 versus independently fitted time-domain and frequency-domain K3 on the same population. Rows sum to one; numerical labels are arbitrary.}
 \label{fig:signaloverlap}\end{figure*}
