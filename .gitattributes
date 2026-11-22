@@ -1,0 +1,11 @@
+# Keep published source hashes identical to the packaged submission files.
+overleaf/*.tex text eol=lf
+overleaf/*.json text eol=lf
+overleaf/README.md text eol=lf
+# Preserve the supplied IEEE class byte-for-byte.
+overleaf/IEEEtran.cls -text
+scripts/create_tcss_supporting_pages.py text eol=lf
+scripts/package_tcss_submission.py text eol=lf
+scripts/render_signal_cross_representation.py text eol=lf
+docs/CURRENT_MANUSCRIPT_STATUS.md text eol=lf
+results_v3/year_end_2022_count_cohort/referee_extension/current_manuscript_delivery.json text eol=lf

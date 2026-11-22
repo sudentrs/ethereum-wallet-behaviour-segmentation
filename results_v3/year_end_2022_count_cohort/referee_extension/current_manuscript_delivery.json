@@ -1,13 +1,22 @@
 {
   "complete": true,
   "manuscript": "overleaf/main.tex",
-  "manuscript_sha256": "ed82f0cd3b01c23d5ddc855f435ecb584fe7442b58035cb5729fb33d98b2565d",
-  "supplementary_sha256": "85a910f057f131774579c98edbe374476e2905aedda9c7444b4e4749dbf03d4f",
+  "manuscript_sha256": "486fd325fff07958e19d2cbb6b8de8ca72be73d086978fe1d9efdc5917be5fb0",
+  "supplementary_sha256": "89b15bea76cbd585bb743fec81890a8106cc0ef1c313a58e7aa9f7d3da419d61",
   "methodology_figure": "overleaf/figures_current/ethereum_wallet_behaviour_methodology.png",
-  "methodology_sha256": "b097ca6b8e411f03de6338712a9906a39b54d50256d13149fe68ae9e63d3d486",
+  "methodology_sha256": "e75d051db98aabb5bba867d1e9ac7e82a59cd55c8d9ea26f589fe6a6adde20f4",
+  "methodology_pixels": [
+    5088,
+    2478
+  ],
+  "source_tag": "tcss-submission-2026-11-22",
   "latex_compiled": true,
   "page_count_verified": true,
   "pages": 10,
-  "verification": "Desktop built-in compiler succeeded with an end-of-document ten-page assertion on the identical source in output/guncel_makale_2026-11-05/main.tex.",
-  "analysis_receipt": "revision_completion.json"
+  "supplementary_pages": 5,
+  "compilation_engine": "Tectonic 0.17.0 (XeTeX)",
+  "verification": "All final PDF pages rendered and visually checked; all 20 scientific tables match frozen CSVs.",
+  "main_pdf_sha256": "832f4d053da51f743c402a4d2f4fb20abec330304f007ab319f92e2434a26d57",
+  "supplementary_pdf_sha256": "1433897c3bfa0cabd9f75f43826b188079c0717aab3d9860076233f7e81f9055",
+  "corresponding_author": "Selim S. Balcisoy"
 }

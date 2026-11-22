@@ -1,10 +1,30 @@
 \documentclass[journal,letterpaper]{IEEEtran}
+\usepackage{fontspec}
+\setmainfont{texgyretermes-regular.otf}[
+  BoldFont=texgyretermes-bold.otf,
+  ItalicFont=texgyretermes-italic.otf,
+  BoldItalicFont=texgyretermes-bolditalic.otf]
 \usepackage{amsmath,amssymb,booktabs}
 \usepackage[hidelinks]{hyperref}
+\setlength{\textfloatsep}{9pt plus 2pt minus 2pt}
+\setlength{\floatsep}{9pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{9pt plus 2pt minus 2pt}
+\setlength{\dblfloatsep}{9pt plus 2pt minus 2pt}
+\setcounter{dbltopnumber}{5}
+\renewcommand{\dbltopfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{14pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\setlength{\@dblfptop}{0pt}
+\setlength{\@dblfpsep}{14pt}
+\setlength{\@dblfpbot}{0pt plus 1fil}
+\makeatother
 \title{Supplementary Material: Ethereum Wallet Segmentation Through Layered Behavioural Validation}
-\author{Selim Balcisoy, Sena Kahya, and Sude Tiras}
+\author{Selim S. Balcisoy, Sena Kahya, and Sude Tiras}
 \begin{document}\maketitle
-This supplement records the detailed retrospective controls and full comparison tables accompanying the main manuscript. The main text defines the data source, original validation branches and inferential scope. No additional raw population or year is introduced here.
+This supplement records the detailed retrospective controls and full comparison tables accompanying the main manuscript. The main text defines the data source, original validation branches and inferential scope. No additional raw population or year is introduced here. The accompanying replication archive includes the compact CSVs and manifests referenced below; its README maps filenames to repository paths. Sources match the \href{https://github.com/sudentrs/ethereum-wallet-behaviour-segmentation/tree/tcss-submission-2026-11-22}{22 November 2026 submission release}.
 \section{Extended Methods}
 \subsection{Resampling, Estimator and Weighting Controls}
 The additional controls are retrospective robustness analyses, not a preregistered selection exercise. A fixed uniform evaluation set of 50,000 addresses is excluded from every new training subset. For each K2--K6 resolution, we refit on thirty independent 100,000-address subsets and twenty independent subsets containing 80\% of the remaining population. MiniBatchKMeans settings and optimizer seed 492 remain fixed to isolate training-subset perturbation. ARI compares assignments on the fixed evaluation set with the original full-cohort seed-492 partition; Hungarian-matched cluster Jaccard scores expose instability hidden by aggregate agreement. The original reference saw the evaluation features, and the full-cohort scaler is retained. These are conditional robustness diagnostics, not held-out predictive validation or confidence intervals for a true taxonomy.
@@ -98,16 +118,16 @@ Graph variant & Mean & Monthly range & Support \\
 \midrule
 All transfer events & -0.97 & -1.45--0.82 & 1/12 \\
 Non-self events & -0.88 & -1.55--1.01 & 1/12 \\
-Unique directed pairs & -2.35 & -2.93---0.87 & 0/12 \\
+Unique directed pairs & -2.35 & $[-2.93, -0.87]$ & 0/12 \\
 Without top token & -0.72 & -1.63--0.97 & 0/12 \\
 Without top 1\% endpoints & 3.04 & 1.79--4.36 & 12/12 \\
 \bottomrule
 \end{tabular}
 \end{table*}
-Each filtered variant has its own eligible edge population and endpoint composition. These results measure robustness to graph construction and exposure concentration, rather than isolating a causal token or hub effect. Exact monthly retained counts and excluded token identifiers accompany the replication tables.
+Each filtered variant has its own eligible edge population and endpoint composition (Table~\ref{tab:graphsensitivity}). These results measure robustness to graph construction and exposure concentration, rather than isolating a causal token or hub effect. Exact monthly retained counts and excluded token identifiers are in the replication archive's \texttt{network\_manifest.json}.
 
 \subsection{Inactivity and Participation Prediction}
-Across the five evaluation pairs, next-month activity among currently active addresses is 0.631--0.735. Among currently inactive but previously observed addresses it is 0.161--0.331, compared with 0.243--1.000 for addresses not yet observed active in 2022. These are cohort-conditional observed-activity rates, not estimates of Ethereum-wide entry or permanent departure. The complete four-category transition matrix is retained separately from the active-only state matrix.
+Across the five evaluation pairs, next-month activity among currently active addresses is 0.631--0.735. Among currently inactive but previously observed addresses it is 0.161--0.331, compared with 0.243--1.000 for addresses not yet observed active in 2022. These are cohort-conditional observed-activity rates, not estimates of Ethereum-wide entry or permanent departure. Table~\ref{tab:suppinactivematrix} reports the complete four-category transition matrix, separately from active-only states.
 
 \begin{table}[t]
 \centering\footnotesize
@@ -131,6 +151,7 @@ K3 state-only predictions have Brier score 0.2122, compared with 0.2228 for cons
 For adding K3 indicators to six-feature logistic regression, paired wallet-bootstrap loss differences (augmented minus unaugmented) are -0.000039 for Brier score (95\% interval -0.000047 to -0.000031) and 0.000078 for log loss (95\% interval 0.000057 to 0.000099). Their magnitude and direction must be interpreted alongside Table~\ref{tab:participationprediction}; narrow intervals do not establish a practically important gain. Full K2--K6 scores and the subgroup absent from supervised training are supplied in the replication tables.
 
 \subsection{Timing Evidence Under Block Nulls}
+Table~\ref{tab:blocktiming} reports all nine observed and null-mean timing statistics.
 \begin{table*}[t]
 \centering\footnotesize
 \caption{Timing sensitivity on the same 2,000-address sample, 999 permutations per null and a nine-test Holm family. Block length one denotes complete daily permutation.}
@@ -155,7 +176,7 @@ The number of supported sample-mean timing statistics is 3/3 for the 1-day null,
 
 \section{Additional Diagnostics}
 \subsection{Candidate-Universe Selection Audit}
-The supplied merged daily source contains 83,519,492 rows and 25,417,590 distinct normalized addresses. The candidate table contains 2,738,243 distinct addresses. Threshold comparisons use annual wallet-record count sums over the complete merged source, not only retained cohort addresses. Exact set equivalence establishes an empirical operational rule within that source, not the provenance of raw-transfer cleaning or proof of the upstream producer's intent.
+The supplied merged daily source contains 83,519,492 rows and 25,417,590 distinct normalized addresses. The candidate table contains 2,738,243 distinct addresses. Threshold comparisons in Table~\ref{tab:suppcandidate} use annual wallet-record count sums over the complete merged source, not only retained cohort addresses. Exact set equivalence establishes an empirical operational rule within that source, not the provenance of raw-transfer cleaning or proof of the upstream producer's intent.
 
 \begin{table*}[t]
 \centering\footnotesize
@@ -176,9 +197,10 @@ Threshold & Threshold addresses & Candidate only & Threshold only & Overlap \\
 \subsection{Signal Definitions and Monthly Graph Coverage}
 Time features divide active days and longest active/inactive runs by 365, and active/inactive switches by 364. Peak share is maximum daily count divided by annual count; coefficient of variation uses population standard deviation across all 365 days divided by the calendar-day mean. Frequency bands use cycles/day: $0<f<1/60$, $1/60\le f<1/14$, $1/14\le f\le 1/2$, $1/8\le f<1/6$, and $1/35\le f<1/25$. Peak power is the largest normalized non-DC bin; entropy is $-\sum_j q_j\log_2 q_j$, with zero terms omitted. These definitions do not equate a broad spectral band with a verified calendar cycle.
 
+Table~\ref{tab:suppgraphcoverage} reports each complete eligible graph before sampling.
 \begin{table*}[t]
 \centering\footnotesize
-\caption{Complete eligible monthly graph sizes before sampling. Each null uses up to 50,000 rows from its declared variant. Exact excluded token identifiers and endpoint counts are recorded in the companion manifest.}
+\caption{Complete eligible monthly graph sizes before sampling. Each null uses up to 50,000 rows from its declared variant. Exact excluded token identifiers and endpoint counts are recorded in the replication archive's network manifest.}
 \label{tab:suppgraphcoverage}
 \begin{tabular}{rrrrrr}
 \toprule
@@ -199,6 +221,7 @@ Month & All events & Non-self & Unique pairs & Token excluded & Hubs excluded \\
 \bottomrule
 \end{tabular}
 \end{table*}
+Table~\ref{tab:suppsignalresolution} gives all time-domain and frequency-domain K2--K6 resolution comparisons.
 \begin{table*}[t]
 \centering\footnotesize
 \caption{Full-cohort signal resolution comparison. Silhouette uses seed 492; ARI ranges use all three seed pairs.}
@@ -220,6 +243,7 @@ Frequency & 6 & 0.248 & 0.293--0.628 \\
 \bottomrule
 \end{tabular}
 \end{table*}
+Table~\ref{tab:suppallprediction} reports every participation model in both evaluation groups.
 \begin{table*}[t]
 \centering\footnotesize
 \caption{All participation models and the subgroup absent from supervised training. Losses are observation-weighted; AUC is the monthly mean. The subgroup can overlap state-vocabulary training.}
@@ -251,7 +275,7 @@ not\_in\_supervised\_training & nonlinear\_count & 0.2053 & 0.5933 & 0.6701 & 5,
 \bottomrule
 \end{tabular}
 \end{table*}
-\begin{table}[t]
+\begin{table*}[t]
 \centering\footnotesize
 \caption{Pooled July--December K3 transitions including inactive observations. Row probabilities sum to one. Inactivity is not a fitted centroid.}
 \label{tab:suppinactivematrix}
@@ -265,7 +289,8 @@ From / To & State 0 & State 1 & State 2 & Inactive \\
 inactive & 0.2039 & 0.0594 & 0.0044 & 0.7323 \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
+Table~\ref{tab:suppreturntests} gives all twenty conditional-return tests and their selected switcher populations.
 \begin{table*}[t]
 \centering\footnotesize
 \caption{All conditional-return tests. Month is the triple start, denominators include only active first-step switchers, and p-values use the original twenty-test family. Binary K2 is structurally degenerate.}

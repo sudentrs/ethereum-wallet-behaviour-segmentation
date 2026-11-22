@@ -32,5 +32,16 @@
     "cross_representation_comparisons": 75,
     "timing_holm_family": 3
   },
-  "source_of_truth": "overleaf/main.tex; legacy extended_body.tex is historical and must not overwrite this source"
+  "source_of_truth": "overleaf/main.tex; legacy extended_body.tex is historical and must not overwrite this source",
+  "presentation": {
+    "framework_layout": "original, exported at 3x from source",
+    "framework_pixels": [
+      5088,
+      2478
+    ],
+    "framework_sha256": "e75d051db98aabb5bba867d1e9ac7e82a59cd55c8d9ea26f589fe6a6adde20f4",
+    "figure2_vector_sha256": "1406dd64fab955ec94b3a17e1c5a5f0c503abc9701a815c9da58a4350cab6b4c",
+    "corresponding_author": "Selim S. Balcisoy",
+    "source_tag": "tcss-submission-2026-11-22"
+  }
 }

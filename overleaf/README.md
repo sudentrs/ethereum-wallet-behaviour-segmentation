@@ -10,18 +10,23 @@ Upload the contents of this directory to Overleaf, preserving
 `figures_current/`, and select **XeLaTeX**. The bibliography is embedded in
 `main.tex`; no BibTeX run is required.
 
-The manuscript is intentionally checked for ten Letter pages by the assertion
-in `main.tex`. Compile the final source once more with the target submission
-environment before upload. The versioned release records the source hash and
-Git commit for the submitted delivery.
+Compile the final source once more with the target submission environment and
+check the page count before upload. The submission package records SHA-256
+hashes for its sources, figures and compiled PDFs.
 
 ## Included Assets
 
-- `figures_current/ethereum_wallet_behaviour_methodology.png` - main framework figure.
+- `IEEEtran.cls` - class supplied with the IEEE template package, including its
+  2023 title-font adjustments.
+- `figures_current/ethereum_wallet_behaviour_methodology.png` - 5088 x 2478 pixel,
+  3x export of the original framework layout (about 758 dpi at manuscript size).
 - `figures_current/signal_cross_representation.pdf` - main cross-representation figure.
-- `figures_current/*.pdf` - supporting figures used by the supplementary source.
 - `references.bib` - historical convenience file only; `main.tex` contains the
   authoritative embedded bibliography.
+
+To rebuild the vector heatmaps from the frozen overlap table,
+run `python scripts/render_signal_cross_representation.py` from the repository
+root. The original-layout framework PNG and vector heatmap PDF are included in `main.tex`.
 
 ## Reproducibility
 
@@ -35,7 +40,15 @@ and generation steps are documented there.
 Do not replace `main.tex` with historical K4/K5/K6 paper files or reuse results
 under `results/` and `results_v2/` as evidence for this manuscript.
 
-## Review Mode
+## TCSS submission
 
-The current author block and GitHub link identify the authors. For a venue with
-double-anonymous review, use an anonymous copy of the source and code release.
+TCSS uses single-anonymous review. Keep the author block and affiliation details.
+Selim S. Balcisoy is the corresponding author. The publication preference is
+Traditional/Subscription; the actual portal choice must be checked at submission.
+
+The matching source is tagged `tcss-submission-2026-11-22`. After compiling both
+sources and reviewing their rendered PDFs, use `scripts/package_tcss_submission.py`
+to create the main-source ZIP, separate lists, current replication archive, and
+complete submission package in `output/pdf/`. The replication README maps CSVs
+and manifests to manuscript and supplementary tables. The embedded bibliography
+is authoritative; the historical convenience `.bib` is not needed for compilation.

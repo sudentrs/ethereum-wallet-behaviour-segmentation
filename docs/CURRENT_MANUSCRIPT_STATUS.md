@@ -1,4 +1,28 @@
-# Current delivery — 5 November 2026
+# Current delivery - 22 November 2026
+
+The current sources are `overleaf/main.tex` and `overleaf/supplementary.tex`.
+The submission source tag is `tcss-submission-2026-11-22`.
+`results_v3/year_end_2022_count_cohort/referee_extension/current_manuscript_delivery.json`
+records current source, figure and compiled-PDF hashes. Earlier receipts below
+remain dated computational provenance rather than current delivery records.
+
+The paper retains the original framework layout using a 5088 x 2478 pixel 3x
+export (approximately 758 dpi at its manuscript placement). Figure 2 remains a
+vector rendering of the frozen overlap CSV. Selim S. Balcisoy is the corresponding
+author. All scientific table values remain unchanged. Footnotes and captions are
+separate one-page PDFs and References are double-spaced.
+Author approval, no external funding, no conflicts,
+and no previous publication/preprint or concurrent submission were confirmed by
+the submitting author. ORCID links and the actual Traditional/Subscription choice
+remain portal checks; institutional ethics applicability is not established here.
+
+Use `scripts/create_tcss_supporting_pages.py` and `scripts/package_tcss_submission.py`
+after compilation and full visual review to regenerate `output/pdf/` packages.
+The new compact replication archive includes the referee-extension controls and
+replaces the 3 November archive containing `extended_body.tex`.
+
+## Archived delivery - 5 November 2026
+
 
 The current paper is `overleaf/main.tex`, identical to the open editor source in
 `output/guncel_makale_2026-11-05/main.tex`. It uses the supplied methodology PNG,
