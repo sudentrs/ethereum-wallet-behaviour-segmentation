@@ -1,22 +1,23 @@
 {
   "complete": true,
   "manuscript": "overleaf/main.tex",
-  "manuscript_sha256": "486fd325fff07958e19d2cbb6b8de8ca72be73d086978fe1d9efdc5917be5fb0",
-  "supplementary_sha256": "89b15bea76cbd585bb743fec81890a8106cc0ef1c313a58e7aa9f7d3da419d61",
+  "manuscript_sha256": "fadb5f333a3973c391ace4a19b08ded0c21c66f653395c98c917ea01ae59765a",
+  "supplementary_sha256": "7821e4cdaad5aba7af825e02affc8f0ee69a9d2592d92d2c5207a5596befc090",
   "methodology_figure": "overleaf/figures_current/ethereum_wallet_behaviour_methodology.png",
   "methodology_sha256": "e75d051db98aabb5bba867d1e9ac7e82a59cd55c8d9ea26f589fe6a6adde20f4",
   "methodology_pixels": [
     5088,
     2478
   ],
-  "source_tag": "tcss-submission-2026-11-22",
+  "source_tag": "tcss-submission-2026-11-22-v2",
   "latex_compiled": true,
   "page_count_verified": true,
   "pages": 10,
   "supplementary_pages": 5,
   "compilation_engine": "Tectonic 0.17.0 (XeTeX)",
   "verification": "All final PDF pages rendered and visually checked; all 20 scientific tables match frozen CSVs.",
-  "main_pdf_sha256": "832f4d053da51f743c402a4d2f4fb20abec330304f007ab319f92e2434a26d57",
-  "supplementary_pdf_sha256": "1433897c3bfa0cabd9f75f43826b188079c0717aab3d9860076233f7e81f9055",
-  "corresponding_author": "Selim S. Balcisoy"
+  "main_pdf_sha256": "9e2eee9b503e3e50afebe3f344e6d016332093f9da9c351abf30e9cf7d4e93d6",
+  "supplementary_pdf_sha256": "e9ac75a7a706559a341b240117783c610c0c4c942355ad9be2fdb19283edb3f6",
+  "corresponding_author": "Selim S. Balcisoy",
+  "author_notes_location": "separate Footnotes.pdf only, as requested by the author"
 }

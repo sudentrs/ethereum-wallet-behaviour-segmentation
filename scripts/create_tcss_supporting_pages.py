@@ -1,6 +1,7 @@
 """Prepare the two submission lists from the supplied manuscript."""
 
 import logging
+import json
 import re
 from pathlib import Path
 from xml.sax.saxutils import escape
@@ -46,8 +47,12 @@ def normalize(text):
 
 
 title = re.search(r"\\title\{([^}]+)\}", source).group(1)
-authors = "Selim S. Balcisoy, Sena Kahya, and Sude Tiras"
-first_footnote, affiliation = re.findall(r"\\thanks\{([^}]+)\}", source)
+authors = re.search(r"\\author\{([^}]+)\}", source).group(1)
+submission_notes = json.loads((ROOT / "overleaf/manuscript_inputs.json").read_text(encoding="utf8")).get("submission_notes", {})
+first_footnote = submission_notes["corresponding_author_statement"]
+affiliation = submission_notes["affiliation_statement"]
+funding_statement = submission_notes.get("funding_statement", "")
+separate_first_footnote = " ".join(x for x in (funding_statement, first_footnote) if x)
 figures = re.findall(r"\\begin\{figure\*?\}(.*?)\\end\{figure\*?\}", source, re.S)
 captions = [
     plain_tex(re.search(r"\\caption\{(.*?)\}\s*\\label", figure, re.S).group(1))
@@ -55,12 +60,8 @@ captions = [
 ]
 assert len(captions) == 2, "Expected exactly the two figures in the supplied PDF."
 
-pdf_affiliation = re.search(
-    r"The authors are with.*?sude\.tiras@sabanciuniv\.edu\)\.",
-    reader.pages[0].extract_text(),
-    re.S,
-).group(0)
-assert normalize(affiliation) == normalize(pdf_affiliation)
+assert normalize(authors) in normalize(reader.pages[0].extract_text())
+assert not re.search(r"\\(?:thanks|footnote|footnotetext)\{", source)
 for page_index, caption in zip((3, 7), captions):
     assert any(normalize(caption) in normalize(page.extract_text()) for page in reader.pages)
 
@@ -122,7 +123,7 @@ def make_document(filename, heading_text, paragraphs, leading):
     print(filename, "1 page", "body leading", leading, "pt")
 
 
-make_document("Footnotes.pdf", "Footnotes", ["Manuscript received", first_footnote, affiliation], 24)
+make_document("Footnotes.pdf", "Footnotes", ["Manuscript received", separate_first_footnote, affiliation], 24)
 make_document(
     "Figure_Captions.pdf",
     "Figure Captions",

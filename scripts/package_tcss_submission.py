@@ -19,7 +19,7 @@ from pypdf import PdfReader
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "output/pdf"
 BASE = ROOT / "results_v3/year_end_2022_count_cohort"
-TAG = "tcss-submission-2026-11-22"
+TAG = "tcss-submission-2026-11-22-v2"
 
 
 def digest(path):
@@ -62,7 +62,9 @@ def main():
                    for p in PdfReader(path).pages)
     tex = (ROOT / "overleaf/main.tex").read_text(encoding="utf8")
     assert len(re.findall(r"\\bibitem\{", tex)) == 16
-    assert "Corresponding author: Selim S. Balcisoy." in tex
+    notes_text = "".join(page.extract_text() or "" for page in PdfReader(pdfs["Footnotes.pdf"]).pages)
+    assert "Correspondingauthor:SelimS.Balcisoy." in re.sub(r"\s+", "", notes_text)
+    assert not re.search(r"\\(?:thanks|footnote|footnotetext)\{", tex)
     assert "\\ref{fig:signaloverlap}" in tex
     assert "\\begin{doublespace}" in tex
     source_names = ["main.tex", "IEEEtran.cls",
@@ -87,8 +89,8 @@ def main():
         compact[n] = ROOT / n
     mapping = """TCSS compact replication records - 22 November 2026
 
-Matching source tag: tcss-submission-2026-11-22
-https://github.com/sudentrs/ethereum-wallet-behaviour-segmentation/tree/tcss-submission-2026-11-22
+Matching source tag: tcss-submission-2026-11-22-v2
+https://github.com/sudentrs/ethereum-wallet-behaviour-segmentation/tree/tcss-submission-2026-11-22-v2
 
 Paths below are preserved relative to the repository root.
 BASE = results_v3/year_end_2022_count_cohort/
@@ -141,6 +143,7 @@ No experimental result has been recomputed or changed by packaging.
                 "main_pdf_sha256": digest(pdfs["Manuscript.pdf"]),
                 "supplementary_pdf_sha256": digest(pdfs["Supplementary_Material.pdf"]),
                 "corresponding_author": "Selim S. Balcisoy"}
+    delivery["author_notes_location"] = "separate Footnotes.pdf only, as requested by the author"
     delivery_path = BASE / "referee_extension/current_manuscript_delivery.json"
     delivery_path.write_text(json.dumps(delivery, indent=2) + "\n", encoding="utf8", newline="\n")
     files = dict(pdfs)
@@ -180,6 +183,8 @@ embedded bibliography. supplementary.tex compiles separately.
 
 Corresponding author: Selim S. Balcisoy, balcisoy@sabanciuniv.edu.
 Author names remain visible because TCSS uses single-anonymous review.
+The author-requested layout keeps funding, corresponding-author and affiliation
+notes in Footnotes.pdf only; the main manuscript has no first-page footnote block.
 Publication preference: Traditional/Subscription; verify the actual portal selection.
 All authors approved submission; no external funding, conflicts, prior publication,
 preprint or concurrent submission were declared by the submitting author.

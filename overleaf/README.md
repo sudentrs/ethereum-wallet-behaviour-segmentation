@@ -43,10 +43,13 @@ under `results/` and `results_v2/` as evidence for this manuscript.
 ## TCSS submission
 
 TCSS uses single-anonymous review. Keep the author block and affiliation details.
-Selim S. Balcisoy is the corresponding author. The publication preference is
+Selim S. Balcisoy is the corresponding author. Funding, corresponding-author,
+affiliation and email notes are kept only in the separate Footnotes.pdf, as
+requested by the author. Their source is submission_notes in manuscript_inputs.json.
+The publication preference is
 Traditional/Subscription; the actual portal choice must be checked at submission.
 
-The matching source is tagged `tcss-submission-2026-11-22`. After compiling both
+The matching source is tagged `tcss-submission-2026-11-22-v2`. After compiling both
 sources and reviewing their rendered PDFs, use `scripts/package_tcss_submission.py`
 to create the main-source ZIP, separate lists, current replication archive, and
 complete submission package in `output/pdf/`. The replication README maps CSVs

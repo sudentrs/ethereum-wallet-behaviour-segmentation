@@ -1,7 +1,7 @@
 # Current delivery - 22 November 2026
 
 The current sources are `overleaf/main.tex` and `overleaf/supplementary.tex`.
-The submission source tag is `tcss-submission-2026-11-22`.
+The submission source tag is `tcss-submission-2026-11-22-v2`.
 `results_v3/year_end_2022_count_cohort/referee_extension/current_manuscript_delivery.json`
 records current source, figure and compiled-PDF hashes. Earlier receipts below
 remain dated computational provenance rather than current delivery records.
@@ -10,7 +10,9 @@ The paper retains the original framework layout using a 5088 x 2478 pixel 3x
 export (approximately 758 dpi at its manuscript placement). Figure 2 remains a
 vector rendering of the frozen overlap CSV. Selim S. Balcisoy is the corresponding
 author. All scientific table values remain unchanged. Footnotes and captions are
-separate one-page PDFs and References are double-spaced.
+separate one-page PDFs and References are double-spaced. Funding, corresponding-
+author, affiliation and email notes appear in Footnotes.pdf only, as requested;
+the main manuscript retains the author byline without a first-page note block.
 Author approval, no external funding, no conflicts,
 and no previous publication/preprint or concurrent submission were confirmed by
 the submitting author. ORCID links and the actual Traditional/Subscription choice
